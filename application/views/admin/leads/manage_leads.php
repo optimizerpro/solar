@@ -1,5 +1,20 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
+<style>
+   .pac-container {
+      background-color: #FFF;
+      z-index: 2001;
+      position: fixed;
+      display: inline-block;
+      float: left;
+   }
+   .modal{
+      z-index: 2000;
+   }
+   .modal-backdrop{
+      z-index: 1000;
+   }​
+</style>
 <div id="wrapper">
    <div class="content">
       <div class="row">
@@ -301,6 +316,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutocomplete&libraries=places&v=weekly"
       defer ></script>
       <script>
+         
          let autocomplete;
 let address1Field;
 let address2Field;
