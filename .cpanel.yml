@@ -1,0 +1,19 @@
+
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/realtyevo/public_html/hashevo.com/elightsolar/
+    - /bin/cp -R application $DEPLOYPATH
+    - /bin/cp -R assets $DEPLOYPATH
+    - /bin/cp -R backups $DEPLOYPATH
+    - /bin/cp -R media $DEPLOYPATH
+    - /bin/cp -R modules $DEPLOYPATH
+    - /bin/cp -R system $DEPLOYPATH
+    - /bin/cp -R temp $DEPLOYPATH
+    - /bin/cp -R uploads $DEPLOYPATH
+    /bin/cp .htaccess $DEPLOYPATH
+    /bin/cp index.php $DEPLOYPATH
+    /bin/cp packages.json $DEPLOYPATH
+    /bin/cp pipe.php $DEPLOYPATH
+    /bin/cp web.config $DEPLOYPATH
+    /bin/cp Gruntfile.js $DEPLOYPATH
