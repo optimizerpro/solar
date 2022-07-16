@@ -304,7 +304,7 @@
          </div>
          <div class="col-md-6">
             <?php $value = (isset($lead) ? $lead->address : ''); ?>
-            <?php echo render_textarea('address','lead_address',$value,array('rows'=>1,'style'=>'height:36px;font-size:100%;')); ?>
+            <?php echo render_input('address','lead_address',$value); ?>
             <?php $value = (isset($lead) ? $lead->city : ''); ?>
             <?php echo render_input('city','lead_city',$value); ?>
             <?php $value = (isset($lead) ? $lead->state : ''); ?>
