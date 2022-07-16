@@ -407,10 +407,10 @@
                initAutocomplete();
             });
          }
-         let autocomplete;
-let address1Field;
-let address2Field;
-let postalField;
+         var autocomplete;
+var address1Field;
+var address2Field;
+var postalField;
 
 function initAutocomplete() {
   address1Field = document.getElementById('address');
@@ -432,8 +432,8 @@ function initAutocomplete() {
 function fillInAddress() {
   // Get the place details from the autocomplete object.
   const place = autocomplete.getPlace();
-  let address1 = "";
-  let postcode = "";
+  var address1 = "";
+  var postcode = "";
 
   // Get each component of the address from the place details,
   // and then fill-in the corresponding field on the form.
