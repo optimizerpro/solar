@@ -386,7 +386,7 @@ function fillInAddress() {
   address2Field.focus();
 }
 
-window.initAutocomplete = initQAutoComp;
+window.initAutocomplete = initAutoComp;
 
 </script>
 <script>
