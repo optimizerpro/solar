@@ -313,19 +313,21 @@
 </script>
 <?php include_once(APPPATH.'views/admin/leads/status.php'); ?>
 <?php init_tail(); ?>
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutocomplete&libraries=places&v=weekly"
       defer ></script>
       <script>
+         function initAutoComp(){
+   $("#lead-modal").on('show.bs.modal',function(){
+      initAutocomplete();
+   });
+}
          $(document).ready(function(){
          let autocomplete;
 let address1Field;
 let address2Field;
 let postalField;
-function initAutoComp(){
-   $("#lead-modal").on('show.bs.modal',function(){
-      initAutocomplete();
-   });
-}
+
 function initAutocomplete() {
   address1Field = document.querySelector("#address");
   address2Field = document.querySelector("#city");
