@@ -322,7 +322,6 @@
                initAutocomplete();
             });
          }
-         $(document).ready(function(){
          let autocomplete;
 let address1Field;
 let address2Field;
@@ -405,7 +404,6 @@ function fillInAddress() {
 }
 
 window.initAutocomplete = initAutoComp;
-});
 </script>
 <script>
    var openLeadID = '<?php echo $leadid; ?>';
