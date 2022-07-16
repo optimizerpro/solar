@@ -318,7 +318,7 @@
       defer ></script>
       <script>
          function initAutoComp(){
-            $("#lead-modal").on('show.bs.modal',function(){
+            $("#lead-modal").on('shown.bs.modal',function(){
                initAutocomplete();
             });
          }
