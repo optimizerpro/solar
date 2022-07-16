@@ -318,10 +318,10 @@
       defer ></script>
       <script>
          function initAutoComp(){
-   $("#lead-modal").on('show.bs.modal',function(){
-      initAutocomplete();
-   });
-}
+            $("#lead-modal").on('show.bs.modal',function(){
+               initAutocomplete();
+            });
+         }
          $(document).ready(function(){
          let autocomplete;
 let address1Field;
