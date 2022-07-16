@@ -402,7 +402,7 @@ function fillInAddress() {
   address2Field.focus();
 }
 
-window.initAutocomplete = initAutocomplete;
+window.initAutocomplete = initAutoComp;
 
 </script>
 <script>
