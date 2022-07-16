@@ -316,7 +316,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutocomplete&libraries=places&v=weekly"
       defer ></script>
       <script>
-         
+         $(document).ready({
          let autocomplete;
 let address1Field;
 let address2Field;
@@ -403,7 +403,7 @@ function fillInAddress() {
 }
 
 window.initAutocomplete = initAutoComp;
-
+});
 </script>
 <script>
    var openLeadID = '<?php echo $leadid; ?>';
