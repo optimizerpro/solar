@@ -410,7 +410,7 @@ class App
             }
         }
 		array_push($this->available_default_languages, "english");
-        array_push($this->available_default_languages, "spansih");
+        array_push($this->available_default_languages, "spanish");
 
         /**
          * Media folder
