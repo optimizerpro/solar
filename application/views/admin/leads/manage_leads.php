@@ -118,6 +118,7 @@
                                        if($status['isdefault'] == 0) {
                                          $selected[] = $status['id'];
                                        } else {
+                                          $selected[] = $status['id'];
                                          $statuses[$key]['option_attributes'] = array('data-subtext'=>_l('leads_converted_to_client'));
                                        }
                                      }
