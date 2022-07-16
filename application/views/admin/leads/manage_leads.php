@@ -3,7 +3,7 @@
 <style>
 .pac-container {
       background-color: '#FFF';
-      z-index: 2001;
+      z-index: 100000;
       position: fixed;
       display: inline-block;
       float: left;
