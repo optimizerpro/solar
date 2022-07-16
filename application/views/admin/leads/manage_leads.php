@@ -111,7 +111,7 @@
                               <div class="col-md-3 leads-filter-column">
                                  <?php
                                     $selected = array();
-                                    if($this->input->get('status')) {
+                                    if($this->input->get('status') && $this->input->get('status')!="") {
                                      $selected[] = $this->input->get('status');
                                     } else {
                                      foreach($statuses as $key => $status) {
