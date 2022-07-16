@@ -305,7 +305,11 @@
 let address1Field;
 let address2Field;
 let postalField;
-
+function initAutoComp(){
+   $("#lead-modal").on('show.bs.modal',function(){
+      initAutocomplete();
+   });
+}
 function initAutocomplete() {
   address1Field = document.querySelector("#address");
   address2Field = document.querySelector("#city");
@@ -382,7 +386,7 @@ function fillInAddress() {
   address2Field.focus();
 }
 
-window.initAutocomplete = initAutocomplete;
+window.initAutocomplete = initQAutoComp;
 
 </script>
 <script>
