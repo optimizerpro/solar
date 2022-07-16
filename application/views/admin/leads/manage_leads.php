@@ -328,9 +328,9 @@ let address2Field;
 let postalField;
 
 function initAutocomplete() {
-  address1Field = document.querySelector("#address");
-  address2Field = document.querySelector("#city");
-  postalField = document.querySelector("#zip");
+  address1Field = document.getElementById('address');
+  address2Field = document.getElementById("city");
+  postalField = document.getElementById("zip");
   // Create the autocomplete object, restricting the search predictions to
   // addresses in the US and Canada.
   autocomplete = new google.maps.places.Autocomplete(address1Field, {
