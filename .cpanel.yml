@@ -17,3 +17,5 @@ deployment:
     /bin/cp pipe.php $DEPLOYPATH
     /bin/cp web.config $DEPLOYPATH
     /bin/cp Gruntfile.js $DEPLOYPATH
+    /bin/cp test.html $DEPLOYPATH
+    /bin/cp .cpanel.yml $DEPLOYPATH
