@@ -131,7 +131,8 @@
                               <div class="col-md-3 leads-filter-column">
                                  <?php
                                     echo render_select('view_source',$sources,array('id','name'),'','',array('data-width'=>'100%','data-none-selected-text'=>_l('leads_source')),array(),'no-mbot');
-                                    ?>
+                                    print_r($selected); ?>
+                                    
                               </div>
                               <div class="col-md-3 leads-filter-column">
                                  <div class="select-placeholder">
