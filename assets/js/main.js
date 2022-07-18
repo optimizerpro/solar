@@ -1549,7 +1549,19 @@ $(function () {
         var selectAddon = $('.items-wrapper .input-group-addon');
         if (selectAddon.length === 0) {
             // No items create permissions, so no + input group
-            $('.items-wrapper .bootstrap-select').css('width', '100%')
+            $('.items-wrapper .bootstrap-select').css('width', '100%');
+            $('.items-select-wrapper .bootstrap-select').css('width', '100%');
+        } else {
+            $('.items-wrapper .bootstrap-select').css('width', (selectWrapper.width() - selectAddon.width()) + 12 + 'px');
+        }
+    });
+    $('body').on('change loaded.bs.select', '.multiple_item_picker', function () {
+        var selectWrapper = $('.items-wrapper .items-select-wrapper');
+        var selectAddon = $('.items-wrapper .input-group-addon');
+        if (selectAddon.length === 0) {
+            // No items create permissions, so no + input group
+            $('.items-wrapper .bootstrap-select').css('width', '100%');
+            $('.items-select-wrapper .bootstrap-select').css('width', '100%');
         } else {
             $('.items-wrapper .bootstrap-select').css('width', (selectWrapper.width() - selectAddon.width()) + 12 + 'px');
         }
@@ -5939,49 +5951,97 @@ function edit_estimate_scheduled_email(schedule_id) {
 }
 
 // Add item to preview
-function add_item_to_preview(id) {
+function add_item_to_preview(id,multiitem=false) {
+    //console.log(multiitem);
     requestGetJSON('invoice_items/get_item_by_id/' + id).done(function (response) {
-        clear_item_preview_values();
+        if(multiitem!=false){
+            var id_of_dom=$(multiitem).parents('.item_to_be_clone').attr('id');
+            //console.log(id_of_dom);
+            //multiitem=$(multiitem).parent().parent().parent().parent().parent().parent().parent().parent().parent();
+            clear_item_preview_values();
+           $('#'+id_of_dom+' .main textarea[name="description"]').val(response.description);
+           $('#'+id_of_dom+' .main textarea[name="long_description"]').val(response.long_description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, " "));
 
-        $('.main textarea[name="description"]').val(response.description);
-        $('.main textarea[name="long_description"]').val(response.long_description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, " "));
+            _set_item_preview_custom_fields_array(response.custom_fields);
 
-        _set_item_preview_custom_fields_array(response.custom_fields);
+           $('#'+id_of_dom+' .main input[name="quantity"]').val(1);
 
-        $('.main input[name="quantity"]').val(1);
+            var taxSelectedArray = [];
+            if (response.taxname && response.taxrate) {
+                taxSelectedArray.push(response.taxname + '|' + response.taxrate);
+            }
+            if (response.taxname_2 && response.taxrate_2) {
+                taxSelectedArray.push(response.taxname_2 + '|' + response.taxrate_2);
+            }
 
-        var taxSelectedArray = [];
-        if (response.taxname && response.taxrate) {
-            taxSelectedArray.push(response.taxname + '|' + response.taxrate);
-        }
-        if (response.taxname_2 && response.taxrate_2) {
-            taxSelectedArray.push(response.taxname_2 + '|' + response.taxrate_2);
-        }
+           $('#'+id_of_dom+' .main select.tax').selectpicker('val', taxSelectedArray);
+           $('#'+id_of_dom+' .main input[name="unit"]').val(response.unit);
 
-        $('.main select.tax').selectpicker('val', taxSelectedArray);
-        $('.main input[name="unit"]').val(response.unit);
+            var $currency = $("body").find('.accounting-template select[name="currency"]');
+            var baseCurency = $currency.attr('data-base');
+            var selectedCurrency = $currency.find('option:selected').val();
+            var $rateInputPreview =$('#'+id_of_dom+' .main input[name="rate"]');
 
-        var $currency = $("body").find('.accounting-template select[name="currency"]');
-        var baseCurency = $currency.attr('data-base');
-        var selectedCurrency = $currency.find('option:selected').val();
-        var $rateInputPreview = $('.main input[name="rate"]');
-
-        if (baseCurency == selectedCurrency) {
-            $rateInputPreview.val(response.rate);
-        } else {
-            var itemCurrencyRate = response['rate_currency_' + selectedCurrency];
-            if (!itemCurrencyRate || parseFloat(itemCurrencyRate) === 0) {
+            if (baseCurency == selectedCurrency) {
                 $rateInputPreview.val(response.rate);
             } else {
-                $rateInputPreview.val(itemCurrencyRate);
+                var itemCurrencyRate = response['rate_currency_' + selectedCurrency];
+                if (!itemCurrencyRate || parseFloat(itemCurrencyRate) === 0) {
+                    $rateInputPreview.val(response.rate);
+                } else {
+                    $rateInputPreview.val(itemCurrencyRate);
+                }
             }
-        }
 
-        $(document).trigger({
-            type: "item-added-to-preview",
-            item: response,
-            item_type: 'item',
-        });
+            $(document).trigger({
+                type: "item-added-to-preview",
+                item: response,
+                item_type: 'item',
+            });
+        
+        }
+        else{
+            clear_item_preview_values();
+            $('.main textarea[name="description"]').val(response.description);
+            $('.main textarea[name="long_description"]').val(response.long_description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, " "));
+
+            _set_item_preview_custom_fields_array(response.custom_fields);
+
+            $('.main input[name="quantity"]').val(1);
+
+            var taxSelectedArray = [];
+            if (response.taxname && response.taxrate) {
+                taxSelectedArray.push(response.taxname + '|' + response.taxrate);
+            }
+            if (response.taxname_2 && response.taxrate_2) {
+                taxSelectedArray.push(response.taxname_2 + '|' + response.taxrate_2);
+            }
+
+            $('.main select.tax').selectpicker('val', taxSelectedArray);
+            $('.main input[name="unit"]').val(response.unit);
+
+            var $currency = $("body").find('.accounting-template select[name="currency"]');
+            var baseCurency = $currency.attr('data-base');
+            var selectedCurrency = $currency.find('option:selected').val();
+            var $rateInputPreview = $('.main input[name="rate"]');
+
+            if (baseCurency == selectedCurrency) {
+                $rateInputPreview.val(response.rate);
+            } else {
+                var itemCurrencyRate = response['rate_currency_' + selectedCurrency];
+                if (!itemCurrencyRate || parseFloat(itemCurrencyRate) === 0) {
+                    $rateInputPreview.val(response.rate);
+                } else {
+                    $rateInputPreview.val(itemCurrencyRate);
+                }
+            }
+
+            $(document).trigger({
+                type: "item-added-to-preview",
+                item: response,
+                item_type: 'item',
+            });
+        }
     });
 }
 
@@ -6058,14 +6118,14 @@ function clear_item_preview_values(default_taxes) {
 }
 
 // Append the added items to the preview to the table as items
-function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
-
+function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=false) {
+    console.log(data);
     // If not custom data passed get from the preview
-    data = typeof (data) == 'undefined' || data == 'undefined' ? get_item_preview_values() : data;
+    data = typeof (data) == 'undefined' || data == 'undefined' ? get_item_preview_values(table_id) : data;
     if (data.description === "" && data.long_description === "" && data.rate === "") {
         return;
     }
-
+    //console.log(table_id);
     var table_row = '';
     var item_key = lastAddedItemKey ? lastAddedItemKey += 1 : $("body").find('tbody .item').length + 1;
     lastAddedItemKey = item_key;
@@ -6193,7 +6253,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
 
         table_row += '</tr>';
 
-        $('table.items tbody').append(table_row);
+        $(table_id).parent().parent().parent().append(table_row);
 
         $(document).trigger({
             type: "item-added-to-table",
@@ -6227,6 +6287,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
         }
 
         init_selectpicker();
+        
         init_datepicker();
         init_color_pickers();
         clear_item_preview_values();
@@ -6250,6 +6311,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
             $('select[name="task_select"]').find('[value="' + billed_task + '"]').remove();
             $('select[name="task_select"]').selectpicker('refresh');
         }
+        $('.items-select-wrapper .bootstrap-select').css('width', '100%');
         return true;
 
     });
@@ -6378,15 +6440,28 @@ function reorder_items() {
 }
 
 // Get the preview main values
-function get_item_preview_values() {
-    var response = {};
-    response.description = $('.main textarea[name="description"]').val();
-    response.long_description = $('.main textarea[name="long_description"]').val();
-    response.qty = $('.main input[name="quantity"]').val();
-    response.taxname = $('.main select.tax').selectpicker('val');
-    response.rate = $('.main input[name="rate"]').val();
-    response.unit = $('.main input[name="unit"]').val();
-    return response;
+function get_item_preview_values(table_id=false) {
+    if(table_id!=false){
+        var main_item=$(table_id).parent().parent().parent().find(".main");
+        var response = {};
+        response.description = main_item.find('textarea[name="description"]').val();
+        response.long_description = main_item.find('textarea[name="long_description"]').val();
+        response.qty =  main_item.find('input[name="quantity"]').val();
+        response.taxname = main_item.find('select.tax').selectpicker('val');
+        response.rate =  main_item.find('input[name="rate"]').val();
+        response.unit =  main_item.find('input[name="unit"]').val();
+        return response;
+    }
+    else{
+        var response = {};
+        response.description = $('.main textarea[name="description"]').val();
+        response.long_description = $('.main textarea[name="long_description"]').val();
+        response.qty = $('.main input[name="quantity"]').val();
+        response.taxname = $('.main select.tax').selectpicker('val');
+        response.rate = $('.main input[name="rate"]').val();
+        response.unit = $('.main input[name="unit"]').val();
+        return response;
+    }
 }
 
 // Calculate invoice total - NOT RECOMENDING EDIT THIS FUNCTION BECUASE IS VERY SENSITIVE
@@ -7836,3 +7911,7 @@ function init_currency_symbol() {
     console.warn('"init_currency_symbol" is deprecated, use "init_currency" instead')
     init_currency();
 }
+ 
+$('.add_item_to_table').bind("click", function(){
+    add_item_to_table('undefined','undefined','undefined','',this);
+ }); 

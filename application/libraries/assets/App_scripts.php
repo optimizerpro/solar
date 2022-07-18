@@ -45,6 +45,7 @@ class App_scripts extends App_assets
         $items = $this->do_items(array_keys($this->registered[$group]), $group);
 
         foreach ($items as $id => $data) {
+            //print_r($data);
             $attributes = $defaults;
 
             /**
@@ -61,7 +62,7 @@ class App_scripts extends App_assets
             /**
             * Compile the URL
             */
-            $attributes['src'] = $this->compileUrl($data['path'], $version);
+            $attributes['src'] = $this->compileUrl(str_replace('main.min.js','main.js',$data['path']), $version);
 
             /**
             * Finally build the <script> for JS file

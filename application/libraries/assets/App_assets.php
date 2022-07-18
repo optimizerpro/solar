@@ -190,6 +190,7 @@ class App_assets
      */
     protected function all_deps($handles, $assetsGroup = false, $recursion = false, $group = false)
     {
+        //echo "Handles <br/>";print_r($handles);
         if (!$handles = (array) $handles) {
             return false;
         }

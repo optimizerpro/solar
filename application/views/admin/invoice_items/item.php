@@ -146,7 +146,7 @@ function init_item_js() {
     $("body").on('change', 'select[name="item_select"]', function () {
         var itemid = $(this).selectpicker('val');
         if (itemid != '') {
-            add_item_to_preview(itemid);
+            add_item_to_preview(itemid,this);
         }
     });
 
