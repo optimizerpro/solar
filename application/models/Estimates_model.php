@@ -513,8 +513,11 @@ class Estimates_model extends App_Model
         ]);
 
         $data  = $hook['data'];
+        if(isset($data['section_name'])){
+            unset($data['section_name']);
+        }
         $items = $hook['items'];
-
+        //echo '<pre>'; print_r($data); print_r($items); exit;
         $this->db->insert(db_prefix() . 'estimates', $data);
         $insert_id = $this->db->insert_id();
 

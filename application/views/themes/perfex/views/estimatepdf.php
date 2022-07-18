@@ -108,6 +108,18 @@ foreach ($items->taxes() as $tax) {
     <td align="right" width="15%">' . app_format_money($tax['total_tax'], $estimate->currency_name) . '</td>
 </tr>';
 }
+/* 18-07-2022 Start */
+if ($estimate->profit_percent > 0) {
+    $tbltotal .= '
+    <tr>
+        <td align="right" width="85%"><strong>' . _l('estimate_profit');
+        $tbltotal .= ' (' . app_format_number($estimate->profit_percent, true) . '%)';
+    $tbltotal .= '</strong>';
+    $tbltotal .= '</td>';
+    $tbltotal .= '<td align="right" width="15%">-' . app_format_money($estimate->profit_total, $estimate->currency_name) . '</td>
+    </tr>';
+}
+/* 18-07-2022 End */
 
 if ((int)$estimate->adjustment != 0) {
     $tbltotal .= '<tr>

@@ -230,14 +230,14 @@
                      </div>
                   </div>
                   <div class="btn-bottom-toolbar bottom-transaction text-right">
-                  <p class="no-mbot pull-left mtop5 btn-toolbar-notice"><?php echo _l('include_proposal_items_merge_field_help','<b>{proposal_items}</b>'); ?></p>
-                    <button type="button" class="btn btn-info mleft10 proposal-form-submit save-and-send transaction-submit">
-                        <?php echo _l('save_and_send'); ?>
-                    </button>
-                    <button class="btn btn-info mleft5 proposal-form-submit transaction-submit" type="button">
-                      <?php echo _l('submit'); ?>
-                    </button>
-               </div>
+                      <p class="no-mbot pull-left mtop5 btn-toolbar-notice"><?php echo _l('include_proposal_items_merge_field_help','<b>{proposal_items}</b>'); ?></p>
+                        <button type="button" class="btn btn-info mleft10 proposal-form-submit save-and-send transaction-submit">
+                            <?php echo _l('save_and_send'); ?>
+                        </button>
+                        <button class="btn btn-info mleft5 proposal-form-submit transaction-submit" type="button">
+                          <?php echo _l('submit'); ?>
+                        </button>
+                   </div>
                </div>
             </div>
          </div>

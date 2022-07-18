@@ -2329,6 +2329,13 @@ $(function () {
         }
     });
 
+    // profit_percent
+    $("body").on('blur', 'input[name="profit_percent"]', function () {
+        if ($(this).valid() === true) {
+            calculate_total();
+        }
+    });
+
     $('body').on('change', '.invoice #project_id', function () {
         var project_id = $(this).selectpicker('val');
         if (project_id !== '') {
@@ -5975,7 +5982,29 @@ function add_item_to_preview(id,multiitem=false) {
             }
 
            $('#'+id_of_dom+' .main select.tax').selectpicker('val', taxSelectedArray);
-           $('#'+id_of_dom+' .main input[name="unit"]').val(response.unit);
+           console.log('response.unit 5978', response.unit);
+           let unitArr = response.unit.toString().split(",");
+           console.log(unitArr, unitArr.length);
+           if(unitArr.length > 1){
+                let cltd = $('#'+id_of_dom+' .main input[name="unit"]').closest('td');
+                $('#'+id_of_dom+' .main input[name="unit"]').remove();
+                let fval = unitArr[0];
+                let selectHtml = '<select class="form-control input-transparent" name="unit">';
+                for (var ij = 0; ij < unitArr.length; ij++) {
+                    selectHtml += '<option value="'+unitArr[ij]+'">'+unitArr[ij]+'</option>';
+                }
+                selectHtml += '<select>';
+                cltd.append(selectHtml);
+                $('#'+id_of_dom+' .main').find('select[name="unit"]').val(fval);
+           } else {
+                console.log(5992, $('#'+id_of_dom+' .main select[name="unit"]'));
+                if($('#'+id_of_dom+' .main select[name="unit"]').length > 0){
+                    let cltd = $('#'+id_of_dom+' .main select[name="unit"]').closest('td');
+                    $('#'+id_of_dom+' .main select[name="unit"]').remove();
+                    cltd.find('.dropdown.bootstrap-select').remove();
+                    cltd.append('<input type="text" placeholder="Unit" name="unit" class="form-control input-transparent text-right" value="'+response.unit+'">')
+                }
+           }
 
             var $currency = $("body").find('.accounting-template select[name="currency"]');
             var baseCurency = $currency.attr('data-base');
@@ -6234,7 +6263,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=fa
         }
 
         table_row += '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="newitems[' + item_key + '][qty]" value="' + data.qty + '" class="form-control">';
-
+        console.log('data.unit',data.unit);
         if (!data.unit || typeof (data.unit) == 'undefined') {
             data.unit = '';
         }
@@ -6449,7 +6478,7 @@ function get_item_preview_values(table_id=false) {
         response.qty =  main_item.find('input[name="quantity"]').val();
         response.taxname = main_item.find('select.tax').selectpicker('val');
         response.rate =  main_item.find('input[name="rate"]').val();
-        response.unit =  main_item.find('input[name="unit"]').val();
+        response.unit =  (main_item.find('select[name="unit"]').length)?main_item.find('select[name="unit"]').val():main_item.find('input[name="unit"]').val();
         return response;
     }
     else{
@@ -6459,7 +6488,7 @@ function get_item_preview_values(table_id=false) {
         response.qty = $('.main input[name="quantity"]').val();
         response.taxname = $('.main select.tax').selectpicker('val');
         response.rate = $('.main input[name="rate"]').val();
-        response.unit = $('.main input[name="unit"]').val();
+        response.unit = ($('.main select[name="unit"]').length)?$('.main select[name="unit"]').val():$('.main input[name="unit"]').val();
         return response;
     }
 }
@@ -6485,7 +6514,8 @@ function calculate_total() {
         total_discount_calculated = 0,
         rows = $('.table.has-calculations tbody tr.item'),
         discount_area = $('#discount_area'),
-        adjustment = $('input[name="adjustment"]').val(),
+        profit_area = $('#profit_area'),
+        adjustment = ($('input[name="adjustment"]').length)?$('input[name="adjustment"]').val():"",
         discount_percent = $('input[name="discount_percent"]').val(),
         discount_fixed = $('input[name="discount_total"]').val(),
         discount_total_type = $('.discount-total-type.selected'),
@@ -6534,6 +6564,12 @@ function calculate_total() {
     } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-fixed')) {
         total_discount_calculated = discount_fixed;
     }
+    var profitAmount = 0;
+    if(profit_area.length > 0){
+        var profit_percent = profit_area.find('input[name="profit_percent"]').val();
+        profit_percent = (isNaN(profit_percent))?0:parseFloat(profit_percent);
+        profitAmount = (subtotal * profit_percent) / 100;
+    }
 
     $.each(taxes, function (taxname, total_tax) {
         if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
@@ -6549,7 +6585,7 @@ function calculate_total() {
         $('#tax_id_' + slugify(taxname)).html(total_tax);
     });
 
-    total = (total + subtotal);
+    total = (total + subtotal + profitAmount);
 
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
@@ -6571,6 +6607,12 @@ function calculate_total() {
 
     // Append, format to html and display
     $('.discount-total').html(discount_html);
+
+
+    var profit_html = '+' + format_money(profitAmount);
+    $('input[name="profit_total"]').val(accounting.toFixed(profitAmount, app.options.decimal_places));
+    $('.profit-total').html(profit_html);
+    
     $('.adjustment').html(format_money(adjustment));
     $('.subtotal').html(format_money(subtotal) + hidden_input('subtotal', accounting.toFixed(subtotal, app.options.decimal_places)));
     $('.total').html(format_money(total) + hidden_input('total', accounting.toFixed(total, app.options.decimal_places)));

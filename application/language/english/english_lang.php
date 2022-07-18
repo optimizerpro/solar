@@ -1079,6 +1079,7 @@ $lang['estimate_table_amount_heading']   = 'Amount';
 $lang['estimate_subtotal']               = 'Sub Total';
 $lang['estimate_adjustment']             = 'Adjustment';
 $lang['estimate_discount']               = 'Discount';
+$lang['estimate_profit']                 = 'Profit';
 $lang['estimate_total']                  = 'Total';
 $lang['estimate_to']                     = 'To';
 $lang['estimate_data_date']              = 'Estimate Date';

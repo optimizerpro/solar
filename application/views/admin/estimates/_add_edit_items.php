@@ -376,6 +376,25 @@
                </td>
                <td class="discount-total"></td>
             </tr>
+
+            <tr id="profit_area">
+               <td>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <span class="bold"><?php echo _l('estimate_profit'); ?></span>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="input-group" id="profit-total">
+                           <input type="number" value="<?php echo (isset($estimate) ? $estimate->profit_percent : 0); ?>" class="form-control pull-left" min="0" max="100" name="profit_percent">
+                           <input type="hidden" value="<?php echo (isset($estimate) ? $estimate->profit_total : 0); ?>" name="profit_total">
+                           <div class="input-group-addon">%</div>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+               <td class="profit-total"></td>
+            </tr>
+
             <tr>
                <td>
                   <div class="row">

@@ -344,6 +344,16 @@
                                      echo '<tr class="tax-area"><td class="bold">'.$tax['taxname'].' ('.app_format_number($tax['taxrate']).'%)</td><td>'.app_format_money($tax['total_tax'], $estimate->currency_name).'</td></tr>';
                                  }
                                  ?>
+                              <?php if($estimate->profit_percent > 0){ ?>
+                              <tr>
+                                 <td>
+                                    <span class="bold"><?php echo _l('estimate_profit'); ?>(<?php echo app_format_number($estimate->profit_percent, true); ?>%)</span>
+                                 </td>
+                                 <td class="discount">
+                                    <?php echo '+' . app_format_money($estimate->profit_total, $estimate->currency_name); ?>
+                                 </td>
+                              </tr>
+                              <?php } ?>
                               <?php if((int)$estimate->adjustment != 0){ ?>
                               <tr>
                                  <td>

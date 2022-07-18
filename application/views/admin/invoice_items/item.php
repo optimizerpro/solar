@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="clearfix mbot15"></div>
-                <?php echo render_input('unit','unit'); ?>
+                <?php echo render_input('unit','Unit (for multiple add comma separeted value)'); ?>
                 <div id="custom_fields_items">
                     <?php echo render_custom_fields('items'); ?>
                 </div>
