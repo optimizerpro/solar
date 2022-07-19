@@ -2330,7 +2330,7 @@ $(function () {
     });
 
     // profit_percent
-    $("body").on('blur', 'input[name="profit_percent"]', function () {
+    $("body").on('blur', 'input[name="profit_percent"], input[name="profit_margin_percent"], input[name="overhead_percent"]', function () {
         if ($(this).valid() === true) {
             calculate_total();
         }
@@ -6515,6 +6515,8 @@ function calculate_total() {
         rows = $('.table.has-calculations tbody tr.item'),
         discount_area = $('#discount_area'),
         profit_area = $('#profit_area'),
+        profit_margin_area = $('#profit_margin_area'),
+        overhead_area = $('#overhead_area'),
         adjustment = ($('input[name="adjustment"]').length)?$('input[name="adjustment"]').val():"",
         discount_percent = $('input[name="discount_percent"]').val(),
         discount_fixed = $('input[name="discount_total"]').val(),
@@ -6571,6 +6573,21 @@ function calculate_total() {
         profitAmount = (subtotal * profit_percent) / 100;
     }
 
+    //profit margin 19-07-2022
+    var profitMarginAmount = 0;
+    if(profit_margin_area.length > 0){
+        var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
+        proMarPer = (isNaN(proMarPer))?0:parseFloat(proMarPer);
+        profitMarginAmount = (subtotal * proMarPer) / 100;
+    }
+    //profit margin 19-07-2022
+    var overheadAmount = 0;
+    if(overhead_area.length > 0){
+        var overhead_percent = overhead_area.find('input[name="overhead_percent"]').val();
+        overhead_percent = (isNaN(overhead_percent))?0:parseFloat(overhead_percent);
+        overheadAmount = (subtotal * overhead_percent) / 100;
+    }
+
     $.each(taxes, function (taxname, total_tax) {
         if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
             total_tax_calculated = (total_tax * discount_percent) / 100;
@@ -6585,7 +6602,7 @@ function calculate_total() {
         $('#tax_id_' + slugify(taxname)).html(total_tax);
     });
 
-    total = (total + subtotal + profitAmount);
+    total = (total + subtotal + profitAmount + profitMarginAmount + overheadAmount);
 
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
@@ -6608,10 +6625,23 @@ function calculate_total() {
     // Append, format to html and display
     $('.discount-total').html(discount_html);
 
-
+    /* profit */
     var profit_html = '+' + format_money(profitAmount);
     $('input[name="profit_total"]').val(accounting.toFixed(profitAmount, app.options.decimal_places));
     $('.profit-total').html(profit_html);
+    /* profit */
+    
+    /* profit margin */
+    var profit_margin_html = '+' + format_money(profitMarginAmount);
+    $('input[name="profit_margin_total"]').val(accounting.toFixed(profitMarginAmount, app.options.decimal_places));
+    $('.profit-margin-total').html(profit_margin_html);
+    /* profit margin */
+
+    /* overhead margin */
+    var overhead_html = '+' + format_money(overheadAmount);
+    $('input[name="overhead_total"]').val(accounting.toFixed(overheadAmount, app.options.decimal_places));
+    $('.overhead-total').html(overhead_html);
+    /* overhead margin */
     
     $('.adjustment').html(format_money(adjustment));
     $('.subtotal').html(format_money(subtotal) + hidden_input('subtotal', accounting.toFixed(subtotal, app.options.decimal_places)));

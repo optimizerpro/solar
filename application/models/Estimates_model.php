@@ -639,6 +639,9 @@ class Estimates_model extends App_Model
         ], $id);
 
         $data                  = $hook['data'];
+        if(isset($data['section_name'])){
+            unset($data['section_name']);
+        }
         $items                 = $hook['items'];
         $newitems              = $hook['newitems'];
         $data['removed_items'] = $hook['removed_items'];

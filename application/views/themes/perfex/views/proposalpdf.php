@@ -85,6 +85,41 @@ foreach ($items->taxes() as $tax) {
 </tr>';
 }
 
+/* 19-07-2022 Start */
+if ($proposal->profit_percent > 0) {
+    $items_html .= '
+    <tr>
+        <td align="right" width="85%"><strong>' . _l('estimate_profit');
+        $items_html .= ' (' . app_format_number($proposal->profit_percent, true) . '%)';
+    $items_html .= '</strong>';
+    $items_html .= '</td>';
+    $items_html .= '<td align="right" width="15%">+' . app_format_money($proposal->profit_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+if ($proposal->profit_margin_percent > 0) {
+    $items_html .= '
+    <tr>
+        <td align="right" width="85%"><strong>' . _l('estimate_profit_margin');
+        $items_html .= ' (' . app_format_number($proposal->profit_margin_percent, true) . '%)';
+    $items_html .= '</strong>';
+    $items_html .= '</td>';
+    $items_html .= '<td align="right" width="15%">+' . app_format_money($proposal->profit_margin_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+
+if ($proposal->overhead_percent > 0) {
+    $items_html .= '
+    <tr>
+        <td align="right" width="85%"><strong>' . _l('estimate_overhead');
+        $items_html .= ' (' . app_format_number($proposal->overhead_percent, true) . '%)';
+    $items_html .= '</strong>';
+    $items_html .= '</td>';
+    $items_html .= '<td align="right" width="15%">+' . app_format_money($proposal->overhead_total, $proposal->currency_name) . '</td>
+    </tr>';
+}
+/* 19-07-2022 End */
+
 if ((int)$proposal->adjustment != 0) {
     $items_html .= '<tr>
     <td align="right" width="85%"><strong>' . _l('estimate_adjustment') . '</strong></td>

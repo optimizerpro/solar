@@ -99,6 +99,9 @@ class Proposals_model extends App_Model
         ]);
 
         $data  = $hook['data'];
+        if(isset($data['section_name'])){
+            unset($data['section_name']);
+        }
         $items = $hook['items'];
 
         $this->db->insert(db_prefix() . 'proposals', $data);
@@ -230,6 +233,9 @@ class Proposals_model extends App_Model
         ], $id);
 
         $data                  = $hook['data'];
+        if(isset($data['section_name'])){
+            unset($data['section_name']);
+        }
         $data['removed_items'] = $hook['removed_items'];
         $newitems              = $hook['newitems'];
         $items                 = $hook['items'];

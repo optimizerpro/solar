@@ -395,7 +395,43 @@
                <td class="profit-total"></td>
             </tr>
 
-            <tr>
+            <tr id="profit_margin_area">
+               <td>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <span class="bold"><?php echo _l('estimate_profit_margin'); ?></span>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="input-group" id="profit-margin-total">
+                           <input type="number" value="<?php echo (isset($estimate) ? $estimate->profit_margin_percent : 0); ?>" class="form-control pull-left" min="0" max="100" name="profit_margin_percent">
+                           <input type="hidden" value="<?php echo (isset($estimate) ? $estimate->profit_margin_total : 0); ?>" name="profit_margin_total">
+                           <div class="input-group-addon">%</div>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+               <td class="profit-margin-total"></td>
+            </tr>
+
+            <tr id="overhead_area">
+               <td>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <span class="bold"><?php echo _l('estimate_overhead'); ?></span>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="input-group" id="overhead-total">
+                           <input type="number" value="<?php echo (isset($estimate) ? $estimate->overhead_percent : 0); ?>" class="form-control pull-left" min="0" max="100" name="overhead_percent">
+                           <input type="hidden" value="<?php echo (isset($estimate) ? $estimate->overhead_total : 0); ?>" name="overhead_total">
+                           <div class="input-group-addon">%</div>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+               <td class="overhead-total"></td>
+            </tr>
+
+            <!-- <tr>
                <td>
                   <div class="row">
                      <div class="col-md-7">
@@ -407,7 +443,7 @@
                   </div>
                </td>
                <td class="adjustment"></td>
-            </tr>
+            </tr> -->
             <tr>
                <td><span class="bold"><?php echo _l('estimate_total'); ?> :</span>
                </td>

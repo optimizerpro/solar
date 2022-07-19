@@ -354,6 +354,26 @@
                                  </td>
                               </tr>
                               <?php } ?>
+                              <?php if($estimate->profit_margin_percent > 0){ ?>
+                              <tr>
+                                 <td>
+                                    <span class="bold"><?php echo _l('estimate_profit_margin'); ?>(<?php echo app_format_number($estimate->profit_margin_percent, true); ?>%)</span>
+                                 </td>
+                                 <td class="discount">
+                                    <?php echo '+' . app_format_money($estimate->profit_margin_total, $estimate->currency_name); ?>
+                                 </td>
+                              </tr>
+                              <?php } ?>
+                              <?php if($estimate->overhead_percent > 0){ ?>
+                              <tr>
+                                 <td>
+                                    <span class="bold"><?php echo _l('estimate_overhead'); ?>(<?php echo app_format_number($estimate->overhead_percent, true); ?>%)</span>
+                                 </td>
+                                 <td class="discount">
+                                    <?php echo '+' . app_format_money($estimate->overhead_total, $estimate->currency_name); ?>
+                                 </td>
+                              </tr>
+                              <?php } ?>
                               <?php if((int)$estimate->adjustment != 0){ ?>
                               <tr>
                                  <td>
