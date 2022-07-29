@@ -354,6 +354,13 @@
                                  </td>
                               </tr>
                               <?php } ?>
+                              <tr id="subtotal">
+                                 <td><span class="bold"><?php echo _l('estimate_subtotal2'); ?></span>
+                                 </td>
+                                 <td class="subtotal">
+                                    <?php echo app_format_money($estimate->subtotal2, $estimate->currency_name); ?>
+                                 </td>
+                              </tr>
                               <?php if($estimate->profit_margin_percent > 0){ ?>
                               <tr>
                                  <td>

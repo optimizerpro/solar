@@ -96,6 +96,9 @@ if ($proposal->profit_percent > 0) {
     $items_html .= '<td align="right" width="15%">+' . app_format_money($proposal->profit_total, $proposal->currency_name) . '</td>
     </tr>';
 }
+$items_html .= '<tr><td align="right" width="85%"><strong>' . _l('estimate_subtotal2').'</strong></td>';
+$items_html .= '<td align="right" width="15%">' . app_format_money($proposal->subtotal2, $proposal->currency_name) . '</td>
+</tr>';
 
 if ($proposal->profit_margin_percent > 0) {
     $items_html .= '

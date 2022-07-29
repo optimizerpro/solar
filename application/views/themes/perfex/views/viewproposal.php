@@ -47,6 +47,44 @@
                   </td>
                </tr>
                <?php } ?>
+               <?php if($proposal->profit_percent > 0){ ?>
+               <tr>
+                  <td>
+                     <span class="bold"><?php echo _l('estimate_profit'); ?>(<?php echo app_format_number($proposal->profit_percent, true); ?>%)</span>
+                  </td>
+                  <td class="discount">
+                     <?php echo '+' . app_format_money($proposal->profit_total, $proposal->currency_name); ?>
+                  </td>
+               </tr>
+               <?php } ?>
+               <tr id="subtotal">
+                  <td><span class="bold"><?php echo _l('estimate_subtotal2'); ?></span>
+                  </td>
+                  <td class="subtotal">
+                     <?php echo app_format_money($proposal->subtotal2, $proposal->currency_name); ?>
+                  </td>
+               </tr>
+               <?php if($proposal->profit_margin_percent > 0){ ?>
+               <tr>
+                  <td>
+                     <span class="bold"><?php echo _l('estimate_profit_margin'); ?>(<?php echo app_format_number($proposal->profit_margin_percent, true); ?>%)</span>
+                  </td>
+                  <td class="discount">
+                     <?php echo '+' . app_format_money($proposal->profit_margin_total, $proposal->currency_name); ?>
+                  </td>
+               </tr>
+               <?php } ?>
+               <?php if($proposal->overhead_percent > 0){ ?>
+               <tr>
+                  <td>
+                     <span class="bold"><?php echo _l('estimate_overhead'); ?>(<?php echo app_format_number($proposal->overhead_percent, true); ?>%)</span>
+                  </td>
+                  <td class="discount">
+                     <?php echo '+' . app_format_money($proposal->overhead_total, $proposal->currency_name); ?>
+                  </td>
+               </tr>
+               <?php } ?>
+
                <tr>
                   <td><span class="bold"><?php echo _l('estimate_total'); ?></span>
                   </td>

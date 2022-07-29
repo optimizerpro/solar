@@ -394,6 +394,13 @@
                </td>
                <td class="profit-total"></td>
             </tr>
+            <tr id="subtotal2">
+               <td><span class="bold"><?php echo _l('estimate_subtotal2'); ?> :</span>
+               </td>
+               <td class="subtotal2">
+               </td>
+            </tr>
+
 
             <tr id="profit_margin_area">
                <td>

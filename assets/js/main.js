@@ -2309,7 +2309,7 @@ $(function () {
     });
 
     // In case user enter discount percent but there is no discount type set
-    $("body").on('change', 'input[name="discount_percent"],input[name="discount_total"]', function () {
+    $("body").on('blur', 'input[name="discount_percent"],input[name="discount_total"]', function () {
         if ($('select[name="discount_type"]').val() === '' && $(this).val() != 0) {
             if($("td[id^='tax_id_']").length === 0) {
                 return
@@ -6509,6 +6509,7 @@ function calculate_total() {
         taxes = {},
         taxes_rows = [],
         subtotal = 0,
+        subtotal2 = 0,
         total = 0,
         quantity = 1,
         total_discount_calculated = 0,
@@ -6559,6 +6560,7 @@ function calculate_total() {
             });
         }
     });
+    subtotal2 = subtotal;
 
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
@@ -6571,22 +6573,7 @@ function calculate_total() {
         var profit_percent = profit_area.find('input[name="profit_percent"]').val();
         profit_percent = (isNaN(profit_percent))?0:parseFloat(profit_percent);
         profitAmount = (subtotal * profit_percent) / 100;
-    }
-
-    //profit margin 19-07-2022
-    var profitMarginAmount = 0;
-    if(profit_margin_area.length > 0){
-        var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
-        proMarPer = (isNaN(proMarPer))?0:parseFloat(proMarPer);
-        profitMarginAmount = (subtotal * proMarPer) / 100;
-    }
-    //profit margin 19-07-2022
-    var overheadAmount = 0;
-    if(overhead_area.length > 0){
-        var overhead_percent = overhead_area.find('input[name="overhead_percent"]').val();
-        overhead_percent = (isNaN(overhead_percent))?0:parseFloat(overhead_percent);
-        overheadAmount = (subtotal * overhead_percent) / 100;
-    }
+    }    
 
     $.each(taxes, function (taxname, total_tax) {
         if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
@@ -6598,6 +6585,7 @@ function calculate_total() {
         }
 
         total += total_tax;
+        subtotal2 += total_tax;
         total_tax = format_money(total_tax);
         $('#tax_id_' + slugify(taxname)).html(total_tax);
     });
@@ -6610,8 +6598,32 @@ function calculate_total() {
     } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-fixed')) {
         total_discount_calculated = discount_fixed;
     }
+    console.log('subtotal2 before :: ',subtotal2);
+    subtotal2 = (subtotal2 - total_discount_calculated) + profitAmount;
+    console.log('total_discount_calculated :: ',total_discount_calculated);
+    console.log('profitAmount :: ',profitAmount);
+    console.log('subtotal2 :: ',subtotal2);
 
-    total = total - total_discount_calculated;
+    //profit margin 19-07-2022
+    var profitMarginAmount = 0;
+    if(profit_margin_area.length > 0){
+        var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
+        proMarPer = (isNaN(proMarPer))?0:parseFloat(proMarPer);
+        profitMarginAmount = (subtotal2 * proMarPer) / 100;
+    }
+    //profit margin 19-07-2022
+    var overheadAmount = 0;
+    if(overhead_area.length > 0){
+        var overhead_percent = overhead_area.find('input[name="overhead_percent"]').val();
+        overhead_percent = (isNaN(overhead_percent))?0:parseFloat(overhead_percent);
+        overheadAmount = (subtotal2 * overhead_percent) / 100;
+    }
+    total = (subtotal2 + profitMarginAmount + overheadAmount);
+
+    $('.subtotal2').html(format_money(subtotal2) + hidden_input('subtotal2', accounting.toFixed(subtotal2, app.options.decimal_places)));
+
+
+    //total = total - total_discount_calculated;
     adjustment = parseFloat(adjustment);
 
     // Check if adjustment not empty

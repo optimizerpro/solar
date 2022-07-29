@@ -17,7 +17,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 * environments.
 *
 */
-define('APP_BASE_URL', 'https://hashevo.com/elightsolar/');
+//define('APP_BASE_URL', 'https://hashevo.com/elightsolar/');
+define('APP_BASE_URL', 'http://localhost/solar_new/');
 
 /*
 * --------------------------------------------------------------------------
@@ -42,15 +43,15 @@ define('APP_DB_HOSTNAME', 'localhost');
 /**
  * The username used to connect to the database
  */
-define('APP_DB_USERNAME', 'realtyevo_solar');
+define('APP_DB_USERNAME', 'root');
 /**
  * The password used to connect to the database
  */
-define('APP_DB_PASSWORD', 'realtyevo_solar');
+define('APP_DB_PASSWORD', '');
 /**
  * The name of the database you want to connect to
  */
-define('APP_DB_NAME', 'realtyevo_solar');
+define('APP_DB_NAME', 'solar');
 
 /**
  * @since  2.3.0

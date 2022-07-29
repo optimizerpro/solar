@@ -119,6 +119,12 @@ if ($estimate->profit_percent > 0) {
     $tbltotal .= '<td align="right" width="15%">+' . app_format_money($estimate->profit_total, $estimate->currency_name) . '</td>
     </tr>';
 }
+$tbltotal .= '
+<tr>
+    <td align="right" width="85%"><strong>' . _l('estimate_subtotal2').'</strong>';
+$tbltotal .= '</td>';
+$tbltotal .= '<td align="right" width="15%">' . app_format_money($estimate->subtotal2, $estimate->currency_name) . '</td>
+</tr>';
 /* 18-07-2022 End */
 /* 19-07-2022 Start */
 if ($estimate->profit_margin_percent > 0) {
