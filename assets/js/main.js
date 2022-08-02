@@ -6562,12 +6562,15 @@ function calculate_total() {
     });
     subtotal2 = subtotal;
 
+    var total_discount_calculated = 0;
+
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
         total_discount_calculated = (subtotal * discount_percent) / 100;
     } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-fixed')) {
         total_discount_calculated = discount_fixed;
     }
+    console.log('discount before_tax',total_discount_calculated,subtotal,discount_fixed,discount_percent);
     var profitAmount = 0;
     if(profit_area.length > 0){
         var profit_percent = profit_area.find('input[name="profit_percent"]').val();
@@ -6589,8 +6592,9 @@ function calculate_total() {
         total_tax = format_money(total_tax);
         $('#tax_id_' + slugify(taxname)).html(total_tax);
     });
+    //total = (total + subtotal);
 
-    total = (total + subtotal + profitAmount + profitMarginAmount + overheadAmount);
+    total = (total + subtotal + profitAmount);
 
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
@@ -6598,12 +6602,11 @@ function calculate_total() {
     } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-fixed')) {
         total_discount_calculated = discount_fixed;
     }
-    console.log('subtotal2 before :: ',subtotal2);
-    subtotal2 = (subtotal2 - total_discount_calculated) + profitAmount;
-    console.log('total_discount_calculated :: ',total_discount_calculated);
-    console.log('profitAmount :: ',profitAmount);
-    console.log('subtotal2 :: ',subtotal2);
+    console.log('discount after_tax',total_discount_calculated,subtotal,discount_fixed,discount_percent);
 
+    console.log('subtotal2 before :: ',subtotal2,total_discount_calculated);
+    subtotal2 = (subtotal2 - total_discount_calculated) + profitAmount;
+    
     //profit margin 19-07-2022
     var profitMarginAmount = 0;
     if(profit_margin_area.length > 0){

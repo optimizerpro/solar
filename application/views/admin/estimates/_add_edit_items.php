@@ -467,9 +467,24 @@
       function addNewSection(){
          //console.log("Adding section");
          var section_group_main=$("#section_items").clone();
+         console.log('section_group_main', section_group_main);
          section_group_main.find('.bootstrap-select').replaceWith(function() { return $('select', this); });
          section_group_main.find('.selectpicker').selectpicker('render');
          $(section_group_main).attr('id','section_items_'+section_items_id);
+         $(section_group_main).find('input[name="section_name[]"]').val("");
+         let qtyWrapper = $(section_group_main).find('.show_quantity_as_wrapper');
+         let iddd = section_items_id + 2;
+         qtyWrapper.each(function(index, el) {
+            $(el).find('.radio-inline').find('input[type="radio"]:eq(0)').attr('id', 'id'+iddd);
+            $(el).find('.radio-inline').find('label:eq(0)').attr('for', 'id'+iddd);
+            
+            $(el).find('.radio-inline').find('input[type="radio"]:eq(1)').attr('id', 'id_hour'+iddd);
+            $(el).find('.radio-inline').find('label:eq(1)').attr('for', 'id_hour'+iddd);
+
+            $(el).find('.radio-inline').find('input[type="radio"]:eq(2)').attr('id', 'id_hq'+iddd);
+            $(el).find('.radio-inline').find('label:eq(2)').attr('for', 'id_hq'+iddd);
+         });
+         $(section_group_main).find('.estimate-items-table').find('tbody').find('tr:gt(0)').remove();
          $("#section_items_append").append(section_group_main);
          setTimeout(function(){
             //init_item_js();

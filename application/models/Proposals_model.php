@@ -99,7 +99,10 @@ class Proposals_model extends App_Model
         ]);
 
         $data  = $hook['data'];
+        //echo "<pre>"; print_r($data); print_r($hook); exit;
+        $sections = [];
         if(isset($data['section_name'])){
+            $sections = $data['section_name'];
             unset($data['section_name']);
         }
         $items = $hook['items'];
