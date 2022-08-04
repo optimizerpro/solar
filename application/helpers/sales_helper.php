@@ -676,10 +676,10 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
     }
 
     $CI = &get_instance();
-
     $CI->db->insert(db_prefix() . 'itemable', [
                     'description'      => $item['description'],
                     'long_description' => nl2br($item['long_description']),
+                    'sectionname'      => (isset($item['sectionname']) && ($rel_type == 'estimate' || $rel_type == 'proposal'))?$item['sectionname']:null,
                     'qty'              => $item['qty'],
                     'rate'             => number_format($item['rate'], get_decimal_places(), '.', ''),
                     'rel_id'           => $rel_id,

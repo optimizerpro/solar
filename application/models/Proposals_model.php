@@ -84,7 +84,7 @@ class Proposals_model extends App_Model
             $items = $data['newitems'];
             unset($data['newitems']);
         }
-
+        //echo '<pre>'; print_r($items); exit;
         if ($this->copy == false) {
             $data['content'] = '{proposal_items}';
         }

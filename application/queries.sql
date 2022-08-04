@@ -10,3 +10,6 @@ ALTER TABLE `tblproposals` ADD `profit_margin_percent` DECIMAL(15,2) NOT NULL DE
 ALTER TABLE `tblproposals` ADD `subtotal2` DECIMAL(15,2) NOT NULL DEFAULT '0.00' AFTER `discount_type`; 
 
 ALTER TABLE `tblestimates` ADD `subtotal2` DECIMAL(15,2) NOT NULL DEFAULT '0.00' AFTER `discount_type`; 
+
+--04-08-2022
+ALTER TABLE `tblitemable` ADD `sectionname` VARCHAR(255) NULL COMMENT 'rel_type=estimate or proposal' AFTER `rel_type`;

@@ -396,6 +396,11 @@ abstract class App_items_table_template
     {
         return $this->headings['number'];
     }
+    
+    public function section_heading()
+    {
+        return $this->headings['section_name'];
+    }
 
     /**
      * Get item heading
@@ -452,6 +457,7 @@ abstract class App_items_table_template
         $langFrom = !$alias ? $this->type : $alias;
 
         $this->headings['number'] = _l('the_number_sign', '', false);
+        $this->headings['section_name']   = "Section";
         $this->headings['item']   = _l($langFrom . '_table_item_heading', '', false);
 
         $qty_heading = _l($langFrom . '_table_quantity_heading', '', false);

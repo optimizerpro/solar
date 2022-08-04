@@ -39,6 +39,7 @@ class App_items_table extends App_items_table_template
         }
 
         $i = 1;
+        $prevName = '';
         foreach ($this->items as $item) {
             $itemHTML = '';
 
@@ -47,6 +48,17 @@ class App_items_table extends App_items_table_template
 
             // Table data number
             $itemHTML .= '<td' . $this->td_attributes() . ' align="center" width="5%">' . $i . '</td>';
+            
+            if($prevName == ''){
+                $prevName = $item['sectionname'];
+            } else if($prevName == $item['sectionname']){
+                $prevName = "&nbsp;";
+            } else if($prevName != $item['sectionname']){
+                $prevName = $item['sectionname'];
+            }
+            if($this->type == 'proposal' || $this->type == 'estimate'){
+                $itemHTML .= '<td' . $this->td_attributes() . '>' . $prevName . '</td>';
+            }
 
             $itemHTML .= '<td class="description" align="left;" width="' . $descriptionItemWidth . '%">';
 
@@ -144,6 +156,9 @@ class App_items_table extends App_items_table_template
     {
         $html = '<tr>';
         $html .= '<th align="center">' . $this->number_heading() . '</th>';
+        if($this->type == 'proposal' || $this->type == 'estimate'){
+            $html .= '<th class="description" align="left">' . $this->section_heading() . '</th>';
+        }
         $html .= '<th class="description" width="' . $this->get_description_item_width() . '%" align="left">' . $this->item_heading() . '</th>';
 
         $customFieldsItems = $this->get_custom_fields_for_table();
@@ -175,6 +190,9 @@ class App_items_table extends App_items_table_template
         $tblhtml = '<tr height="30" bgcolor="' . get_option('pdf_table_heading_color') . '" style="color:' . get_option('pdf_table_heading_text_color') . ';">';
 
         $tblhtml .= '<th width="5%;" align="center">' . $this->number_heading() . '</th>';
+        if($this->type == 'proposal' || $this->type == 'estimate'){
+            $tblhtml .= '<th class="description" align="left">' . $this->section_heading() . '</th>';
+        }
         $tblhtml .= '<th width="' . $descriptionItemWidth . '%" align="left">' . $this->item_heading() . '</th>';
 
         foreach ($customFieldsItems as $cf) {

@@ -6182,6 +6182,9 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=fa
 
         // order input
         table_row += '<input type="hidden" class="order" name="newitems[' + item_key + '][order]">';
+        if(typeof data.sectionname !== 'undefined'){
+            table_row += '<input type="hidden" class="sectionname" name="newitems[' + item_key + '][sectionname]" value="'+data.sectionname+'">';
+        }
 
         table_row += '</td>';
 
@@ -6478,7 +6481,9 @@ function get_item_preview_values(table_id=false) {
         response.qty =  main_item.find('input[name="quantity"]').val();
         response.taxname = main_item.find('select.tax').selectpicker('val');
         response.rate =  main_item.find('input[name="rate"]').val();
-        response.unit =  (main_item.find('select[name="unit"]').length)?main_item.find('select[name="unit"]').val():main_item.find('input[name="unit"]').val();
+        if(main_item.closest('form').attr('id') == 'proposal-form' || main_item.closest('form').attr('id') == 'estimate-form'){
+            response.sectionname =  main_item.closest('.item_to_be_clone').find('input[name="section_name[]"]').val();
+        }
         return response;
     }
     else{
@@ -6489,6 +6494,9 @@ function get_item_preview_values(table_id=false) {
         response.taxname = $('.main select.tax').selectpicker('val');
         response.rate = $('.main input[name="rate"]').val();
         response.unit = ($('.main select[name="unit"]').length)?$('.main select[name="unit"]').val():$('.main input[name="unit"]').val();
+        if($('.main').closest('form').attr('id') == 'proposal-form' || $('.main').closest('form').attr('id') == 'estimate-form'){
+            response.sectionname =  $('.main').closest('.item_to_be_clone').find('input[name="section_name[]"]').val();
+        }
         return response;
     }
 }
