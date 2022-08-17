@@ -1,4 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<style>
+   .d-none{
+      display:none !important;
+   }
+</style>
 <div class="modal fade" id="convert_lead_to_client_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
    <div class="modal-dialog modal-lg" role="document">
       <?php echo form_open('admin/leads/convert_to_customer',array('id'=>'lead_to_client_form')); ?>
@@ -58,7 +63,7 @@
            }
         }
         if($found_custom_fields == true){
-         echo '<h4 class="bold text-center mtop30">'._l('copy_custom_fields_convert_to_customer').'</h4><hr />';
+         echo '<h4 class="bold text-center mtop30 d-none">'._l('copy_custom_fields_convert_to_customer').'</h4><hr />';
       }
       foreach ($custom_fields as $field) {
          $value = get_custom_field_value($lead->id, $field['id'], 'leads');
