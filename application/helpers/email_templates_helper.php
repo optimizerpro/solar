@@ -128,7 +128,7 @@ function mail_template($class)
     $params = array_values($params);
 
     $path = get_mail_template_path($class, $params);
-
+    echo $path;die('  path does not exists');
     if (!file_exists($path)) {
         if (!defined('CRON')) {
             show_error('Mail Class Does Not Exists [' . $path . ']');
