@@ -108,7 +108,7 @@ function send_mail_template()
 {
     $params = func_get_args();
 
-    return mail_template(...$params)->send();
+    mail_template(...$params)->send();
 }
 
 /**
@@ -133,7 +133,6 @@ function mail_template($class)
         if (!defined('CRON')) {
             show_error('Mail Class Does Not Exists [' . $path . ']');
         } else {
-            //echo $path;die('  path does not exists');
             return false;
         }
     }
@@ -142,13 +141,9 @@ function mail_template($class)
     if (!class_exists($class, false)) {
         include_once($path);
     }
-    else{
-       // echo $class." does not exists";die();
-    }
 
     // Initialize the class and pass the params
     $instance = new $class(...$params);
-    //var_dump($instance);die();
     // Call the send method
     return $instance;
 }
