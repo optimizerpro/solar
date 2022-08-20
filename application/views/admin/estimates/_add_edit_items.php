@@ -237,7 +237,7 @@
                                  <?php
                               }
                         ?>
-                           <div class="col-md-12 item_to_be_clone " style="marginbottom:10px;" id="section_items<?php if($prev_sec!=''){ echo '_'.$section_items_id; } ?>">
+                           <div class="col-md-12 item_to_be_clone " style="marginbottom:10px;" id="section_items<?php if($prev_sec!=''){ $prev_sec=$new_sec; echo '_'.$section_items_id; } ?>">
                      <div class="row" style="">
                         <div class="col-md-3">
                            <input type="text" name="section_name[]" value="<?php echo $new_sec; ?>" placeholder="Section Name Here" class="form-control">
@@ -383,7 +383,7 @@
                                  ?>
                            
                   <?php
-                     $prev_sec=$new_sec;
+                     
                   }
                }
             ?>
