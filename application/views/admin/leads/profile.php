@@ -500,7 +500,7 @@
 
                }
 
-               echo render_select('assigned',$members,array('staffid',array('firstname','last_name')),'lead_add_edit_assigned',$selected,$assigned_attrs); ?>
+               echo render_select('assigned',$members,array('staffid',array('firstname','lastname')),'lead_add_edit_assigned',$selected,$assigned_attrs); ?>
 
          </div>
 
