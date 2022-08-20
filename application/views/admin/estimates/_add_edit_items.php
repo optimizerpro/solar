@@ -216,6 +216,7 @@
                   <?php
                      }
                      else{
+                        $show_section_id=false;
                         $i               = 1;
                         $items_indicator = 'newitems';
                         if (isset($estimate)) {
@@ -225,9 +226,11 @@
                         foreach ($add_items as $item) {
                            $new_sec=$item['sectionname'];
                            if($prev_sec!=''){
+                              $show_section_id=true;
                               $section_items_id=$section_items_id+1;
                            }
                            if($new_sec!=$prev_sec){
+                              
                               if($prev_sec!=''){
                                  ?>
                                  </tbody>
@@ -235,9 +238,11 @@
                      </div>
                   </div>
                                  <?php
+                                 
                               }
+                              $prev_sec=$new_sec;
                         ?>
-                           <div class="col-md-12 item_to_be_clone " style="marginbottom:10px;" id="section_items<?php if($prev_sec!=''){ $prev_sec=$new_sec; echo '_'.$section_items_id; } ?>">
+                           <div class="col-md-12 item_to_be_clone " style="marginbottom:10px;" id="section_items<?php if($show_section_id){  echo '_'.$section_items_id; } ?>">
                      <div class="row" style="">
                         <div class="col-md-3">
                            <input type="text" name="section_name[]" value="<?php echo $new_sec; ?>" placeholder="Section Name Here" class="form-control">
