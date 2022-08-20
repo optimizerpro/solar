@@ -242,7 +242,7 @@
 
             <p class="text-muted lead-field-heading no-mtop"><?php echo _l('lead_add_edit_name'); ?></p>
 
-            <p class="bold font-medium-xs lead-name"><?php echo (isset($lead) && $lead->name != '' ? $lead->name : '-') ?></p>
+            <p class="bold font-medium-xs lead-name"><?php echo (isset($lead) && $lead->name != '' ? $lead->name : '-'); echo (isset($lead) && $lead->leadlastname != '' ? ' '.$lead->leadlastname : '-') ?></p>
 
             <p class="text-muted lead-field-heading"><?php echo _l('lead_title'); ?></p>
 
@@ -500,7 +500,7 @@
 
                }
 
-               echo render_select('assigned',$members,array('staffid',array('firstname','lastname')),'lead_add_edit_assigned',$selected,$assigned_attrs); ?>
+               echo render_select('assigned',$members,array('staffid',array('firstname','last_name')),'lead_add_edit_assigned',$selected,$assigned_attrs); ?>
 
          </div>
 
@@ -527,10 +527,17 @@
 
 
          <div class="col-md-6">
-
+            <div class="row">
             <?php $value = (isset($lead) ? $lead->name : ''); ?>
-
-            <?php echo render_input('name','lead_add_edit_name',$value); ?>
+               <div class="col-md-6">
+                  <?php echo render_input('name','First Name',$value); ?>
+               </div>
+               <?php $value = (isset($lead) ? $lead->leadlastname : ''); ?>
+               <div class="col-md-6">
+                  <?php echo render_input('leadlastname','Last Name',$value); ?>
+               </div>
+            </div>
+           
 
             <?php $value = (isset($lead) ? $lead->title : ''); ?>
 

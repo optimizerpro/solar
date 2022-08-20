@@ -13,6 +13,7 @@ $aColumns = [
     '1',
     db_prefix() . 'leads.id as id',
     db_prefix() . 'leads.name as name',
+    
     ];
 if (is_gdpr() && $consentLeads == '1') {
     $aColumns[] = '1';
@@ -27,6 +28,7 @@ $aColumns = array_merge($aColumns, ['company',
     db_prefix() . 'leads_sources.name as source_name',
     'lastcontact',
     'dateadded',
+    db_prefix() . 'leads.leadlastname as leadlastname',
 ]);
 
 $sIndexColumn = 'id';
@@ -121,7 +123,7 @@ foreach ($rResult as $aRow) {
     $hrefAttr = 'href="' . admin_url('leads/index/' . $aRow['id']) . '" onclick="init_lead(' . $aRow['id'] . ');return false;"';
     $row[]    = '<a ' . $hrefAttr . '>' . $aRow['id'] . '</a>';
 
-    $nameRow = '<a ' . $hrefAttr . '>' . $aRow['name'] . '</a>';
+    $nameRow = '<a ' . $hrefAttr . '>' . $aRow['name'].' '.$aRow['leadlastname'] . '</a>';
 
     $nameRow .= '<div class="row-options">';
     $nameRow .= '<a ' . $hrefAttr . '>' . _l('view') . '</a>';
