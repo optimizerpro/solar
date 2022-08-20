@@ -28,6 +28,8 @@
               $lastname = '';
               $firstname = $lead->name;
            }
+           $firstname=$lead->name;
+           $lastname=$lead->leadlastname;
            ?>
            <?php echo form_hidden('default_language',$lead->default_language); ?>
            <?php echo render_input('firstname','lead_convert_to_client_firstname',$firstname); ?>
