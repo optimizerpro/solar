@@ -196,6 +196,7 @@ class Proposals extends AdminController
         $data['base_currency'] = $this->currencies_model->get_base_currency();
 
         $data['title'] = $title;
+        //print_r($data);exit;
         $this->load->view('admin/proposals/proposal', $data);
     }
 
