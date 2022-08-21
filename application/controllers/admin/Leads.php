@@ -414,7 +414,7 @@ class Leads extends AdminController
             $data['billing_state']   = $data['state'];
             $data['billing_zip']     = $data['zip'];
             $data['billing_country'] = $data['country'];
-
+            $data['company']   = $data['firstname']." ".$data['lastname'];
             $data['is_primary'] = 1;
             $id                 = $this->clients_model->add($data, true);
             if ($id) {

@@ -609,7 +609,7 @@
 
             <?php $value = (isset($lead) ? $lead->company : ''); ?>
 
-            <?php echo render_input('company','lead_company',$value); ?>
+            <?php //echo render_input('company','lead_company',$value); ?>
 
          </div>
 

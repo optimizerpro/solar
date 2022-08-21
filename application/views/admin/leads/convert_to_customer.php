@@ -36,7 +36,7 @@
            <?php echo render_input('lastname','lead_convert_to_client_lastname',$lastname); ?>
            <?php echo render_input('title','contact_position',$lead->title); ?>
            <?php echo render_input('email','lead_convert_to_email',$lead->email); ?>
-           <?php echo render_input('company','lead_company',$lead->company); ?>
+           <?php //echo render_input('company','lead_company',$lead->company); ?>
            <?php echo render_input('phonenumber','lead_convert_to_client_phone',$lead->phonenumber); ?>
            <?php echo render_input('website','client_website',$lead->website); ?>
            <?php echo render_textarea('address','client_address',$lead->address); ?>

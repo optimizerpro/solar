@@ -92,6 +92,7 @@ class Leads_model extends App_Model
         $data['description'] = nl2br($data['description']);
         $data['dateadded']   = date('Y-m-d H:i:s');
         $data['addedfrom']   = get_staff_user_id();
+        $data['company']   = $data['name']." ".$data['leadlastname'];
 
         $data = hooks()->apply_filters('before_lead_added', $data);
 
