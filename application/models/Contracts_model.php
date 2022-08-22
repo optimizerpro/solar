@@ -108,7 +108,7 @@ class Contracts_model extends App_Model
         //echo $file_path;
         $file_name_key=slug_it($contract->subject);
         include_once __DIR__."/../controllers/adobe/index.php";
-        $doc_array[str_replace('-','_',$file_name_key)]=$file_name;//$attach;
+        $doc_array[str_replace('-','_',$file_name_key)]='uploads/contracts/'.$id.'/agreements/'.$file_name;//$attach;
 
         $this->db->where('is_primary', 1);
         $this->db->where('userid', $contract->client);
