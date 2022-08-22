@@ -34,6 +34,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
         foreach($docs as $key=>$val){
             $todosDoc=array();
             $file_path = $val;
+            var_dump($file_path);die();
             $file_stream = Psr7\FnStream::decorate(Psr7\stream_for(file_get_contents($file_path)), [
                 'getMetadata' => function() use ($file_path) {
                     return $file_path;

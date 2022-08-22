@@ -46,18 +46,39 @@ class Contracts extends AdminController
     }
 
     /* Edit contract or add new contract */
-    public function send_contract_for_adobe_sign($id,$code=''){
-        $code=$_REQUEST['code'];
-        $res=$this->contracts_model->send_contract_for_adobe_sign($id,$code);
-        if($res){
-            $message = 'Documents successfully sent for signing to client.';
-            set_alert('success',$message);
+    public function send_contract_for_adobe_sign($id='',$code=''){
+        $this->load->helper('cookie');
+        $contract_id_for_adobe_sign=$id;
+        $cookie= array(
+            'name'   => 'contract_id_for_adobe_sign',
+            'value'  => $contract_id_for_adobe_sign,                            
+            'expire' => '3000',  
+            'path' => '/',                                                                                 
+            'secure' => TRUE
+        );
+        if($this->input->cookie('contract_id_for_adobe_sign')!='' && $id==''){
+            $id=$this->input->cookie('contract_id_for_adobe_sign',TRUE);
+        }
+        $this->input->set_cookie($cookie);
+        if($id!=''){
+            $code=$_REQUEST['code'];
+            $res=$this->contracts_model->send_contract_for_adobe_sign($id,$code);
+            if($res){
+                $message = 'Documents successfully sent for signing to client.';
+                set_alert('success',$message);
+            }
+            else{
+                $message = 'Something went wrong please try again.';
+                set_alert('success',$message);
+            }
+            redirect(admin_url('contracts/contract/'.$id));
         }
         else{
-            $message = 'Something went wrong please try again.';
+            $message = 'Invalid request, parameter id for contract is missing.';
             set_alert('success',$message);
+            redirect(admin_url('contracts/contract/'.$id));
         }
-        redirect(admin_url('contracts/contract/'.$id));
+        
     }
     public function contract($id = '')
     {
