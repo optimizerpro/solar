@@ -99,6 +99,7 @@ class Contracts_model extends App_Model
         }
         $file_name=time().'-'.slug_it($contract->subject) . '.pdf';
         $file_path = __DIR__.'/../../uploads/agreements/'.$id.'/'.$file_name;
+        echo $file_path;
         $pdf    = contract_pdf($contract);
         ob_clean();
         $attach = $pdf->Output($file_name, 'F');
