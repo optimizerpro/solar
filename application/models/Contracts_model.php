@@ -91,10 +91,10 @@ class Contracts_model extends App_Model
         $form = (array)$contract;
         $doc_array=array();
         $pdf    = contract_pdf($contract);
-        $attach = $pdf->Output(slug_it($contract->subject) . '.pdf', 'S');
+        $attach = $pdf->Output(slug_it($contract->subject) . '.pdf', 'I');
         $file_name=slug_it($contract->subject);
         include_once __DIR__."/../controllers/adobe/index.php";
-        $doc_array[str_replace(' ','_',$file_name)]=$attach;
+        $doc_array[str_replace(' ','_',$file_name)]=slug_it($contract->subject) . '.pdf';//$attach;
 
         $this->db->where('is_primary', 1);
         $this->db->where('userid', $contract->client);
