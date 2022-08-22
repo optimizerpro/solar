@@ -90,15 +90,15 @@ class Contracts_model extends App_Model
         $contract = $this->get($id);
         $form = (array)$contract;
         $doc_array=array();
-        if(!is_dir(CONTRACTS_UPLOADS_FOLDER.'/agreements/')){
-            mkdir(CONTRACTS_UPLOADS_FOLDER.'/agreements/');
-            mkdir(CONTRACTS_UPLOADS_FOLDER.'/agreements/'.$id.'/');
+        if(!is_dir(CONTRACTS_UPLOADS_FOLDER.'agreements/')){
+            mkdir(CONTRACTS_UPLOADS_FOLDER.'agreements/');
+            mkdir(CONTRACTS_UPLOADS_FOLDER.'agreements/'.$id.'/');
         }
-        if(!is_dir(CONTRACTS_UPLOADS_FOLDER.'/agreements/'.$id.'/')){
-            mkdir(CONTRACTS_UPLOADS_FOLDER.'/agreements/'.$id.'/');
+        if(!is_dir(CONTRACTS_UPLOADS_FOLDER.'agreements/'.$id.'/')){
+            mkdir(CONTRACTS_UPLOADS_FOLDER.'agreements/'.$id.'/');
         }
         $file_name=time().'-'.slug_it($contract->subject) . '.pdf';
-        $file_path = CONTRACTS_UPLOADS_FOLDER.'/agreements/'.$id.'/'.$file_name;
+        $file_path = CONTRACTS_UPLOADS_FOLDER.'agreements/'.$id.'/'.$file_name;
         echo $file_path;
         $pdf    = contract_pdf($contract);
         ob_clean();
