@@ -73,7 +73,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
                             'defaultValue' => 'Elite Solar'
                         ]
                     ],
-                    'signatureFlow'     => 'SENDER_SIGNATURE_REQUIRED'
+                    'signatureFlow'     => 'SENDER_SIGNATURE_NOT_REQUIRED'
                 ]
             ]);
             //var_dump($agreement);

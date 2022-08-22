@@ -126,7 +126,7 @@ class Contracts_model extends App_Model
                 $this->db->where('id', $id);
                 $this->db->update(db_prefix() . 'contracts',array('document_sent_for_sign' => 1, 'agreement_hash' => $agreement_id, 'signed' => 0, 'marked_as_signed' => 0));
 
-                //print_r($docs);die();
+                print_r($docs);die();
                 return true;
             }
         }
