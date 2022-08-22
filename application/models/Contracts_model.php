@@ -98,7 +98,7 @@ class Contracts_model extends App_Model
 
         $this->db->where('is_primary', 1);
         $this->db->where('userid', $contract->client);
-        $contact=$this->db->get(db_prefix() . 'tblcontacts')->row_array();
+        $contact=$this->db->get(db_prefix() . 'contacts')->row_array();
 
         $docs=signJoineeDocuments($code,$contact['email'],$doc_array,$id);
         if($docs==false){
