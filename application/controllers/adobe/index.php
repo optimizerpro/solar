@@ -29,7 +29,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
             exit;
         }
         //echo $email;die();
-        print_r($docs);
+        //print_r($docs);
         $accessToken=$adobeSign->getAccessToken($code);
         $access_token=$accessToken->getToken();
         $adobeSign->setAccessToken($access_token);
@@ -75,7 +75,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
                     'signatureFlow'     => 'SENDER_SIGNATURE_NOT_REQUIRED'
                 ]
             ]);
-            var_dump($agreement);
+            //var_dump($agreement);
             $docs[$key]=$agreement;
         }
         return $docs;
