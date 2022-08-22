@@ -65,9 +65,6 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
                         ],
                         'recipientSetRole'        => [
                             'SIGNER'
-                        ],
-                        'recipientSetOrder' => [
-                            1
                         ]
                     ],
                     'mergeFieldInfo'    => [
