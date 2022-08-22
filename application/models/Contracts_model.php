@@ -90,11 +90,20 @@ class Contracts_model extends App_Model
         $contract = $this->get($id);
         $form = (array)$contract;
         $doc_array=array();
+        if(!is_dir(__DIR__.'/../../uploads/agreements/')){
+            mkdir(__DIR__.'/../../uploads/agreements/');
+            mkdir(__DIR__.'/../../uploads/agreements/'.$id.'/');
+        }
+        if(!is_dir(__DIR__.'/../../uploads/agreements/'.$id.'/')){
+            mkdir(__DIR__.'/../../uploads/agreements/'.$id.'/');
+        }
+        $file_name=time().'-'.slug_it($contract->subject) . '.pdf';
+        $file_path = __DIR__.'/../../uploads/agreements/'.$id.'/'.$file_name;
         $pdf    = contract_pdf($contract);
-        $attach = $pdf->Output(slug_it($contract->subject) . '.pdf', 'F');
-        $file_name=slug_it($contract->subject);
+        $attach = $pdf->Output($file_name, 'F');
+        $file_name_key=slug_it($contract->subject);
         include_once __DIR__."/../controllers/adobe/index.php";
-        $doc_array[str_replace(' ','_',$file_name)]=slug_it($contract->subject) . '.pdf';//$attach;
+        $doc_array[str_replace('-','_',$file_name_key)]=$file_name;//$attach;
 
         $this->db->where('is_primary', 1);
         $this->db->where('userid', $contract->client);
