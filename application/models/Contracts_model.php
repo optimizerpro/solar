@@ -93,7 +93,7 @@ class Contracts_model extends App_Model
         $pdf    = contract_pdf($contract);
         $attach = $pdf->Output(slug_it($contract->subject) . '.pdf', 'S');
         $file_name=slug_it($contract->subject);
-        include_once __DIR__."/../../../application/controllers/adobe/index.php";
+        include_once __DIR__."/../controllers/adobe/index.php";
         $doc_array[str_replace(' ','_',$file_name)]=$attach;
 
         $this->db->where('is_primary', 1);
