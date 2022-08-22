@@ -61,7 +61,9 @@ class Contracts extends AdminController
         }
         $this->input->set_cookie($cookie);
         if($id!=''){
-            $code=$_REQUEST['code'];
+            if(isset($_REQUEST['code']) && $_REQUEST['code']!=''){
+                $code=$_REQUEST['code'];
+            }
             $res=$this->contracts_model->send_contract_for_adobe_sign($id,$code);
             if($res){
                 $message = 'Documents successfully sent for signing to client.';
