@@ -98,7 +98,7 @@ class Contracts_model extends App_Model
             mkdir(CONTRACTS_UPLOADS_FOLDER.$id.'/agreements/');
         }
         $file_name=time().'-'.slug_it($contract->subject) . '.pdf';
-        $file_path = CONTRACTS_UPLOADS_FOLDER.''.$id.'/agreements/'.$file_name;
+        $file_path = './../../uploads/contracts/'.$id.'/agreements/'.$file_name;
         echo $file_path;
         $pdf    = contract_pdf($contract);
         ob_clean();
