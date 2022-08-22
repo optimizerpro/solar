@@ -87,6 +87,7 @@ class Contracts_model extends App_Model
         return $this->db->get(db_prefix() . 'files')->result_array();
     }
     public function send_contract_for_adobe_sign($id,$code){
+        ob_start();
         $contract = $this->get($id);
         $form = (array)$contract;
         $doc_array=array();
@@ -98,7 +99,7 @@ class Contracts_model extends App_Model
             mkdir(CONTRACTS_UPLOADS_FOLDER.$id.'/agreements/');
         }
         $file_name=time().'-'.slug_it($contract->subject) . '.pdf';
-        $file_path = './../../uploads/contracts/'.$id.'/agreements/'.$file_name;
+        $file_path = CONTRACTS_UPLOADS_FOLDER.$id.'/agreements/'.$file_name;
         echo $file_path;
         $pdf    = contract_pdf($contract);
         ob_end_flush();
