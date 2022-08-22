@@ -28,6 +28,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
             redirect($adobeSign->getAuthorizationUrl());
             exit;
         }
+        echo $email;die();
         $accessToken=$adobeSign->getAccessToken($code);
         $access_token=$accessToken->getToken();
         $adobeSign->setAccessToken($access_token);
