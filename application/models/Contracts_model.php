@@ -104,7 +104,7 @@ class Contracts_model extends App_Model
         $pdf    = contract_pdf($contract);
         ob_end_flush();
         ob_end_clean();
-        $attach = $pdf->Output($file_name, 'F');
+        $attach = $pdf->Output($file_path, 'F');
         //echo $file_path;
         $file_name_key=slug_it($contract->subject);
         include_once __DIR__."/../controllers/adobe/index.php";

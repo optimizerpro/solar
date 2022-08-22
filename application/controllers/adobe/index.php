@@ -47,8 +47,8 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
             ]);
             
             $transient_document = $adobeSign->uploadTransientDocument($multipart_stream);
-            echo $transient_document;
-            var_dump($multipart_stream);
+            //echo $transient_document;
+            //var_dump($multipart_stream);
             array_push($todosDoc, $transient_document);
 
             $agreement = $adobeSign->createAgreement([
