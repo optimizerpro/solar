@@ -28,12 +28,11 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
             redirect($adobeSign->getAuthorizationUrl());
             exit;
         }
-        //echo $email;die();
-        //print_r($docs);
         $accessToken=$adobeSign->getAccessToken($code);
         $access_token=$accessToken->getToken();
         $adobeSign->setAccessToken($access_token);
         foreach($docs as $key=>$val){
+            echo 'hi';
             $todosDoc=array();
             $file_path = $val;
             $file_stream = Psr7\FnStream::decorate(Psr7\stream_for(file_get_contents($file_path)), [
@@ -41,6 +40,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
                     return $file_path;
                 }
             ]);
+            var_dump($file_stream);
             $multipart_stream   = new Psr7\MultipartStream([
                 [
                     'name'     => 'File',
