@@ -46,6 +46,19 @@ class Contracts extends AdminController
     }
 
     /* Edit contract or add new contract */
+    public function send_contract_for_adobe_sign($id,$code=''){
+        $code=$_REQUEST['code'];
+        $res=$this->contracts_model->send_contract_for_adobe_sign($id,$code);
+        if($res){
+            $message = 'Documents successfully sent for signing to client.';
+            set_alert('success',$message);
+        }
+        else{
+            $message = 'Something went wrong please try again.';
+            set_alert('success',$message);
+        }
+        redirect(admin_url('contracts/contract/'.$id));
+    }
     public function contract($id = '')
     {
         if ($this->input->post()) {

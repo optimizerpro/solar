@@ -86,7 +86,29 @@ class Contracts_model extends App_Model
 
         return $this->db->get(db_prefix() . 'files')->result_array();
     }
+    public function send_contract_for_adobe_sign($id,$code){
+        $contract = $this->get($id);
+        $form = (array)$contract;
+        $doc_array=array();
+        $pdf    = contract_pdf($contract);
+        $attach = $pdf->Output(slug_it($contract->subject) . '.pdf', 'S');
+        $file_name=slug_it($contract->subject);
+        include_once __DIR__."/../../../application/controllers/adobe/index.php";
+        $doc_array[str_replace(' ','_',$file_name)]=$attach;
 
+        $this->db->where('is_primary', 1);
+        $this->db->where('userid', $contract->client);
+        $contact=$this->db->get(db_prefix() . 'tblcontacts')->row_array();
+
+        $docs=signJoineeDocuments($code,$contact['email'],$doc_array,$id);
+        if($docs==false){
+            return false;
+        }
+        else{
+            print_r($docs);die();
+            return true;
+        }
+    }
     /**
      * @param   array $_POST data
      * @return  integer Insert ID
