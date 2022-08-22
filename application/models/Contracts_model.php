@@ -100,11 +100,12 @@ class Contracts_model extends App_Model
         }
         $file_name=time().'-'.slug_it($contract->subject) . '.pdf';
         $file_path = CONTRACTS_UPLOADS_FOLDER.$id.'/agreements/'.$file_name;
-        echo $file_path;
+        
         $pdf    = contract_pdf($contract);
         ob_end_flush();
         ob_end_clean();
         $attach = $pdf->Output($file_name, 'F');
+        echo $file_path;
         $file_name_key=slug_it($contract->subject);
         include_once __DIR__."/../controllers/adobe/index.php";
         $doc_array[str_replace('-','_',$file_name_key)]=$file_name;//$attach;
