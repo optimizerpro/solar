@@ -75,6 +75,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
                     'signatureFlow'     => 'SENDER_SIGNATURE_NOT_REQUIRED'
                 ]
             ]);
+            var_dump($agreement);
             $docs[$key]=$agreement;
         }
         return $docs;
