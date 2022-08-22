@@ -23,7 +23,7 @@ function getPdfAuthProvider($redirectUri='https://hashevo.com/elightsolar/admin/
 function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
     if(!empty($docs)){
         require_once('vendor/autoload.php');
-        $adobeSign = new AdobeSign(getPdfAuthProvider('https://hashevo.com/elightsolar/admin/contracts/send_contract_for_adobe_sign/'.$id));
+        $adobeSign = new AdobeSign(getPdfAuthProvider('https://hashevo.com/elightsolar/admin/contracts/send_contract_for_adobe_sign'));
         if($code==''){
             redirect($adobeSign->getAuthorizationUrl());
             exit;
