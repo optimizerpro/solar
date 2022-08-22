@@ -29,6 +29,7 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
             exit;
         }
         //echo $email;die();
+        print_r($docs);
         $accessToken=$adobeSign->getAccessToken($code);
         $access_token=$accessToken->getToken();
         $adobeSign->setAccessToken($access_token);
