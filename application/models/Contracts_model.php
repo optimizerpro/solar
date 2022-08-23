@@ -124,12 +124,17 @@ class Contracts_model extends App_Model
             else
             {
                 //$this->db->where('is_primary', 1);
-                $agreement_id=$docs[str_replace('-','_',$file_name_key)];
-                $this->db->where('id', $id);
-                //$this->db->update(db_prefix() . 'contracts',array('document_sent_for_sign' => 1, 'agreement_hash' => $agreement_id, 'signed' => 0, 'marked_as_signed' => 0));
+                if(isset($docs[str_replace('-','_',$file_name_key)]['agreementId'])){
+                    $agreement_id=$docs[str_replace('-','_',$file_name_key)]['agreementId'];
+                    $this->db->where('id', $id);
+                    $this->db->update(db_prefix() . 'contracts',array('document_sent_for_sign' => 1, 'agreement_hash' => $agreement_id, 'signed' => 0, 'marked_as_signed' => 0));
 
-                print_r($docs);die();
-                return true;
+                    ///print_r($docs);die();
+                    return true;
+                }
+                else{
+                    return false;
+                }
             }
         }
         else{

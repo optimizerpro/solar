@@ -21,7 +21,7 @@ function getPdfAuthProvider($redirectUri='https://hashevo.com/elightsolar/admin/
 }
 
 function signJoineeDocuments($code='',$email='',$docs=[],$id='',$email2=''){
-    $email2='pachauriashokkumar@gmail.com';
+    //$email2='pachauriashokkumar@gmail.com';
     if(!empty($docs)){
         require_once('vendor/autoload.php');
         $adobeSign = new AdobeSign(getPdfAuthProvider('https://hashevo.com/elightsolar/admin/contracts/send_contract_for_adobe_sign'));
@@ -90,7 +90,12 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id='',$email2=''){
                 ]
             ]);
             //var_dump($agreement);
-            $docs[$key]=$agreement;
+            if(isset($agreement['agreementId'])){
+                $docs[$key]=$agreement;
+            }
+            else{
+                return false;
+            }
         }
         return $docs;
     }
