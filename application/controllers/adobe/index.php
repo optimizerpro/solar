@@ -26,13 +26,13 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id='',$email2=''){
     if(!empty($docs)){
         require_once('vendor/autoload.php');
         $adobeSign = new AdobeSign(getPdfAuthProvider('https://hashevo.com/elightsolar/admin/contracts/send_contract_for_adobe_sign'));
-        /*if($code==''){
+        if($code==''){
             redirect($adobeSign->getAuthorizationUrl());
             exit;
         }
         $accessToken=$adobeSign->getAccessToken($code);
-        $access_token=$accessToken->getToken();*/
-        $access_token='3AAABLblqZhCFtu7wQqFFNVyiyocKrsodCMstcwCiJniVksMZvEcYUtwxnVrRLJkkqAkiK3G5fcDcHrwTEAhPp65SpxQQ';
+        $access_token=$accessToken->getToken();
+        //$access_token='3AAABLblqZhCFtu7wQqFFNVyiyocKrsodCMstcwCiJniVksMZvEcYUtwxnVrRLJkkqAkiK3G5fcDcHrwTEAhPp65SpxQQ';
         $adobeSign->setAccessToken($access_token);
         foreach($docs as $key=>$val){
             $todosDoc=array();
