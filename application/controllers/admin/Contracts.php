@@ -48,6 +48,10 @@ class Contracts extends AdminController
     /* Edit contract or add new contract */
     public function send_contract_for_adobe_sign($id='',$code=''){
         $this->load->helper('cookie');
+        
+        if($this->input->cookie('contract_id_for_adobe_sign')!='' && $id==''){
+            $id=$this->input->cookie('contract_id_for_adobe_sign',TRUE);
+        }
         $contract_id_for_adobe_sign=$id;
         $cookie= array(
             'name'   => 'contract_id_for_adobe_sign',
@@ -56,9 +60,6 @@ class Contracts extends AdminController
             'path' => '/',                                                                                 
             'secure' => TRUE
         );
-        if($this->input->cookie('contract_id_for_adobe_sign')!='' && $id==''){
-            $id=$this->input->cookie('contract_id_for_adobe_sign',TRUE);
-        }
         $this->input->set_cookie($cookie);
         if($id!=''){
             if(isset($_REQUEST['code']) && $_REQUEST['code']!=''){
@@ -71,14 +72,14 @@ class Contracts extends AdminController
             }
             else{
                 $message = 'Something went wrong please try again.';
-                set_alert('success',$message);
+                set_alert('danger',$message);
             }
             redirect(admin_url('contracts/contract/'.$id));
         }
         else{
             $message = 'Invalid request, parameter id for contract is missing.';
-            set_alert('success',$message);
-            redirect(admin_url('contracts/contract/'.$id));
+            set_alert('danger',$message);
+            redirect(admin_url('contracts'));
         }
         
     }
