@@ -547,7 +547,7 @@
 
             <?php echo render_input('email','lead_add_edit_email',$value); ?>
 
-           <?php if((isset($lead) && empty($lead->website)) || !isset($lead)){
+           <?php /*if((isset($lead) && empty($lead->website)) || !isset($lead)){
 
                  $value = (isset($lead) ? $lead->website : '');
 
@@ -581,7 +581,7 @@
 
             </div>
 
-            <?php }
+            <?php }*/
 
             $value = (isset($lead) ? $lead->phonenumber : ''); ?>
 
