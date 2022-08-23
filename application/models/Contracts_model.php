@@ -124,7 +124,7 @@ class Contracts_model extends App_Model
             else
             {
                 //$this->db->where('is_primary', 1);
-                $agreement_id=$docs[str_replace('-','_',$file_name_key)];
+                $agreement_id=$docs[str_replace('-','_',$file_name_key)]['id'];
                 $this->db->where('id', $id);
                 $this->db->update(db_prefix() . 'contracts',array('document_sent_for_sign' => 1, 'agreement_hash' => $agreement_id, 'signed' => 0, 'marked_as_signed' => 0));
 
