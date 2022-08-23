@@ -115,7 +115,7 @@ class Contracts_model extends App_Model
         $contact=$this->db->get(db_prefix() . 'contacts')->row_array();
         if(!empty($contact)){
             //echo $contact['email'];die();
-            $staff=get_staff(get_staff_user_id());
+            $staff=(array)get_staff(get_staff_user_id());
             $email2=$staff['email'];
             $docs=signJoineeDocuments($code,$contact['email'],$doc_array,$id,$email2);
             if($docs==false){
