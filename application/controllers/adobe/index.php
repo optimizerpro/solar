@@ -20,7 +20,7 @@ function getPdfAuthProvider($redirectUri='https://hashevo.com/elightsolar/admin/
     return $provider;
 }
 
-function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
+function signJoineeDocuments($code='',$email='',$docs=[],$id='',$email2=''){
     if(!empty($docs)){
         require_once('vendor/autoload.php');
         $adobeSign = new AdobeSign(getPdfAuthProvider('https://hashevo.com/elightsolar/admin/contracts/send_contract_for_adobe_sign'));
@@ -60,13 +60,24 @@ function signJoineeDocuments($code='',$email='',$docs=[],$id=''){
                     'name'              => $key,
                     'signatureType'     => 'ESIGN',
                     'recipientSetInfos' => [
-                        'recipientSetMemberInfos' => [
-                            'email' => $email
+                        [
+                            'recipientSetMemberInfos' => [
+                                'email' => $email
+                            ],
+                            'recipientSetRole'        => [
+                                'SIGNER'
+                            ],
+                            'order' => 1
                         ],
-                        'recipientSetRole'        => [
-                            'SIGNER'
-                        ],
-                        'order' => 1
+                        [
+                            'recipientSetMemberInfos' => [
+                                'email' => $email2
+                            ],
+                            'recipientSetRole'        => [
+                                'SIGNER'
+                            ],
+                            'order' => 2
+                        ]
                     ],
                     'mergeFieldInfo'    => [
                         [
