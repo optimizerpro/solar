@@ -184,8 +184,11 @@
                   <div class="clearfix"></div>
                   <?php if(has_permission('customers','','view') || have_assigned_customers()) {
                      $where_summary = '';
+                     if(get_staff_role()=='2'){
+                        $where_summary.= " AND addedfrom='".get_staff_user_id()."'";
+                     }
                      if(!has_permission('customers','','view')){
-                         $where_summary = ' AND userid IN (SELECT customer_id FROM '.db_prefix().'customer_admins WHERE staff_id='.get_staff_user_id().')';
+                         $where_summary.= ' AND userid IN (SELECT customer_id FROM '.db_prefix().'customer_admins WHERE staff_id='.get_staff_user_id().')';
                      }
                      ?>
                   <hr class="hr-panel-heading" />

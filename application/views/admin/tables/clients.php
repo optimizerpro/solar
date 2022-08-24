@@ -1,7 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-
+$this->ci->load->helper('staff_helper');
 $hasPermissionDelete = has_permission('customers', '', 'delete');
 
 $custom_fields = get_table_custom_fields('customers');
@@ -26,11 +26,11 @@ $filter = [];
 $where        = [];
 
 $own_customers_query="";
-if(get_staff_role()==2){
+if(get_staff_role()=='2'){
     $own_customers_query=" AND ".db_prefix()."clients.addedfrom='".get_staff_user_id()."' ";
     array_push($where, $own_customers_query);
 }
-
+//echo $own_customers_query; //echo get_staff_user_id(); 
 $join = [
     'LEFT JOIN '.db_prefix().'contacts ON '.db_prefix().'contacts.userid='.db_prefix().'clients.userid AND '.db_prefix().'contacts.is_primary=1',
 ];

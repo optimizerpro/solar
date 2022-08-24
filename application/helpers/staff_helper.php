@@ -397,7 +397,7 @@ function get_staff_role($staff_id = '')
 
     $CI->db->select('role');
     $CI->db->from(db_prefix() . 'staff');
-    $CI->db->where('staffid', $staffid);
+    $CI->db->where('staffid', $staff_id);
     $staff = $CI->db->get()->row();
     if ($staff) {
         return $staff->role;
