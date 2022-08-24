@@ -208,6 +208,17 @@
                         <h3 class="bold"><?php echo total_rows(db_prefix().'clients','active=0'.$where_summary); ?></h3>
                         <span class="text-danger"><?php echo _l('inactive_active_customers'); ?></span>
                      </div>
+                     <?php
+                        $where_summary='';
+                        if(!has_permission('customers','','view')){
+                           $where_summary = ' AND userid IN (SELECT customer_id FROM '.db_prefix().'customer_admins WHERE staff_id='.get_staff_user_id().')';
+                           
+                        }
+                        if(get_staff_role()=='2'){
+                           $where_summary.= ' AND userid IN (SELECT userid FROM '.db_prefix().'clients WHERE addedfrom='.get_staff_user_id().')';
+                     
+                        }
+                     ?>
                      <div class="col-md-2 col-xs-6 border-right">
                         <h3 class="bold"><?php echo total_rows(db_prefix().'contacts','active=1'.$where_summary); ?></h3>
                         <span class="text-info"><?php echo _l('customers_summary_active'); ?></span>
