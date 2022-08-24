@@ -22,7 +22,7 @@
                      </div>
                      <div class="checkbox checkbox-primary checkbox-inline">
                         <input type="checkbox" name="not_visible_to_client" id="not_visible_to_client" <?php if(isset($contract)){if($contract->not_visible_to_client == 1){echo 'checked';}}; ?>>
-                        <label for="not_visible_to_client"><?php echo _l('contract_not_visible_to_client'); ?></label>
+                        <label for="not_visible_to_client">Disable Customer Side</label>
                      </div>
                   </div>
                   <div class="form-group select-placeholder f_client_id">
@@ -55,7 +55,7 @@
             <?php $value = (isset($contract) ? $contract->subject : ''); ?>
             <i class="fa fa-question-circle pull-left" data-toggle="tooltip" title="<?php echo _l('contract_subject_tooltip'); ?>"></i>
             <?php echo render_input('subject','contract_subject',$value); ?>
-            <div class="form-group">
+            <!--<div class="form-group">
                <label for="contract_value"><?php echo _l('contract_value'); ?></label>
                <div class="input-group" data-toggle="tooltip" title="<?php echo isset($contract) && $contract->signed == 1 ? '' : _l('contract_value_tooltip'); ?>">
                   <input type="number" class="form-control" name="contract_value" value="<?php if(isset($contract)){echo $contract->contract_value; }?>"<?php echo isset($contract) && $contract->signed == 1 ? ' disabled' : ''; ?>>
@@ -63,7 +63,7 @@
                      <?php echo $base_currency->symbol; ?>
                   </div>
                </div>
-            </div>
+            </div>-->
             <?php
             $selected = (isset($contract) ? $contract->contract_type : '');
             if(is_admin() || get_option('staff_members_create_inline_contract_types') == '1'){
@@ -569,6 +569,7 @@
     });
 
     var editor_settings = {
+      readonly : 1,
        selector: 'div.editable',
        inline: true,
        theme: 'inlite',
@@ -649,7 +650,6 @@
     }
 
     tinymce.init(editor_settings);
-
  });
 
 function save_contract_content(manual) {
