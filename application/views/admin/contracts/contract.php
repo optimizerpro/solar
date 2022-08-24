@@ -287,7 +287,7 @@
                            </ul>
                         </div>
                      </div>
-                     <div class="col-md-12">
+                     <!--<div class="col-md-12">
                         <?php if(isset($contract_merge_fields)){ ?>
                            <hr class="hr-panel-heading" />
                            <p class="bold text-right no-mbot"><a href="#" onclick="slideToggle('.avilable_merge_fields'); return false;"><?php echo _l('available_merge_fields'); ?></a></p>
@@ -303,7 +303,7 @@
                             </ul>
                          </div>
                       <?php } ?>
-                   </div>
+                   </div>-->
                 </div>
                 <hr class="hr-panel-heading" />
                 <?php if(!staff_can('edit','contracts')) { ?>
@@ -694,7 +694,7 @@ function save_contract_content(manual) {
 
  function insert_merge_field(field) {
     var key = $(field).text();
-    tinymce.activeEditor.execCommand('mceInsertContent', false, key);
+    //tinymce.activeEditor.execCommand('mceInsertContent', false, key);
  }
 
  function contract_full_view() {
