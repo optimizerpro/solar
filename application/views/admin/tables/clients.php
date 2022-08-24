@@ -18,12 +18,18 @@ $aColumns = [
     '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM '.db_prefix().'customer_groups JOIN '.db_prefix().'customers_groups ON '.db_prefix().'customer_groups.groupid = '.db_prefix().'customers_groups.id WHERE customer_id = '.db_prefix().'clients.userid ORDER by name ASC) as customerGroups',
     db_prefix().'clients.datecreated as datecreated',
 ];
-
 $sIndexColumn = 'userid';
 $sTable       = db_prefix().'clients';
-$where        = [];
+
 // Add blank where all filter can be stored
 $filter = [];
+$where        = [];
+
+$own_customers_query="";
+if(get_staff_role()==2){
+    $own_customers_query=" AND ".db_prefix()."clients.addedfrom='".get_staff_user_id()."' ";
+    array_push($where, $own_customers_query);
+}
 
 $join = [
     'LEFT JOIN '.db_prefix().'contacts ON '.db_prefix().'contacts.userid='.db_prefix().'clients.userid AND '.db_prefix().'contacts.is_primary=1',

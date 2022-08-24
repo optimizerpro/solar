@@ -384,3 +384,22 @@ function is_staff_member($staff_id = '')
 
     return $CI->db->count_all_results(db_prefix() . 'staff') > 0 ? true : false;
 }
+
+function get_staff_role($staff_id = '')
+{
+    $CI = & get_instance();
+    if ($staff_id == '') {
+        if (isset($GLOBALS['current_user_role'])) {
+            return $GLOBALS['current_user_role'];
+        }
+        $staff_id = get_staff_user_id();
+    }
+
+    $CI->db->select('role');
+    $CI->db->from(db_prefix() . 'staff');
+    $CI->db->where('staffid', $staffid);
+    $staff = $CI->db->get()->row();
+    if ($staff) {
+        return $staff->role;
+    }
+}
