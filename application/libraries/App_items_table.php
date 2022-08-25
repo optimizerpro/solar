@@ -159,19 +159,23 @@ class App_items_table extends App_items_table_template
         if($this->type == 'proposal' || $this->type == 'estimate'){
             $html .= '<th class="description" align="left">' . $this->section_heading() . '</th>';
         }
-        $html .= '<th class="description" width="' . $this->get_description_item_width() . '%" align="left">' . $this->item_heading() . '</th>';
+        if($this->type != 'invoice'){
+            $html .= '<th class="description" width="' . $this->get_description_item_width() . '%" align="left">' . $this->item_heading() . '</th>';
 
-        $customFieldsItems = $this->get_custom_fields_for_table();
-        foreach ($customFieldsItems as $cf) {
-            $html .= '<th class="custom_field" align="left">' . $cf['name'] . '</th>';
+            $customFieldsItems = $this->get_custom_fields_for_table();
+            foreach ($customFieldsItems as $cf) {
+                $html .= '<th class="custom_field" align="left">' . $cf['name'] . '</th>';
+            }
+
+            $html .= '<th align="right">' . $this->qty_heading() . '</th>';
         }
-
-        $html .= '<th align="right">' . $this->qty_heading() . '</th>';
         $html .= '<th align="right">' . $this->rate_heading() . '</th>';
-        if ($this->show_tax_per_item()) {
-            $html .= '<th align="right">' . $this->tax_heading() . '</th>';
+        if($this->type != 'invoice'){
+            if ($this->show_tax_per_item()) {
+                $html .= '<th align="right">' . $this->tax_heading() . '</th>';
+            }
+            $html .= '<th align="right">' . $this->amount_heading() . '</th>';
         }
-        $html .= '<th align="right">' . $this->amount_heading() . '</th>';
         $html .= '</tr>';
 
         return $html;
@@ -195,18 +199,21 @@ class App_items_table extends App_items_table_template
         }
         $tblhtml .= '<th width="' . $descriptionItemWidth . '%" align="left">' . $this->item_heading() . '</th>';
 
-        foreach ($customFieldsItems as $cf) {
-            $tblhtml .= '<th width="' . $regularItemWidth . '%" align="left">' . $cf['name'] . '</th>';
-        }
+        if($this->type != 'invoice'){
+            foreach ($customFieldsItems as $cf) {
+                $tblhtml .= '<th width="' . $regularItemWidth . '%" align="left">' . $cf['name'] . '</th>';
+            }
 
-        $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->qty_heading() . '</th>';
+            $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->qty_heading() . '</th>';
+        }
         $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->rate_heading() . '</th>';
+        if($this->type != 'invoice'){
+            if ($this->show_tax_per_item()) {
+                $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->tax_heading() . '</th>';
+            }
 
-        if ($this->show_tax_per_item()) {
-            $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->tax_heading() . '</th>';
+            $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->amount_heading() . '</th>';
         }
-
-        $tblhtml .= '<th width="' . $regularItemWidth . '%" align="right">' . $this->amount_heading() . '</th>';
         $tblhtml .= '</tr>';
 
         return $tblhtml;

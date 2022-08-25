@@ -6134,6 +6134,9 @@ function clear_item_preview_values(default_taxes) {
     var previewArea = $('.main');
 
     previewArea.find('textarea').val(''); // includes cf
+    if(previewArea.find('input[name="description"]').length > 0){
+        previewArea.find('input[name="description"]').val('');
+    }
     previewArea.find('td.custom_field input[type="checkbox"]').prop('checked', false); // cf
     previewArea.find('td.custom_field input:not(:checkbox):not(:hidden)').val(''); // cf // not hidden for chkbox hidden helpers
     previewArea.find('td.custom_field select').selectpicker('val', ''); // cf
@@ -6350,6 +6353,104 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=fa
 
     return false;
 }
+/* Invoice Items Start 25-08-2022 */
+function add_item_to_table_invoice(data, itemid, merge_invoice, bill_expense,table_id=false) {
+    // If not custom data passed get from the preview
+    data = typeof (data) == 'undefined' || data == 'undefined' ? get_item_preview_values(table_id) : data;
+    if (data.description === "" && data.long_description === "" && data.rate === "") {
+        return;
+    }
+    //console.log(table_id);
+    var table_row = '';
+    var item_key = lastAddedItemKey ? lastAddedItemKey += 1 : $("body").find('tbody .item').length + 1;
+    lastAddedItemKey = item_key;
+
+    table_row += '<tr class="sortable item" data-merge-invoice="' + merge_invoice + '" data-bill-expense="' + bill_expense + '">';
+
+    table_row += '<td class="dragger">';
+
+
+    // Check if rate is number
+    if (data.rate === '' || isNaN(data.rate)) {
+        data.rate = 0;
+    }
+
+    var amount = data.rate;
+
+    $("body").append('<div class="dt-loader"></div>');
+    var regex = /<br[^>]*>/gi;
+
+        // order input
+        table_row += '<input type="hidden" class="order" name="newitems[' + item_key + '][order]">';
+        
+        table_row += '</td>';
+
+        table_row += '<td class="bold description"><input type="text" name="newitems[' + item_key + '][description]" class="form-control" value="' + data.description + '" /></textarea></td>';
+
+        var cf_has_required = false;
+        
+        table_row += '<td class="rate"><input type="number" data-toggle="tooltip" title="' + app.lang.item_field_not_formatted + '" onblur="calculate_total();" onchange="calculate_total();" name="newitems[' + item_key + '][rate]" value="' + data.rate + '" class="form-control"></td>';
+
+        //table_row += '<td class="amount" align="right">' + format_money(amount, true) + '</td>';
+
+        table_row += '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' + itemid + '); return false;"><i class="fa fa-trash"></i></a></td>';
+
+        table_row += '</tr>';
+
+        $(table_id).parent().parent().parent().append(table_row);
+        $('.s_table').find('.invoice-items-table').find('tbody').append(table_row);
+        $(document).trigger({
+            type: "item-added-to-table",
+            data: data,
+            row: table_row
+        });
+
+        setTimeout(function () {
+            calculate_total();
+        }, 15);
+
+        var billed_task = $('input[name="task_id"]').val();
+        var billed_expense = $('input[name="expense_id"]').val();
+
+        if (billed_task !== '' && typeof (billed_task) != 'undefined') {
+            billed_tasks = billed_task.split(',');
+            $.each(billed_tasks, function (i, obj) {
+                $('#billed-tasks').append(hidden_input('billed_tasks[' + item_key + '][]', obj));
+            });
+        }
+
+        if (billed_expense !== '' && typeof (billed_expense) != 'undefined') {
+            billed_expenses = billed_expense.split(',');
+            $.each(billed_expenses, function (i, obj) {
+                $('#billed-expenses').append(hidden_input('billed_expenses[' + item_key + '][]', obj));
+            });
+        }
+
+        if ($('#item_select').hasClass('ajax-search') && $('#item_select').selectpicker('val') !== '') {
+            $('#item_select').prepend('<option></option>');
+        }
+
+        clear_item_preview_values();
+        reorder_items();
+
+        $('body').find('#items-warning').remove();
+        $("body").find('.dt-loader').remove();
+
+        if (cf_has_required && $('.invoice-form').length) {
+            validate_invoice_form();
+        }
+
+        if (bill_expense == 'undefined' || !bill_expense) {
+            $('select[name="task_select"]').find('[value="' + billed_task + '"]').remove();
+            $('select[name="task_select"]').selectpicker('refresh');
+        }
+        $('.items-select-wrapper .bootstrap-select').css('width', '100%');
+        return true;
+
+
+    return false;
+}
+/* Invoice Items End */
 
 // Get taxes dropdown selectpicker template / Causing problems with ajax becuase is fetching from server
 function get_taxes_dropdown_template(name, taxname) {
@@ -6489,6 +6590,9 @@ function get_item_preview_values(table_id=false) {
     else{
         var response = {};
         response.description = $('.main textarea[name="description"]').val();
+        if($('.main input[name="description"]').length > 0){
+            response.description = $('.main input[name="description"]').val();
+        }
         response.long_description = $('.main textarea[name="long_description"]').val();
         response.qty = $('.main input[name="quantity"]').val();
         response.taxname = $('.main select.tax').selectpicker('val');
@@ -6537,9 +6641,13 @@ function calculate_total() {
     $.each(rows, function () {
 
         quantity = $(this).find('[data-quantity]').val();
-        if (quantity === '') {
+        if($(this).find('[data-quantity]').length > 0){
+            if (quantity === '') {
+                quantity = 1;
+                $(this).find('[data-quantity]').val(1);
+            }
+        } else {
             quantity = 1;
-            $(this).find('[data-quantity]').val(1);
         }
 
         _amount = accounting.toFixed($(this).find('td.rate input').val() * quantity, app.options.decimal_places);
@@ -6578,7 +6686,6 @@ function calculate_total() {
     } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-fixed')) {
         total_discount_calculated = discount_fixed;
     }
-    console.log('discount before_tax',total_discount_calculated,subtotal,discount_fixed,discount_percent);
     var profitAmount = 0;
     if(profit_area.length > 0){
         var profit_percent = profit_area.find('input[name="profit_percent"]').val();
@@ -6603,16 +6710,13 @@ function calculate_total() {
     //total = (total + subtotal);
 
     total = (total + subtotal + profitAmount);
-
+    console.log('discount_type', discount_type);
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
         total_discount_calculated = (total * discount_percent) / 100;
     } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-fixed')) {
         total_discount_calculated = discount_fixed;
     }
-    console.log('discount after_tax',total_discount_calculated,subtotal,discount_fixed,discount_percent);
-
-    console.log('subtotal2 before :: ',subtotal2,total_discount_calculated);
     subtotal2 = (subtotal2 - total_discount_calculated) + profitAmount;
     
     //profit margin 19-07-2022
