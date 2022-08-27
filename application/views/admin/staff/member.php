@@ -144,7 +144,6 @@
                      <?php $value = (isset($member) ? $member->email_signature : ''); ?>
                      <?php echo render_textarea('email_signature','settings_email_signature',$value, ['data-entities-encode'=>'true']); ?>
                      
-                     <button type="button" id="accept_action" class="btn btn-success pull-right action-button">Generate your signature</button>
                      <div class="form-group select-placeholder">
                         <label for="direction"><?php echo _l('document_direction'); ?></label>
                         <select class="selectpicker" data-none-selected-text="<?php echo _l('system_default_string'); ?>" data-width="100%" name="direction" id="direction">
@@ -153,6 +152,16 @@
                            <option value="rtl" <?php if(isset($member) && $member->direction == 'rtl'){echo 'selected';} ?>>RTL</option>
                         </select>
                      </div>
+                     <br/>
+                     <?php
+                           if($member->signature!='' && $member->signature!=NULL){
+                              ?>
+                              <img src="<?php echo site_url('uploads/staff/'.$member->staffid.'/'.$member->signature); ?>" style="width:200px;height:50px;">
+                              <?php
+                           }
+                     ?>
+                     <button type="button" id="accept_action" class="btn btn-success pull-right action-button">Generate your signature</button>
+                     <br/>
                      <div class="form-group">
                         <?php if(count($departments) > 0){ ?>
                         <label for="departments"><?php echo _l('staff_add_edit_departments'); ?></label>
