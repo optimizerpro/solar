@@ -240,10 +240,17 @@
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_email'); ?></p>
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->email != '' ? '<a href="mailto:'.$lead->email.'">' . $lead->email.'</a>' : '-') ?></p>
+            <?php if(isset($lead) && $lead->ano_email != '' && count(explode("|", $lead->ano_email))){ ?>
+               <p class="text-muted lead-field-heading">Another Email</p>
+               <p class="bold font-medium-xs"><?php echo implode(", ", explode("|", $lead->ano_email)); ?></p>
+            <?php } ?>
+            <?php if(isset($lead) && $lead->ano_phone != '' && count(explode("|", $lead->ano_phone))){ ?>
+               <p class="text-muted lead-field-heading">Another Phone</p>
+               <p class="bold font-medium-xs"><?php echo implode(", ", explode("|", $lead->ano_phone)); ?></p>
+            <?php } ?>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_website'); ?></p>
 
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_website'); ?></p>
-
-            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->website != '' ? '<a href="'.maybe_add_http($lead->website).'" target="_blank">' . $lead->website.'</a>' : '-') ?></p>
+            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->website != '' ? '<a href="'.maybe_add_http($lead->website).'" target="_blank">' . $lead->website.'</a>' : '-') ?></p> -->
 
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_phonenumber'); ?></p>
 
@@ -257,6 +264,7 @@
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p>
 
+            <h4><?php echo _l('Billing Address'); ?></h4>
             <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->address != '' ? $lead->address : '-') ?></p>
@@ -277,6 +285,28 @@
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->zip != '' ? $lead->zip : '-') ?></p>
 
+            <?php if(isset($lead) && $lead->same_as_mailing == 0){ ?>
+               <h4><?php echo _l('lead_mailing_address'); ?></h4>
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_address != '' ? $lead->bill_address : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_city'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_city != '' ? $lead->bill_city : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_state'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_state != '' ? $lead->bill_state : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_country'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_country != 0 ? get_country($lead->bill_country)->short_name : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_zip'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_zip != '' ? $lead->bill_zip : '-') ?></p>
+            <?php } ?>
          </div>
 
          <div class="col-md-4 col-xs-12 lead-information-col">
@@ -309,7 +339,7 @@
             <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->trade_type_name != '' ? $lead->trade_type_name : '-') ?></p>
 
 
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_trade_type'); ?></p>
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_location_photo'); ?></p>
             <p class="bold font-medium-xs mbot15">
                <?php
                if(isset($lead) && $lead->location_photo != ''){
@@ -528,12 +558,12 @@
          <div class="col-md-4">
             <?php
                $selected = (isset($lead) ? $lead->work_type : '');
-               echo render_select('work_type',$trade_types,array('id','name'),'lead_work_type',$selected,[]); ?>
+               echo render_select('work_type',$work_types,array('id','name'),'lead_work_type',$selected,[]); ?>
          </div>
          <div class="col-md-4">
             <?php
                $selected = (isset($lead) ? $lead->trade_type : '');
-               echo render_select('trade_type',$work_types,array('id','name'),'lead_trade_type',$selected,[]); ?>
+               echo render_select('trade_type',$trade_types,array('id','name'),'lead_trade_type',$selected,[]); ?>
          </div>
          <div class="clearfix"></div>
 
@@ -705,7 +735,44 @@
             
 
          </div>
+         <div class="clearfix"></div>
+         <div class="col-md-6">
+            <h4>Billing Address</h4>
+         </div>
+         <div class="col-md-6">
+            <!-- <input type="checkbox" name="same_as_mailing" value="1" /> Same as mailing -->
+         </div>
+         <div class="clearfix"></div>
 
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_address : ''); ?>
+
+            <?php echo render_textarea('bill_address','lead_address',$value,array('rows'=>1,'style'=>'height:36px;font-size:100%;')); ?>
+         </div>
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_city : ''); ?>
+
+            <?php echo render_input('bill_city','lead_city',$value); ?>
+         </div>
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_state : ''); ?>
+
+            <?php echo render_input('bill_state','lead_state',$value); ?>
+         </div>
+         <div class="col-md-4">
+            <?php
+               $selected =( isset($lead) ? $lead->bill_country : $customer_default_country);
+
+               echo render_select( 'bill_country',$get_default_countries,array( 'country_id',array( 'short_name')), 'lead_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
+
+               ?>
+         </div>
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_zip : ''); ?>
+
+            <?php echo render_input('bill_zip','lead_zip',$value); ?>
+         </div>
+         <div class="clearfix"></div>
          <div class="col-md-12">
 
             <?php $value = (isset($lead) ? $lead->description : ''); ?>
@@ -831,15 +898,20 @@
 </script>
 
 <?php } ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutocomplete&libraries=places&v=weekly"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutoCompvvv&libraries=places&v=weekly"
       defer ></script>
       <script>
+         function initAutoCompvvv(){
+            initAutocomplete();
+            initAutocompleteBill();
+         }
          function initAutoComp(){
             $("#lead-modal").on('shown.bs.modal',function(){
                initAutocomplete();
+               initAutocompleteBill();
             });
          }
-         var autocomplete;
+var autocomplete;
 var address1Field;
 var address2Field;
 var postalField;
@@ -921,6 +993,92 @@ function fillInAddress() {
 }
 
 window.initAutocomplete = initAutocomplete;
+
+
+////////////////////////////////////
+var autocompletebill;
+var address1FieldBill;
+var address2FieldBill;
+var postalFieldBill;
+
+function initAutocompleteBill() {
+  address1FieldBill = document.getElementById('bill_address');
+  address2FieldBill = document.getElementById("bill_city");
+  postalFieldBill = document.getElementById("bill_zip");
+  // Create the autocomplete object, restricting the search predictions to
+  // addresses in the US and Canada.
+  autocompletebill = new google.maps.places.Autocomplete(address1FieldBill, {
+    componentRestrictions: { country: ["us", "ca"] },
+    fields: ["address_components", "geometry"],
+    types: ["address"],
+  });
+  //address1FieldBill.focus();
+  // When the user selects an address from the drop-down, populate the
+  // address fields in the form.
+  autocompletebill.addListener("place_changed", fillInAddressBill);
+}
+
+function fillInAddressBill() {
+  // Get the place details from the autocomplete object.
+  const place = autocompletebill.getPlace();
+  var address1 = "";
+  var postcode = "";
+
+  // Get each component of the address from the place details,
+  // and then fill-in the corresponding field on the form.
+  // place.address_components are google.maps.GeocoderAddressComponent objects
+  // which are documented at http://goo.gle/3l5i5Mr
+  for (const component of place.address_components) {
+    // @ts-ignore remove once typings fixed
+    const componentType = component.types[0];
+
+    switch (componentType) {
+      case "street_number": {
+        address1 = `${component.long_name} ${address1}`;
+        break;
+      }
+
+      case "route": {
+        address1 += component.short_name;
+        break;
+      }
+
+      case "postal_code": {
+        postcode = `${component.long_name}${postcode}`;
+        break;
+      }
+
+      case "postal_code_suffix": {
+        postcode = `${postcode}-${component.long_name}`;
+        break;
+      }
+      case "locality":
+        document.querySelector("#bill_city").value = component.long_name;
+        break;
+      case "administrative_area_level_1": {
+        document.querySelector("#bill_state").value = component.short_name;
+        break;
+      }
+      case "country":
+         if("United States"==component.long_name)
+         {
+            document.querySelector("#bill_country").value = 236;
+            $("#bill_country").selectpicker('refresh');
+         }
+        break;
+    }
+  }
+
+  address1FieldBill.value = address1;
+  postalFieldBill.value = postcode;
+  // After filling the form with address components from the Autocomplete
+  // prediction, set cursor focus on the second address line to encourage
+  // entry of subpremise information such as apartment, unit, or floor number.
+  address2FieldBill.focus();
+}
+
+window.initAutocompleteBill = initAutocompleteBill;
+
 $(document).ready(function() {
    let ijk = 1;
    $('body').on('click','.add_ano_email', function(e){

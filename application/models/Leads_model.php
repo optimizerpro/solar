@@ -236,6 +236,20 @@ class Leads_model extends App_Model
             }
             unset($data['custom_fields']);
         }
+
+        if (isset($_FILES['location_photo']['name'])) {
+            $location_photo = handle_lead_location_photo();
+            if(isset($data['location_photo'])){ unset($data['location_photo']); }
+            $data['location_photo'] = $location_photo;
+        }
+        
+        if (isset($data['ano_email'])) {
+            $data['ano_email'] = implode("|", $data['ano_email']);
+        }
+        if (isset($data['ano_phone'])) {
+            $data['ano_phone'] = implode("|", $data['ano_phone']);
+        }
+        
         if (!defined('API')) {
             if (isset($data['is_public'])) {
                 $data['is_public'] = 1;
