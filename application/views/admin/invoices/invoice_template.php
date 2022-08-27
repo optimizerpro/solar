@@ -586,7 +586,7 @@
                     $table_row .= '<input type="hidden" class="order" name="' . $items_indicator . '[' . $i . '][order]">';
                     $table_row .= '</td>';
                     //$table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="5">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
-                    $table_row .= '<td class="bold description"><input type="text" name="' . $items_indicator . '[' . $i . '][description]" class="form-control" />' . clear_textarea_breaks($item['description']) . '</td>';
+                    $table_row .= '<td class="bold description"><input type="text" name="' . $items_indicator . '[' . $i . '][description]" class="form-control" value="' . clear_textarea_breaks($item['description']) . '" /></td>';
                     //$table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="5">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
 
                     //$table_row .= render_custom_fields_items_table_in($item,$items_indicator.'['.$i.']');
@@ -604,7 +604,7 @@
                     $table_row .= '</td>';
                     $table_row .= '<td class="rate"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
                     //$table_row .= '<td class="taxrate">' . $this->misc_model->get_taxes_dropdown_template('' . $items_indicator . '[' . $i . '][taxname][]', $invoice_item_taxes, 'invoice', $item['id'], true, $manual) . '</td>';
-                    $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
+                    //$table_row .= '<td class="amount" align="right">' . $amount . '</td>';
                     $table_row .= '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a></td>';
                     if (isset($item['task_id'])) {
                       if (!is_array($item['task_id'])) {

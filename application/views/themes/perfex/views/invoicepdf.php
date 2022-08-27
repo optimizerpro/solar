@@ -90,8 +90,8 @@ $pdf->Ln(hooks()->apply_filters('pdf_info_and_table_separator', 6));
 
 // The items table
 $items = get_items_table_data($invoice, 'invoice', 'pdf');
-
 $tblhtml = $items->table();
+//echo '<pre>'; print_r($tblhtml); exit;
 $pdf->writeHTML($tblhtml, true, false, false, false, '');
 
 $pdf->Ln(8);

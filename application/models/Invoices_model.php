@@ -974,6 +974,9 @@ class Invoices_model extends App_Model
         }
 
         foreach ($newitems as $key => $item) {
+            $item['qty'] = 1;
+            $item['long_description'] = '';
+            $item['unit'] = '';
             if ($new_item_added = add_new_sales_item_post($item, $id, 'invoice')) {
                 if (isset($billed_tasks[$key])) {
                     foreach ($billed_tasks[$key] as $_task_id) {
