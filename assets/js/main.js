@@ -7987,6 +7987,7 @@ function delete_template(wrapper, rel_type, id) {
 function insert_template(wrapper, rel_type, id) {
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
         var data = response.data;
+        tinymce.activeEditor.setContent('');
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
         if (rel_type == 'proposals') {
             $('a[aria-controls="tab_proposal"]').click()
