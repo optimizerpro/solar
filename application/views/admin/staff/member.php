@@ -563,11 +563,11 @@
    <script>
       $(document).ready(function(){
          $("#acceptance_firstname").val($("#firstname").val());
-         $("#acceptance_firstname").hide();
+         $("#acceptance_firstname").parent().parent().hide();
          $("#acceptance_lastname").val($("#lastname").val());
-         $("#acceptance_lastname").hide();
+         $("#acceptance_lastname").parent().parent().hide();
          $("#acceptance_email").val($("#email").val());
-         $("#acceptance_email").hide();
+         $("#acceptance_email").parent().parent().hide();
       });
    </script>
 </body>

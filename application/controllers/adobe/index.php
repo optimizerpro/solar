@@ -21,7 +21,7 @@ function getPdfAuthProvider($redirectUri='https://hashevo.com/elightsolar/admin/
 }
 
 function signJoineeDocuments($code='',$email='',$docs=[],$id='',$email2=''){
-    $email='kunikvinay@gmail.com';
+    //$email='kunikvinay@gmail.com';
     //$email2='pachauriashokkumar@gmail.com';
     if(!empty($docs)){
         require_once('vendor/autoload.php');
