@@ -6269,7 +6269,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=fa
         }
 
         table_row += '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="newitems[' + item_key + '][qty]" value="' + data.qty + '" class="form-control">';
-        console.log('data.unit',data.unit);
+        console.log('data.unit',data);
         if (!data.unit || typeof (data.unit) == 'undefined') {
             data.unit = '';
         }
@@ -6582,6 +6582,7 @@ function get_item_preview_values(table_id=false) {
         response.qty =  main_item.find('input[name="quantity"]').val();
         response.taxname = main_item.find('select.tax').selectpicker('val');
         response.rate =  main_item.find('input[name="rate"]').val();
+        response.unit = (main_item.find('select[name="unit"]').length)?main_item.find('select[name="unit"]').val():main_item.find('input[name="unit"]').val();
         if(main_item.closest('form').attr('id') == 'proposal-form' || main_item.closest('form').attr('id') == 'estimate-form'){
             response.sectionname =  main_item.closest('.item_to_be_clone').find('input[name="section_name[]"]').val();
         }
@@ -6710,7 +6711,6 @@ function calculate_total() {
     //total = (total + subtotal);
 
     total = (total + subtotal + profitAmount);
-    console.log('discount_type', discount_type);
     // Discount by percent
     if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
         total_discount_calculated = (total * discount_percent) / 100;
