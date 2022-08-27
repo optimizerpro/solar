@@ -32,7 +32,7 @@ class Staff extends AdminController
             if(isset($_POST['action']) && $_POST['action']=='sign_contract'){
                 $action = $this->input->post('action');
                 process_digital_signature_image($this->input->post('signature', false), STAFF_UPLOADS_FOLDER . $id);
-                $this->db->where('id', $id);
+                $this->db->where('staffid', $id);
                 $this->db->update(db_prefix().'staff', array_merge(get_acceptance_info_array(false,true)));
                 set_alert('success', "Signature generated successfully");
                 redirect($_SERVER['HTTP_REFERER']);
