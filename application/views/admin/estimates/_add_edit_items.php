@@ -229,7 +229,7 @@
                               $show_section_id=true;
                               $section_items_id=$section_items_id+1;
                            }
-                           if($new_sec!=$prev_sec){
+                           if($new_sec == '' || $new_sec!=$prev_sec){
                               
                               if($prev_sec!=''){
                                  ?>

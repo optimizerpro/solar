@@ -492,8 +492,11 @@ class Invoices_model extends App_Model
             if (!$this->is_draft($insert_id)) {
                 $this->increment_next_number();
             }
-
+            
             foreach ($items as $key => $item) {
+                $item['qty'] = 1;
+                $item['long_description'] = '';
+                $item['unit'] = '';
                 if ($itemid = add_new_sales_item_post($item, $insert_id, 'invoice')) {
                     if (isset($billed_tasks[$key])) {
                         foreach ($billed_tasks[$key] as $_task_id) {
@@ -515,7 +518,7 @@ class Invoices_model extends App_Model
                     _maybe_insert_post_item_tax($itemid, $item, $insert_id, 'invoice');
                 }
             }
-
+            
             update_sales_total_tax_column($insert_id, 'invoice', db_prefix() . 'invoices');
 
             if (!DEFINED('CRON') && $expense == false) {
@@ -971,6 +974,9 @@ class Invoices_model extends App_Model
         }
 
         foreach ($newitems as $key => $item) {
+            $item['qty'] = 1;
+            $item['long_description'] = '';
+            $item['unit'] = '';
             if ($new_item_added = add_new_sales_item_post($item, $id, 'invoice')) {
                 if (isset($billed_tasks[$key])) {
                     foreach ($billed_tasks[$key] as $_task_id) {

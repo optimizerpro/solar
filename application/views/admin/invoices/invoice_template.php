@@ -377,13 +377,13 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group select-placeholder">
+                     <div class="form-group hidden"><!-- select-placeholder -->
+                        <!-- <input type="hidden" name="discount_type" value="before_tax"> -->
                         <label for="discount_type" class="control-label"><?php echo _l('discount_type'); ?></label>
                         <select name="discount_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                            <option value="" selected><?php echo _l('no_discount'); ?></option>
-                           <option value="before_tax" <?php
-                              if(isset($invoice)){ if($invoice->discount_type == 'before_tax'){ echo 'selected'; }} ?>><?php echo _l('discount_type_before_tax'); ?></option>
-                           <option value="after_tax" <?php if(isset($invoice)){if($invoice->discount_type == 'after_tax'){echo 'selected';}} ?>><?php echo _l('discount_type_after_tax'); ?></option>
+                           <option value="before_tax" selected><?php echo _l('discount_type_before_tax'); ?></option>
+                           <option value="after_tax"><?php echo _l('discount_type_after_tax'); ?></option>
                         </select>
                      </div>
                   </div>
@@ -432,7 +432,7 @@
       </div>
    </div>
    <div class="panel-body mtop10">
-      <div class="row">
+      <!-- <div class="row">
          <div class="col-md-4">
             <?php $this->load->view('admin/invoice_items/item_select'); ?>
          </div>
@@ -484,15 +484,15 @@
                </div>
             </div>
          </div>
-      </div>
+      </div> -->
       <?php if(isset($invoice_from_project)){ echo '<hr class="no-mtop" />'; } ?>
       <div class="table-responsive s_table">
          <table class="table invoice-items-table items table-main-invoice-edit has-calculations no-mtop">
             <thead>
                <tr>
                   <th></th>
-                  <th width="20%" align="left"><i class="fa fa-exclamation-circle" aria-hidden="true" data-toggle="tooltip" data-title="<?php echo _l('item_description_new_lines_notice'); ?>"></i> <?php echo _l('invoice_table_item_heading'); ?></th>
-                  <th width="25%" align="left"><?php echo _l('invoice_table_item_description'); ?></th>
+                  <th align="left"><i class="fa fa-exclamation-circle" aria-hidden="true" data-toggle="tooltip" data-title="<?php echo _l('item_description_new_lines_notice'); ?>"></i> <?php echo _l('invoice_table_item_heading'); ?></th>
+                  <!-- <th width="25%" align="left"><?php echo _l('invoice_table_item_description'); ?></th>
                   <?php
                   $custom_fields = get_custom_fields('items');
                   foreach($custom_fields as $cf){
@@ -505,10 +505,10 @@
                       $qty_heading = _l('invoice_table_quantity_heading') .'/'._l('invoice_table_hours_heading');
                      }
                      ?>
-                  <th width="10%" align="right" class="qty"><?php echo $qty_heading; ?></th>
-                  <th width="15%" align="right"><?php echo _l('invoice_table_rate_heading'); ?></th>
-                  <th width="20%" align="right"><?php echo _l('invoice_table_tax_heading'); ?></th>
-                  <th width="10%" align="right"><?php echo _l('invoice_table_amount_heading'); ?></th>
+                  <th width="10%" align="right" class="qty"><?php echo $qty_heading; ?></th> -->
+                  <th align="right"><?php echo _l('invoice_table_rate_heading'); ?></th>
+                  <!-- <th width="20%" align="right"><?php echo _l('invoice_table_tax_heading'); ?></th>
+                  <th width="10%" align="right"><?php echo _l('invoice_table_amount_heading'); ?></th> -->
                   <th align="center"><i class="fa fa-cog"></i></th>
                </tr>
             </thead>
@@ -516,20 +516,20 @@
                <tr class="main">
                   <td></td>
                   <td>
-                     <textarea name="description" class="form-control" rows="4" placeholder="<?php echo _l('item_description_placeholder'); ?>"></textarea>
+                     <input name="description" type="text" class="form-control" placeholder="<?php echo _l('item_description_placeholder'); ?>" />
                   </td>
-                  <td>
+                  <!-- <td>
                      <textarea name="long_description" rows="4" class="form-control" placeholder="<?php echo _l('item_long_description_placeholder'); ?>"></textarea>
-                  </td>
-                  <?php echo render_custom_fields_items_table_add_edit_preview(); ?>
+                  </td> -->
+                  <!-- <?php echo render_custom_fields_items_table_add_edit_preview(); ?>
                   <td>
                      <input type="number" name="quantity" min="0" value="1" class="form-control" placeholder="<?php echo _l('item_quantity_placeholder'); ?>">
                      <input type="text" placeholder="<?php echo _l('unit'); ?>" data-toggle="tooltip" data-title="e.q kg, lots, packs" name="unit" class="form-control input-transparent text-right">
-                  </td>
+                  </td> -->
                   <td>
                      <input type="number" name="rate" class="form-control" placeholder="<?php echo _l('item_rate_placeholder'); ?>">
                   </td>
-                  <td>
+                  <!-- <td>
                      <?php
                         $default_tax = unserialize(get_option('default_tax'));
                         $select = '<select class="selectpicker display-block tax main-tax" data-width="100%" name="taxname" multiple data-none-selected-text="'._l('no_tax').'">';
@@ -547,7 +547,7 @@
                         echo $select;
                         ?>
                   </td>
-                  <td></td>
+                  <td></td> -->
                   <td>
                      <?php
                         $new_item = 'undefined';
@@ -555,7 +555,7 @@
                          $new_item = true;
                         }
                         ?>
-                     <button type="button" onclick="add_item_to_table('undefined','undefined',<?php echo $new_item; ?>); return false;" class="btn pull-right btn-info"><i class="fa fa-check"></i></button>
+                     <button type="button" onclick="add_item_to_table_invoice('undefined','undefined',<?php echo $new_item; ?>); return false;" class="btn pull-right btn-info"><i class="fa fa-check"></i></button>
                   </td>
                </tr>
                <?php if (isset($invoice) || isset($add_items)) {
@@ -585,25 +585,26 @@
                     // order input
                     $table_row .= '<input type="hidden" class="order" name="' . $items_indicator . '[' . $i . '][order]">';
                     $table_row .= '</td>';
-                    $table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="5">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
-                    $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="5">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
+                    //$table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="5">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
+                    $table_row .= '<td class="bold description"><input type="text" name="' . $items_indicator . '[' . $i . '][description]" class="form-control" value="' . clear_textarea_breaks($item['description']) . '" /></td>';
+                    //$table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="5">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
 
-                    $table_row .= render_custom_fields_items_table_in($item,$items_indicator.'['.$i.']');
+                    //$table_row .= render_custom_fields_items_table_in($item,$items_indicator.'['.$i.']');
 
-                    $table_row .= '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
+                    //$table_row .= '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
 
-                    $unit_placeholder = '';
+                    /*$unit_placeholder = '';
                     if(!$item['unit']){
                       $unit_placeholder = _l('unit');
                       $item['unit'] = '';
                     }
 
-                    $table_row .= '<input type="text" placeholder="'.$unit_placeholder.'" name="'.$items_indicator.'['.$i.'][unit]" class="form-control input-transparent text-right" value="'.$item['unit'].'">';
+                    $table_row .= '<input type="text" placeholder="'.$unit_placeholder.'" name="'.$items_indicator.'['.$i.'][unit]" class="form-control input-transparent text-right" value="'.$item['unit'].'">';*/
 
                     $table_row .= '</td>';
                     $table_row .= '<td class="rate"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
-                    $table_row .= '<td class="taxrate">' . $this->misc_model->get_taxes_dropdown_template('' . $items_indicator . '[' . $i . '][taxname][]', $invoice_item_taxes, 'invoice', $item['id'], true, $manual) . '</td>';
-                    $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
+                    //$table_row .= '<td class="taxrate">' . $this->misc_model->get_taxes_dropdown_template('' . $items_indicator . '[' . $i . '][taxname][]', $invoice_item_taxes, 'invoice', $item['id'], true, $manual) . '</td>';
+                    //$table_row .= '<td class="amount" align="right">' . $amount . '</td>';
                     $table_row .= '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a></td>';
                     if (isset($item['task_id'])) {
                       if (!is_array($item['task_id'])) {
