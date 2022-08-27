@@ -270,9 +270,10 @@ abstract class App_pdf extends TCPDF
                     $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
                 }
             }
-            $CONTRACTOR__SIGNATURE_IMAGE=get_staff_signature(get_staff_user_id());
-            if($CONTRACTOR__SIGNATURE_IMAGE!=""){
-                $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/contracts/'.$instance->id.'/'.$instance->signature.'" data-imgsrc="'.$src.'" style="width:200px;height:75px;">';
+            $staff=get_staff(get_staff_user_id());
+            $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
+            if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
+                $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;">';
                 $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
             }
             
