@@ -180,9 +180,21 @@ abstract class App_pdf extends TCPDF
     public function Close()
     {
         if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
-            $this->processSignature();
+            //$this->processSignature();
+            /*$path   = $this->getSignaturePath();
+            if (!empty($path) && file_exists($path)) {
+                $signature = '';
+                if ($this->type() == 'contract') {
+                    $imageData = file_get_contents($path);
+                    $signature .= '<br /><img src="'.$imageData.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: right;">';
+                    //$signature .= _l('contract_signed_by') . ": {$record->acceptance_firstname} {$record->acceptance_lastname}<br />";
+                    $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
+                    $signature .= "IP: {$record->acceptance_ip}";
+                    $signature .= '</span><br />';
+                }
+            }*/
         }
-
+        
         hooks()->do_action('pdf_close', ['pdf_instance' => $this, 'type' => $this->type()]);
 
         $this->last_page_flag = true;
@@ -238,7 +250,24 @@ abstract class App_pdf extends TCPDF
 
         // Image center
         $content = str_replace('margin-left: auto; margin-right: auto;', 'text-align:center;', $content);
-
+        if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
+            //$this->processSignature();
+            $path   = $this->getSignaturePath();
+            if (!empty($path) && file_exists($path)) {
+                $signature = '';
+                if ($this->type() == 'contract') {
+                    $imageData = file_get_contents($path);
+                    $signature .= '<br /><img src="'.$imageData.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
+                    //$signature .= _l('contract_signed_by') . ": {$record->acceptance_firstname} {$record->acceptance_lastname}<br />";
+                    $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
+                    $signature .= "IP: {$record->acceptance_ip}";
+                    $signature .= '</span><br />';
+                    $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
+                }
+            }
+        }
+        //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
+        //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);
         // Remove any inline definitions for font family as it's causing issue with
         // the PDF font, in this case, only the PDF font will be used to generate the PDF document
         // the inline defitions will be used for HTML view
