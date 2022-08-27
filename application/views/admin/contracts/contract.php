@@ -227,15 +227,7 @@
                            </ul>
                         </div>
                         
-                        <?php
-                           if($contract->sent_for_sign==0){
-                              ?>
-                              <a href="https://hashevo.com/elightsolar/admin/contracts/send_contract_for_adobe_sign/<?php echo $contract->id; ?>" class="btn btn-default" ><span class="btn-with-tooltip" data-toggle="tooltip" data-title="Send for Sign" data-placement="bottom">
-                                 <i class="fa fa-usd"></i></span>
-                              </a>
-                              <?php
-                           }
-                        ?>
+                        
                         <a href="#" class="btn btn-default" data-target="#contract_send_to_client_modal" data-toggle="modal"><span class="btn-with-tooltip" data-toggle="tooltip" data-title="<?php echo _l('contract_send_to_email'); ?>" data-placement="bottom">
                            <i class="fa fa-envelope"></i></span>
                         </a>
@@ -569,7 +561,7 @@
     });
 
     var editor_settings = {
-      readonly : 1,
+       readonly : 1,
        selector: 'div.editable',
        inline: true,
        theme: 'inlite',
