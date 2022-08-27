@@ -143,9 +143,7 @@
                      <i class="fa fa-question-circle pull-left" data-toggle="tooltip" data-title="<?php echo _l('staff_email_signature_help'); ?>"></i>
                      <?php $value = (isset($member) ? $member->email_signature : ''); ?>
                      <?php echo render_textarea('email_signature','settings_email_signature',$value, ['data-entities-encode'=>'true']); ?>
-                     <?php
-                        get_template_part('identity_confirmation_form', array('formData' => form_hidden('action', 'sign_contract')));
-                     ?>
+                     
                      <button type="submit" id="accept_action" class="btn btn-success pull-right action-button">Generate your signature</button>
                      <div class="form-group select-placeholder">
                         <label for="direction"><?php echo _l('document_direction'); ?></label>
@@ -555,5 +553,8 @@
    });
 
 </script>
+<?php
+   get_template_part('identity_confirmation_form', array('formData' => form_hidden('action', 'sign_contract')));
+?>
 </body>
 </html>
