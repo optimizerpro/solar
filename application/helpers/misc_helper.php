@@ -100,7 +100,7 @@ function process_digital_signature_image($partBase64, $path)
  * @param  boolean $empty should the array values be empty or taken from $_POST
  * @return array
  */
-function get_acceptance_info_array($empty = false)
+function get_acceptance_info_array($empty = false,$staff=false)
 {
     $CI        = &get_instance();
     $signature = null;
@@ -119,7 +119,11 @@ function get_acceptance_info_array($empty = false)
         'acceptance_ip'        => !$empty ? $CI->input->ip_address() : null,
         'acceptance_ip'        => !$empty ? $CI->input->ip_address() : null,
     ];
-
+    if($staff){
+        $data = [
+            'signature'            => $signature
+        ];
+    }
     return hooks()->apply_filters('acceptance_info_array', $data, $empty);
 }
 

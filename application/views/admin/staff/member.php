@@ -551,11 +551,16 @@
            }
        });
    });
+   $("#acceptance_firstname").val($("#firstname").val());
+   $("#acceptance_firstname").hide();
+   $("#acceptance_lastname").val($("#lastname").val());
+   $("#acceptance_lastname").hide();
+   $("#acceptance_email").val($("#email").val());
+   $("#acceptance_email").hide();
    $("body").addClass("identity-confirmation");
 </script>
 <script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/themes/perfex/js/global.min.js?v='.time()); ?>"></script>
 <script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/plugins/signature-pad/signature_pad.min.js?v=2.9.4'); ?>"></script>
-
 <?php
    get_template_part('identity_confirmation_form', array('formData' => form_hidden('action', 'sign_contract')));
    ?>

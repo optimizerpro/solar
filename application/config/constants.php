@@ -157,6 +157,8 @@ define('NEWSFEED_FOLDER', FCPATH . 'uploads/newsfeed' . '/');
  * Contracts attachments
  */
 define('CONTRACTS_UPLOADS_FOLDER', FCPATH . 'uploads/contracts' . '/');
+
+define('STAFF_UPLOADS_FOLDER', FCPATH . 'uploads/staff' . '/');
 /**
  * Tasks attachments
  */

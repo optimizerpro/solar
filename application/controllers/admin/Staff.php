@@ -27,46 +27,59 @@ class Staff extends AdminController
         hooks()->do_action('staff_member_edit_view_profile', $id);
 
         $this->load->model('departments_model');
+        
         if ($this->input->post()) {
-            $data = $this->input->post();
-            // Don't do XSS clean here.
-            $data['email_signature'] = $this->input->post('email_signature', false);
-            $data['email_signature'] = html_entity_decode($data['email_signature']);
-
-            if ($data['email_signature'] == strip_tags($data['email_signature'])) {
-                // not contains HTML, add break lines
-                $data['email_signature'] = nl2br_save_html($data['email_signature']);
+            if(isset($_POST['action']) && $_POST['action']=='sign_contract'){
+                $action = $this->input->post('action');
+                process_digital_signature_image($this->input->post('signature', false), STAFF_UPLOADS_FOLDER . $id);
+                $this->db->where('id', $id);
+                $this->db->update(db_prefix().'staff', array_merge(get_acceptance_info_array(false,true)));
+                set_alert('success', "Signature generated successfully");
+                redirect($_SERVER['HTTP_REFERER']);
             }
+            else
+            {
+                $data = $this->input->post();
+                // Don't do XSS clean here.
+                $data['email_signature'] = $this->input->post('email_signature', false);
+                $data['email_signature'] = html_entity_decode($data['email_signature']);
 
-            $data['password'] = $this->input->post('password', false);
-
-            if ($id == '') {
-                if (!has_permission('staff', '', 'create')) {
-                    access_denied('staff');
+                if ($data['email_signature'] == strip_tags($data['email_signature'])) {
+                    // not contains HTML, add break lines
+                    $data['email_signature'] = nl2br_save_html($data['email_signature']);
                 }
-                $id = $this->staff_model->add($data);
-                if ($id) {
+
+                $data['password'] = $this->input->post('password', false);
+
+                if ($id == '') {
+                    if (!has_permission('staff', '', 'create')) {
+                        access_denied('staff');
+                    }
+                    $id = $this->staff_model->add($data);
+                    if ($id) {
+                        handle_staff_profile_image_upload($id);
+                        set_alert('success', _l('added_successfully', _l('staff_member')));
+                        redirect(admin_url('staff/member/' . $id));
+                    }
+                } else {
+                    if (!has_permission('staff', '', 'edit')) {
+                        access_denied('staff');
+                    }
                     handle_staff_profile_image_upload($id);
-                    set_alert('success', _l('added_successfully', _l('staff_member')));
+                    $response = $this->staff_model->update($data, $id);
+                    if (is_array($response)) {
+                        if (isset($response['cant_remove_main_admin'])) {
+                            set_alert('warning', _l('staff_cant_remove_main_admin'));
+                        } elseif (isset($response['cant_remove_yourself_from_admin'])) {
+                            set_alert('warning', _l('staff_cant_remove_yourself_from_admin'));
+                        }
+                    } elseif ($response == true) {
+                        set_alert('success', _l('updated_successfully', _l('staff_member')));
+                    }
                     redirect(admin_url('staff/member/' . $id));
                 }
-            } else {
-                if (!has_permission('staff', '', 'edit')) {
-                    access_denied('staff');
-                }
-                handle_staff_profile_image_upload($id);
-                $response = $this->staff_model->update($data, $id);
-                if (is_array($response)) {
-                    if (isset($response['cant_remove_main_admin'])) {
-                        set_alert('warning', _l('staff_cant_remove_main_admin'));
-                    } elseif (isset($response['cant_remove_yourself_from_admin'])) {
-                        set_alert('warning', _l('staff_cant_remove_yourself_from_admin'));
-                    }
-                } elseif ($response == true) {
-                    set_alert('success', _l('updated_successfully', _l('staff_member')));
-                }
-                redirect(admin_url('staff/member/' . $id));
             }
+            
         }
         if ($id == '') {
             $title = _l('add_new', _l('staff_member_lowercase'));
