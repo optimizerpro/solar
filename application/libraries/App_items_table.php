@@ -78,11 +78,13 @@ class App_items_table extends App_items_table_template
             /**
              * Item long description
              */
-            if (!empty($item['long_description'])) {
-                $itemHTML .= '<span style="color:#424242;">' . $this->period_merge_field($item['long_description']) . '</span>';
-            }
+            if($this->type != 'invoice'){
+                if (!empty($item['long_description'])) {
+                    $itemHTML .= '<span style="color:#424242;">' . $this->period_merge_field($item['long_description']) . '</span>';
+                }
 
-            $itemHTML .= '</td>';
+                $itemHTML .= '</td>';
+            }
 
             /**
              * Item custom fields
@@ -91,19 +93,21 @@ class App_items_table extends App_items_table_template
                 $itemHTML .= '<td align="left" width="' . $regularItemWidth . '%">' . get_custom_field_value($item['id'], $custom_field['id'], 'items') . '</td>';
             }
 
-            /**
-             * Item quantity
-             */
-            $itemHTML .= '<td align="right" width="' . $regularItemWidth . '%">' . floatVal($item['qty']);
+            if($this->type != 'invoice'){
+                /**
+                 * Item quantity
+                 */
+                $itemHTML .= '<td align="right" width="' . $regularItemWidth . '%">' . floatVal($item['qty']);
 
-            /**
-             * Maybe item has added unit?
-             */
-            if ($item['unit']) {
-                $itemHTML .= ' ' . $item['unit'];
+                /**
+                 * Maybe item has added unit?
+                 */
+                if ($item['unit']) {
+                    $itemHTML .= ' ' . $item['unit'];
+                }
+
+                $itemHTML .= '</td>';
             }
-
-            $itemHTML .= '</td>';
 
             /**
              * Item rate
@@ -121,22 +125,25 @@ class App_items_table extends App_items_table_template
              * Items table taxes HTML custom function because it's too general for all features/options
              * @var string
              */
-            $itemHTML .= $this->taxes_html($item, $regularItemWidth);
+            if($this->type != 'invoice'){
+                $itemHTML .= $this->taxes_html($item, $regularItemWidth);
+            }
 
             /**
              * Possible action hook user to include tax in item total amount calculated with the quantiy
              * eq Rate * QTY + TAXES APPLIED
              */
-            $item_amount_with_quantity = hooks()->apply_filters(
-                'item_preview_amount_with_currency',
-                app_format_money(($item['qty'] * $item['rate']), $this->transaction->currency_name, $this->exclude_currency()),
-                $item,
-                $this->transaction,
-                $this->exclude_currency()
-            );
+            if($this->type != 'invoice'){
+                $item_amount_with_quantity = hooks()->apply_filters(
+                    'item_preview_amount_with_currency',
+                    app_format_money(($item['qty'] * $item['rate']), $this->transaction->currency_name, $this->exclude_currency()),
+                    $item,
+                    $this->transaction,
+                    $this->exclude_currency()
+                );
 
-            $itemHTML .= '<td class="amount" align="right" width="' . $regularItemWidth . '%">' . $item_amount_with_quantity . '</td>';
-
+                $itemHTML .= '<td class="amount" align="right" width="' . $regularItemWidth . '%">' . $item_amount_with_quantity . '</td>';
+            }
             // Close table row
             $itemHTML .= '</tr>';
 
@@ -159,9 +166,8 @@ class App_items_table extends App_items_table_template
         if($this->type == 'proposal' || $this->type == 'estimate'){
             $html .= '<th class="description" align="left">' . $this->section_heading() . '</th>';
         }
+        $html .= '<th class="description" width="' . $this->get_description_item_width() . '%" align="left">' . $this->item_heading() . '</th>';
         if($this->type != 'invoice'){
-            $html .= '<th class="description" width="' . $this->get_description_item_width() . '%" align="left">' . $this->item_heading() . '</th>';
-
             $customFieldsItems = $this->get_custom_fields_for_table();
             foreach ($customFieldsItems as $cf) {
                 $html .= '<th class="custom_field" align="left">' . $cf['name'] . '</th>';
