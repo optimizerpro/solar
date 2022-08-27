@@ -467,6 +467,10 @@ $lang['lead_add_edit_notes']               = 'Notes';
 $lang['lead_add_edit_add_note']            = 'Add Note';
 $lang['lead_not_contacted']                = 'I have not contacted this lead';
 $lang['lead_add_edit_contacted_this_lead'] = 'I got in touch with this lead';
+$lang['lead_category'] = 'Job Category';
+$lang['lead_work_type'] = 'Work Type';
+$lang['lead_trade_type'] = 'Trade Type';
+$lang['lead_location_photo'] = 'Location Photo';
 
 # Misc
 $lang['access_denied'] = 'Access denied';

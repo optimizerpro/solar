@@ -183,21 +183,10 @@
    <?php } ?>
 
    <div class="clearfix no-margin"></div>
-
-
-
    <?php if(isset($lead)){ ?>
-
-
-
    <div class="row mbot15">
-
       <hr class="no-margin" />
-
    </div>
-
-
-
    <div class="alert alert-warning hide mtop20" role="alert" id="lead_proposal_warning">
 
       <?php echo _l('proposal_warning_email_change',array(_l('lead_lowercase'),_l('lead_lowercase'),_l('lead_lowercase'))); ?>
@@ -309,6 +298,31 @@
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_source'); ?></p>
 
             <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->source_name != '' ? $lead->source_name : '-') ?></p>
+            
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_category'); ?></p>
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->job_category_name != '' ? $lead->job_category_name : '-') ?></p>
+
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_work_type'); ?></p>
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->work_type_name != '' ? $lead->work_type_name : '-') ?></p>
+
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_trade_type'); ?></p>
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->trade_type_name != '' ? $lead->trade_type_name : '-') ?></p>
+
+
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_trade_type'); ?></p>
+            <p class="bold font-medium-xs mbot15">
+               <?php
+               if(isset($lead) && $lead->location_photo != ''){
+                  $locationPath = 'uploads/leads/location/'. $lead->location_photo;
+                 if (file_exists($locationPath)) {
+                  echo '<img src="'.base_url($locationPath).'" />';
+                 } else {
+                  echo '-';
+                 }
+               } else {
+                  echo '-';
+               }
+               ?>
 
             <?php if(!is_language_disabled()){ ?>
 
@@ -505,6 +519,23 @@
          </div>
 
          <div class="clearfix"></div>
+         <div class="col-md-4">
+            <?php
+               $selected = (isset($lead) ? $lead->job_category : '');
+               echo render_select('job_category',$categories,array('id','name'),'lead_category',$selected,[]); ?>
+
+         </div>
+         <div class="col-md-4">
+            <?php
+               $selected = (isset($lead) ? $lead->work_type : '');
+               echo render_select('work_type',$trade_types,array('id','name'),'lead_work_type',$selected,[]); ?>
+         </div>
+         <div class="col-md-4">
+            <?php
+               $selected = (isset($lead) ? $lead->trade_type : '');
+               echo render_select('trade_type',$work_types,array('id','name'),'lead_trade_type',$selected,[]); ?>
+         </div>
+         <div class="clearfix"></div>
 
             <hr class="mtop5 mbot10" />
 
@@ -544,8 +575,10 @@
             <?php echo render_input('title','lead_title',$value); ?>
 
             <?php $value = (isset($lead) ? $lead->email : ''); ?>
-
-            <?php echo render_input('email','lead_add_edit_email',$value); ?>
+            <div class="mul_email">
+               <?php echo render_input('email','lead_add_edit_email',$value); ?>
+            </div>
+            <a href="javascript:;" class="add_ano_email">+ Add Another Email</a>
 
            <?php /*if((isset($lead) && empty($lead->website)) || !isset($lead)){
 
@@ -584,8 +617,11 @@
             <?php }*/
 
             $value = (isset($lead) ? $lead->phonenumber : ''); ?>
-
-            <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?>
+            <div class="mul_phone">
+               <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?>
+            </div>
+            <a href="javascript:;" class="add_ano_phone">+ Add Another Phone</a>
+            
 
             <!-- <div class="form-group">
 
@@ -614,6 +650,28 @@
          </div>
 
          <div class="col-md-6">
+            <div class="form-group">
+               <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo'); ?></label>
+               <input type="file" name="location_photo" class="form-control" id="location_photo">
+            </div>
+            <?php if(!is_language_disabled()){ ?>
+               <div class="form-group">
+                  <label for="default_language" class="control-label"><?php echo _l('localization_default_language'); ?></label>
+                  <select name="default_language" data-live-search="true" id="default_language" class="form-control selectpicker" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                     <option value=""><?php echo _l('system_default_string'); ?></option>
+                     <?php foreach($this->app->get_available_default_languages() as $availableLanguage){
+                        $selected = '';
+                        if(isset($lead)){
+                          if($lead->default_language == $availableLanguage){
+                            $selected = 'selected';
+                         }
+                        }
+                        ?>
+                     <option value="<?php echo $availableLanguage; ?>" <?php echo $selected; ?>><?php echo ucfirst($availableLanguage); ?></option>
+                     <?php } ?>
+                  </select>
+               </div>
+            <?php } ?>
 
             <?php $value = (isset($lead) ? $lead->address : ''); ?>
 
@@ -644,41 +702,7 @@
 
             <?php echo render_input('zip','lead_zip',$value); ?>
 
-            <?php if(!is_language_disabled()){ ?>
-
-            <div class="form-group">
-
-               <label for="default_language" class="control-label"><?php echo _l('localization_default_language'); ?></label>
-
-               <select name="default_language" data-live-search="true" id="default_language" class="form-control selectpicker" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
-
-                  <option value=""><?php echo _l('system_default_string'); ?></option>
-
-                  <?php foreach($this->app->get_available_default_languages() as $availableLanguage){
-
-                     $selected = '';
-
-                     if(isset($lead)){
-
-                       if($lead->default_language == $availableLanguage){
-
-                         $selected = 'selected';
-
-                      }
-
-                     }
-
-                     ?>
-
-                  <option value="<?php echo $availableLanguage; ?>" <?php echo $selected; ?>><?php echo ucfirst($availableLanguage); ?></option>
-
-                  <?php } ?>
-
-               </select>
-
-            </div>
-
-            <?php } ?>
+            
 
          </div>
 
@@ -897,5 +921,21 @@ function fillInAddress() {
 }
 
 window.initAutocomplete = initAutocomplete;
+$(document).ready(function() {
+   let ijk = 1;
+   $('body').on('click','.add_ano_email', function(e){
+      let newHtml = '<div class="form-group" ><label for="email'+ijk+'" class="control-label">Another Email</label><input type="text" id="email'+ijk+'" name="ano_email[]" class="form-control" value=""></div>';
+      //let newHtml = '<div class="form-group" ><label for="email'+ijk+'" class="control-label">Another Email</label><div class="input-group"><input type="text" id="email'+ijk+'" name="ano_email[]" class="form-control" value=""><div class="input-group-addon">x</div></div></div>';
+      $('#lead_form').find('.mul_email').append(newHtml);
+      ijk++;
+   })
+   let ijkm = 1;
+
+   $('body').on('click','.add_ano_phone', function(e){
+      let newHtml = '<div class="form-group" ><label for="phone'+ijkm+'" class="control-label">Another Phone</label><input type="text" id="phone'+ijkm+'" name="ano_phone[]" class="form-control" value=""></div>';
+      $('#lead_form').find('.mul_phone').append(newHtml);
+      ijkm++;
+   })
+});
 </script>
 
