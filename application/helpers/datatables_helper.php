@@ -164,7 +164,7 @@ function data_tables_init($aColumns, $sIndexColumn, $sTable, $join = [], $where 
         $searchFound = 0;
         $sWhere      = 'WHERE (';
         for ($i = 0; $i < count($aColumns); $i++) {
-            if (($__post['columns'][$i]) && $__post['columns'][$i]['searchable'] == 'true') {
+            if (isset($__post['columns'][$i]) && $__post['columns'][$i]['searchable'] == 'true') {
                 $search_value = $__post['columns'][$i]['search']['value'];
 
                 $columnName = $aColumns[$i];
