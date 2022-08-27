@@ -144,7 +144,7 @@
                      <?php $value = (isset($member) ? $member->email_signature : ''); ?>
                      <?php echo render_textarea('email_signature','settings_email_signature',$value, ['data-entities-encode'=>'true']); ?>
                      
-                     <button type="submit" id="accept_action" class="btn btn-success pull-right action-button">Generate your signature</button>
+                     <button type="button" id="accept_action" class="btn btn-success pull-right action-button">Generate your signature</button>
                      <div class="form-group select-placeholder">
                         <label for="direction"><?php echo _l('document_direction'); ?></label>
                         <select class="selectpicker" data-none-selected-text="<?php echo _l('system_default_string'); ?>" data-width="100%" name="direction" id="direction">
