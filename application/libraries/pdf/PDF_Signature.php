@@ -22,7 +22,7 @@ trait PDF_Signature
         }
 
         // Customer signature
-        $record = $this->getSignatureableInstance();
+        /*$record = $this->getSignatureableInstance();
         $path   = $this->getSignaturePath();
 
         if (!empty($path) && file_exists($path)) {
@@ -73,6 +73,7 @@ trait PDF_Signature
 
             hooks()->do_action('after_customer_pdf_signature', $hookData);
         }
+        */
     }
 
     public function getCompanySignature()
@@ -82,9 +83,10 @@ trait PDF_Signature
         || ($this->type() == 'contract' && get_option('show_pdf_signature_contract') == 1)
         || ($this->type() == 'proposal' && get_option('show_pdf_signature_proposal') == 1)
         || ($this->type() == 'credit_note') && get_option('show_pdf_signature_credit_note') == 1) {
-            $signatureImage = get_option('signature_image');
-
-            $signaturePath   = FCPATH . 'uploads/company/' . $signatureImage;
+            //$signatureImage = get_option('signature_image');
+            $staff=get_staff(get_staff_user_id());
+            $signatureImage=$staff->signature;
+            $signaturePath   = FCPATH . 'uploads/staff/' . $signatureImage;
             $signatureExists = file_exists($signaturePath);
 
             $blankSignatureLine = hooks()->apply_filters('blank_signature_line', '_________________________');
