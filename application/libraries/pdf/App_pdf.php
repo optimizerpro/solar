@@ -259,7 +259,7 @@ abstract class App_pdf extends TCPDF
                 $signature = '';
                 if ($this->type() == 'contract') {
                     $imageData = file_get_contents($path);
-                    $signature .= '<br /><img src="'.$imageData.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
+                    $signature .= '<br /><img src="@'.$imageData.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
                     //$signature .= _l('contract_signed_by') . ": {$record->acceptance_firstname} {$record->acceptance_lastname}<br />";
                     $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
                     $signature .= "IP: {$record->acceptance_ip}";
