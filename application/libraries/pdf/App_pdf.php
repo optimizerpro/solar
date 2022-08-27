@@ -265,7 +265,7 @@ abstract class App_pdf extends TCPDF
                     $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
                     $signature .= "IP: {$record->acceptance_ip}";
                     $signature .= '</span><br />';
-                    echo $signature;die();
+                    //echo $signature;die();
                     $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
                 }
             }
