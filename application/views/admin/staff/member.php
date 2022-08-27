@@ -152,16 +152,21 @@
                            <option value="rtl" <?php if(isset($member) && $member->direction == 'rtl'){echo 'selected';} ?>>RTL</option>
                         </select>
                      </div>
-                     <br/>
-                     <?php
-                           if($member->signature!='' && $member->signature!=NULL){
-                              ?>
-                              <img src="<?php echo site_url('uploads/staff/'.$member->staffid.'/'.$member->signature); ?>" style="width:200px;height:50px;">
-                              <?php
-                           }
-                     ?>
-                     <button type="button" id="accept_action" class="btn btn-success pull-right action-button">Generate your signature</button>
-                     <br/>
+                     
+                     <div class="form-group">
+                        <label for="custom_signature">Create / Change Signature for documents</label>
+                        <?php
+                              if($member->signature!='' && $member->signature!=NULL){
+                                 ?>
+                                 <img src="<?php echo site_url('uploads/staff/'.$member->staffid.'/'.$member->signature); ?>" style="width:200px;height:50px;">
+                                 <?php
+                              }
+                        ?>
+                        <br/>
+                        <button type="button" id="accept_action" class="btn btn-success pull-right action-button">Create New Signature</button>
+                        <br/>
+                     </div>
+                     
                      <div class="form-group">
                         <?php if(count($departments) > 0){ ?>
                         <label for="departments"><?php echo _l('staff_add_edit_departments'); ?></label>
