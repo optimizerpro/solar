@@ -180,7 +180,7 @@ abstract class App_pdf extends TCPDF
     public function Close()
     {
         if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
-            $this->processSignature();
+            //$this->processSignature();
             /*$path   = $this->getSignaturePath();
             if (!empty($path) && file_exists($path)) {
                 $signature = '';
