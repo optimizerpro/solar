@@ -249,11 +249,13 @@ abstract class App_pdf extends TCPDF
         $content = str_replace('float: left', 'text-align: left', $content);
 
         // Image center
+        
         $content = str_replace('margin-left: auto; margin-right: auto;', 'text-align:center;', $content);
         if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
             //$this->processSignature();
             $path   = $this->getSignaturePath();
             if (!empty($path) && file_exists($path)) {
+                $record = $this->getSignatureableInstance();
                 $signature = '';
                 if ($this->type() == 'contract') {
                     $imageData = file_get_contents($path);
