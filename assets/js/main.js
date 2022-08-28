@@ -8018,13 +8018,12 @@ function delete_template(wrapper, rel_type, id) {
 }
 
 function insert_template(wrapper, rel_type, id) {
-    tinymce.activeEditor.mode.set("design");
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
-        
         var data = response.data;
         tinymce.activeEditor.setContent('');
+        tinymce.activeEditor.mode.set("design");
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
-        
+        tinymce.activeEditor.mode.set("readonly");
         if (rel_type == 'proposals') {
             $('a[aria-controls="tab_proposal"]').click()
         } else if (rel_type == 'contracts') {
@@ -8033,7 +8032,7 @@ function insert_template(wrapper, rel_type, id) {
         
         tinymce.activeEditor.focus();
     });
-    tinymce.activeEditor.mode.set("readonly");
+    
 }
 
 function retrieve_imap_folders(url, params) {
