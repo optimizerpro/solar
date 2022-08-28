@@ -561,6 +561,7 @@
     });
 
     var editor_settings = {
+       readonly:1,
        selector: 'div.editable',
        inline: true,
        theme: 'inlite',
