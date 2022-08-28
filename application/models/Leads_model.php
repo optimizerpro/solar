@@ -18,9 +18,12 @@ class Leads_model extends App_Model
      */
     public function get($id = '', $where = [])
     {
-        $this->db->select('*,' . db_prefix() . 'leads.name, ' . db_prefix() . 'leads.id,' . db_prefix() . 'leads_status.name as status_name,' . db_prefix() . 'leads_sources.name as source_name');
+        $this->db->select('*,' . db_prefix() . 'leads.name, ' . db_prefix() . 'leads.id,' . db_prefix() . 'leads_status.name as status_name,' . db_prefix() . 'leads_sources.name as source_name,' . db_prefix() . 'leads_categories.name as job_category_name,' . db_prefix() . 'leads_work_types.name as work_type_name,' . db_prefix() . 'leads_trade_types.name as trade_type_name');
         $this->db->join(db_prefix() . 'leads_status', db_prefix() . 'leads_status.id=' . db_prefix() . 'leads.status', 'left');
         $this->db->join(db_prefix() . 'leads_sources', db_prefix() . 'leads_sources.id=' . db_prefix() . 'leads.source', 'left');
+        $this->db->join(db_prefix() . 'leads_categories', db_prefix() . 'leads_categories.id=' . db_prefix() . 'leads.job_category', 'left');
+        $this->db->join(db_prefix() . 'leads_work_types', db_prefix() . 'leads_work_types.id=' . db_prefix() . 'leads.work_type', 'left');
+        $this->db->join(db_prefix() . 'leads_trade_types', db_prefix() . 'leads_trade_types.id=' . db_prefix() . 'leads.trade_type', 'left');
 
         $this->db->where($where);
         if (is_numeric($id)) {
@@ -105,6 +108,19 @@ class Leads_model extends App_Model
         if (isset($data['custom_fields'])) {
             $custom_fields = $data['custom_fields'];
             unset($data['custom_fields']);
+        }
+        
+        if (isset($_FILES['location_photo']['name'])) {
+            $location_photo = handle_lead_location_photo();
+            if(isset($data['location_photo'])){ unset($data['location_photo']); }
+            $data['location_photo'] = $location_photo;
+        }
+        
+        if (isset($data['ano_email'])) {
+            $data['ano_email'] = implode("|", $data['ano_email']);
+        }
+        if (isset($data['ano_phone'])) {
+            $data['ano_phone'] = implode("|", $data['ano_phone']);
         }
 
         $data['address'] = trim($data['address']);
@@ -220,6 +236,20 @@ class Leads_model extends App_Model
             }
             unset($data['custom_fields']);
         }
+
+        if (isset($_FILES['location_photo']['name'])) {
+            $location_photo = handle_lead_location_photo();
+            if(isset($data['location_photo'])){ unset($data['location_photo']); }
+            $data['location_photo'] = $location_photo;
+        }
+        
+        if (isset($data['ano_email'])) {
+            $data['ano_email'] = implode("|", $data['ano_email']);
+        }
+        if (isset($data['ano_phone'])) {
+            $data['ano_phone'] = implode("|", $data['ano_phone']);
+        }
+        
         if (!defined('API')) {
             if (isset($data['is_public'])) {
                 $data['is_public'] = 1;
@@ -623,6 +653,27 @@ class Leads_model extends App_Model
         $this->db->order_by('name', 'asc');
 
         return $this->db->get(db_prefix() . 'leads_sources')->result_array();
+    }
+    // get masters
+
+    /**
+     27-08-2022
+     * Get leads categories
+     * @param  string $tbl default categories,trade_types,work_types
+     * @param  mixed $id Optional - Category ID
+     * @return mixed object if id passed else array
+     */
+    public function get_master_datas($tbl = 'categories', $id = false)
+    {
+        if (is_numeric($id)) {
+            $this->db->where('id', $id);
+
+            return $this->db->get(db_prefix() . 'leads_'.$tbl)->row();
+        }
+
+        $this->db->order_by('name', 'asc');
+
+        return $this->db->get(db_prefix() . 'leads_'.$tbl)->result_array();
     }
 
     /**

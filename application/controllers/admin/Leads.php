@@ -170,6 +170,9 @@ class Leads extends AdminController
 
         $data['statuses'] = $this->leads_model->get_status();
         $data['sources']  = $this->leads_model->get_source();
+        $data['categories']  = $this->leads_model->get_master_datas();
+        $data['trade_types']  = $this->leads_model->get_master_datas('trade_types');
+        $data['work_types']  = $this->leads_model->get_master_datas('work_types');
 
         $data = hooks()->apply_filters('lead_view_data', $data);
 

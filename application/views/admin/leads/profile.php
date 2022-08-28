@@ -183,21 +183,10 @@
    <?php } ?>
 
    <div class="clearfix no-margin"></div>
-
-
-
    <?php if(isset($lead)){ ?>
-
-
-
    <div class="row mbot15">
-
       <hr class="no-margin" />
-
    </div>
-
-
-
    <div class="alert alert-warning hide mtop20" role="alert" id="lead_proposal_warning">
 
       <?php echo _l('proposal_warning_email_change',array(_l('lead_lowercase'),_l('lead_lowercase'),_l('lead_lowercase'))); ?>
@@ -251,10 +240,17 @@
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_email'); ?></p>
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->email != '' ? '<a href="mailto:'.$lead->email.'">' . $lead->email.'</a>' : '-') ?></p>
+            <?php if(isset($lead) && $lead->ano_email != '' && count(explode("|", $lead->ano_email))){ ?>
+               <p class="text-muted lead-field-heading">Another Email</p>
+               <p class="bold font-medium-xs"><?php echo implode(", ", explode("|", $lead->ano_email)); ?></p>
+            <?php } ?>
+            <?php if(isset($lead) && $lead->ano_phone != '' && count(explode("|", $lead->ano_phone))){ ?>
+               <p class="text-muted lead-field-heading">Another Phone</p>
+               <p class="bold font-medium-xs"><?php echo implode(", ", explode("|", $lead->ano_phone)); ?></p>
+            <?php } ?>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_website'); ?></p>
 
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_website'); ?></p>
-
-            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->website != '' ? '<a href="'.maybe_add_http($lead->website).'" target="_blank">' . $lead->website.'</a>' : '-') ?></p>
+            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->website != '' ? '<a href="'.maybe_add_http($lead->website).'" target="_blank">' . $lead->website.'</a>' : '-') ?></p> -->
 
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_phonenumber'); ?></p>
 
@@ -268,6 +264,7 @@
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p>
 
+            <h4><?php echo _l('Billing Address'); ?></h4>
             <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->address != '' ? $lead->address : '-') ?></p>
@@ -288,6 +285,28 @@
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->zip != '' ? $lead->zip : '-') ?></p>
 
+            <?php if(isset($lead) && $lead->same_as_mailing == 0){ ?>
+               <h4><?php echo _l('lead_mailing_address'); ?></h4>
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_address != '' ? $lead->bill_address : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_city'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_city != '' ? $lead->bill_city : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_state'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_state != '' ? $lead->bill_state : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_country'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_country != 0 ? get_country($lead->bill_country)->short_name : '-') ?></p>
+
+               <p class="text-muted lead-field-heading"><?php echo _l('lead_zip'); ?></p>
+
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_zip != '' ? $lead->bill_zip : '-') ?></p>
+            <?php } ?>
          </div>
 
          <div class="col-md-4 col-xs-12 lead-information-col">
@@ -309,6 +328,31 @@
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_source'); ?></p>
 
             <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->source_name != '' ? $lead->source_name : '-') ?></p>
+            
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_category'); ?></p>
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->job_category_name != '' ? $lead->job_category_name : '-') ?></p>
+
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_work_type'); ?></p>
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->work_type_name != '' ? $lead->work_type_name : '-') ?></p>
+
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_trade_type'); ?></p>
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->trade_type_name != '' ? $lead->trade_type_name : '-') ?></p>
+
+
+            <p class="text-muted lead-field-heading"><?php echo _l('lead_location_photo'); ?></p>
+            <p class="bold font-medium-xs mbot15">
+               <?php
+               if(isset($lead) && $lead->location_photo != ''){
+                  $locationPath = 'uploads/leads/location/'. $lead->location_photo;
+                 if (file_exists($locationPath)) {
+                  echo '<img src="'.base_url($locationPath).'" />';
+                 } else {
+                  echo '-';
+                 }
+               } else {
+                  echo '-';
+               }
+               ?>
 
             <?php if(!is_language_disabled()){ ?>
 
@@ -505,6 +549,23 @@
          </div>
 
          <div class="clearfix"></div>
+         <div class="col-md-4">
+            <?php
+               $selected = (isset($lead) ? $lead->job_category : '');
+               echo render_select('job_category',$categories,array('id','name'),'lead_category',$selected,[]); ?>
+
+         </div>
+         <div class="col-md-4">
+            <?php
+               $selected = (isset($lead) ? $lead->work_type : '');
+               echo render_select('work_type',$work_types,array('id','name'),'lead_work_type',$selected,[]); ?>
+         </div>
+         <div class="col-md-4">
+            <?php
+               $selected = (isset($lead) ? $lead->trade_type : '');
+               echo render_select('trade_type',$trade_types,array('id','name'),'lead_trade_type',$selected,[]); ?>
+         </div>
+         <div class="clearfix"></div>
 
             <hr class="mtop5 mbot10" />
 
@@ -544,8 +605,10 @@
             <?php echo render_input('title','lead_title',$value); ?>
 
             <?php $value = (isset($lead) ? $lead->email : ''); ?>
-
-            <?php echo render_input('email','lead_add_edit_email',$value); ?>
+            <div class="mul_email">
+               <?php echo render_input('email','lead_add_edit_email',$value); ?>
+            </div>
+            <a href="javascript:;" class="add_ano_email">+ Add Another Email</a>
 
            <?php /*if((isset($lead) && empty($lead->website)) || !isset($lead)){
 
@@ -584,8 +647,11 @@
             <?php }*/
 
             $value = (isset($lead) ? $lead->phonenumber : ''); ?>
-
-            <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?>
+            <div class="mul_phone">
+               <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?>
+            </div>
+            <a href="javascript:;" class="add_ano_phone">+ Add Another Phone</a>
+            
 
             <!-- <div class="form-group">
 
@@ -614,6 +680,28 @@
          </div>
 
          <div class="col-md-6">
+            <div class="form-group">
+               <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo'); ?></label>
+               <input type="file" name="location_photo" class="form-control" id="location_photo">
+            </div>
+            <?php if(!is_language_disabled()){ ?>
+               <div class="form-group">
+                  <label for="default_language" class="control-label"><?php echo _l('localization_default_language'); ?></label>
+                  <select name="default_language" data-live-search="true" id="default_language" class="form-control selectpicker" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                     <option value=""><?php echo _l('system_default_string'); ?></option>
+                     <?php foreach($this->app->get_available_default_languages() as $availableLanguage){
+                        $selected = '';
+                        if(isset($lead)){
+                          if($lead->default_language == $availableLanguage){
+                            $selected = 'selected';
+                         }
+                        }
+                        ?>
+                     <option value="<?php echo $availableLanguage; ?>" <?php echo $selected; ?>><?php echo ucfirst($availableLanguage); ?></option>
+                     <?php } ?>
+                  </select>
+               </div>
+            <?php } ?>
 
             <?php $value = (isset($lead) ? $lead->address : ''); ?>
 
@@ -644,44 +732,47 @@
 
             <?php echo render_input('zip','lead_zip',$value); ?>
 
-            <?php if(!is_language_disabled()){ ?>
-
-            <div class="form-group">
-
-               <label for="default_language" class="control-label"><?php echo _l('localization_default_language'); ?></label>
-
-               <select name="default_language" data-live-search="true" id="default_language" class="form-control selectpicker" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
-
-                  <option value=""><?php echo _l('system_default_string'); ?></option>
-
-                  <?php foreach($this->app->get_available_default_languages() as $availableLanguage){
-
-                     $selected = '';
-
-                     if(isset($lead)){
-
-                       if($lead->default_language == $availableLanguage){
-
-                         $selected = 'selected';
-
-                      }
-
-                     }
-
-                     ?>
-
-                  <option value="<?php echo $availableLanguage; ?>" <?php echo $selected; ?>><?php echo ucfirst($availableLanguage); ?></option>
-
-                  <?php } ?>
-
-               </select>
-
-            </div>
-
-            <?php } ?>
+            
 
          </div>
+         <div class="clearfix"></div>
+         <div class="col-md-6">
+            <h4>Billing Address</h4>
+         </div>
+         <div class="col-md-6">
+            <!-- <input type="checkbox" name="same_as_mailing" value="1" /> Same as mailing -->
+         </div>
+         <div class="clearfix"></div>
 
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_address : ''); ?>
+
+            <?php echo render_textarea('bill_address','lead_address',$value,array('rows'=>1,'style'=>'height:36px;font-size:100%;')); ?>
+         </div>
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_city : ''); ?>
+
+            <?php echo render_input('bill_city','lead_city',$value); ?>
+         </div>
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_state : ''); ?>
+
+            <?php echo render_input('bill_state','lead_state',$value); ?>
+         </div>
+         <div class="col-md-4">
+            <?php
+               $selected =( isset($lead) ? $lead->bill_country : $customer_default_country);
+
+               echo render_select( 'bill_country',$get_default_countries,array( 'country_id',array( 'short_name')), 'lead_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
+
+               ?>
+         </div>
+         <div class="col-md-4">
+            <?php $value = (isset($lead) ? $lead->bill_zip : ''); ?>
+
+            <?php echo render_input('bill_zip','lead_zip',$value); ?>
+         </div>
+         <div class="clearfix"></div>
          <div class="col-md-12">
 
             <?php $value = (isset($lead) ? $lead->description : ''); ?>
@@ -807,15 +898,20 @@
 </script>
 
 <?php } ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutocomplete&libraries=places&v=weekly"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe8HvpYz71UY4riWVHh5qJ26blcKBHBv8&callback=initAutoCompvvv&libraries=places&v=weekly"
       defer ></script>
       <script>
+         function initAutoCompvvv(){
+            initAutocomplete();
+            initAutocompleteBill();
+         }
          function initAutoComp(){
             $("#lead-modal").on('shown.bs.modal',function(){
                initAutocomplete();
+               initAutocompleteBill();
             });
          }
-         var autocomplete;
+var autocomplete;
 var address1Field;
 var address2Field;
 var postalField;
@@ -897,5 +993,107 @@ function fillInAddress() {
 }
 
 window.initAutocomplete = initAutocomplete;
+
+
+////////////////////////////////////
+var autocompletebill;
+var address1FieldBill;
+var address2FieldBill;
+var postalFieldBill;
+
+function initAutocompleteBill() {
+  address1FieldBill = document.getElementById('bill_address');
+  address2FieldBill = document.getElementById("bill_city");
+  postalFieldBill = document.getElementById("bill_zip");
+  // Create the autocomplete object, restricting the search predictions to
+  // addresses in the US and Canada.
+  autocompletebill = new google.maps.places.Autocomplete(address1FieldBill, {
+    componentRestrictions: { country: ["us", "ca"] },
+    fields: ["address_components", "geometry"],
+    types: ["address"],
+  });
+  //address1FieldBill.focus();
+  // When the user selects an address from the drop-down, populate the
+  // address fields in the form.
+  autocompletebill.addListener("place_changed", fillInAddressBill);
+}
+
+function fillInAddressBill() {
+  // Get the place details from the autocomplete object.
+  const place = autocompletebill.getPlace();
+  var address1 = "";
+  var postcode = "";
+
+  // Get each component of the address from the place details,
+  // and then fill-in the corresponding field on the form.
+  // place.address_components are google.maps.GeocoderAddressComponent objects
+  // which are documented at http://goo.gle/3l5i5Mr
+  for (const component of place.address_components) {
+    // @ts-ignore remove once typings fixed
+    const componentType = component.types[0];
+
+    switch (componentType) {
+      case "street_number": {
+        address1 = `${component.long_name} ${address1}`;
+        break;
+      }
+
+      case "route": {
+        address1 += component.short_name;
+        break;
+      }
+
+      case "postal_code": {
+        postcode = `${component.long_name}${postcode}`;
+        break;
+      }
+
+      case "postal_code_suffix": {
+        postcode = `${postcode}-${component.long_name}`;
+        break;
+      }
+      case "locality":
+        document.querySelector("#bill_city").value = component.long_name;
+        break;
+      case "administrative_area_level_1": {
+        document.querySelector("#bill_state").value = component.short_name;
+        break;
+      }
+      case "country":
+         if("United States"==component.long_name)
+         {
+            document.querySelector("#bill_country").value = 236;
+            $("#bill_country").selectpicker('refresh');
+         }
+        break;
+    }
+  }
+
+  address1FieldBill.value = address1;
+  postalFieldBill.value = postcode;
+  // After filling the form with address components from the Autocomplete
+  // prediction, set cursor focus on the second address line to encourage
+  // entry of subpremise information such as apartment, unit, or floor number.
+  address2FieldBill.focus();
+}
+
+window.initAutocompleteBill = initAutocompleteBill;
+
+$(document).ready(function() {
+   let ijk = 1;
+   $('body').on('click','.add_ano_email', function(e){
+      let newHtml = '<div class="form-group" ><label for="email'+ijk+'" class="control-label">Another Email</label><input type="text" id="email'+ijk+'" name="ano_email[]" class="form-control" value=""></div>';
+      //let newHtml = '<div class="form-group" ><label for="email'+ijk+'" class="control-label">Another Email</label><div class="input-group"><input type="text" id="email'+ijk+'" name="ano_email[]" class="form-control" value=""><div class="input-group-addon">x</div></div></div>';
+      $('#lead_form').find('.mul_email').append(newHtml);
+      ijk++;
+   })
+   let ijkm = 1;
+
+   $('body').on('click','.add_ano_phone', function(e){
+      let newHtml = '<div class="form-group" ><label for="phone'+ijkm+'" class="control-label">Another Phone</label><input type="text" id="phone'+ijkm+'" name="ano_phone[]" class="form-control" value=""></div>';
+      $('#lead_form').find('.mul_phone').append(newHtml);
+      ijkm++;
+   })
+});
 </script>
 

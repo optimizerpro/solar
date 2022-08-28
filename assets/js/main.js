@@ -4157,10 +4157,43 @@ function validate_lead_convert_to_client_form() {
 // Lead profile data function form handler
 function lead_profile_form_handler(form) {
     form = $(form);
-    var data = form.serialize();
+    //var data = form.serialize();
+    var formData = new FormData($(form)[0]);
     var leadid = $('#lead-modal').find('input[name="leadid"]').val();
     $('.lead-save-btn').addClass('disabled');
-    $.post(form.attr('action'), data).done(function (response) {
+    $.ajax({
+       url: form.attr('action'),
+       type: "POST",
+       data:  formData,
+       contentType: false,
+       cache: false,
+       processData:false,
+       success: function(response){
+        response = JSON.parse(response);
+        if (response.message !== '') {
+            alert_float('success', response.message);
+        }
+        if (response.proposal_warning && response.proposal_warning != false) {
+            $("body").find('#lead_proposal_warning').removeClass('hide');
+            $("body").find('#lead-modal').animate({
+                scrollTop: 0
+            }, 800);
+        } else {
+            _lead_init_data(response, response.id);
+        }
+        if ($.fn.DataTable.isDataTable('.table-leads')) {
+            table_leads.DataTable().ajax.reload(null, false);
+        } else if($('body').hasClass('kan-ban-body')) {
+            leads_kanban()
+        }
+       },
+       error: function(e){
+        alert_float('danger', data.responseText);
+        return false;
+       }          
+    });
+    return false;
+    /*$.post(form.attr('action'), formData).done(function (response) {
         response = JSON.parse(response);
         if (response.message !== '') {
             alert_float('success', response.message);
@@ -4182,7 +4215,7 @@ function lead_profile_form_handler(form) {
         alert_float('danger', data.responseText);
         return false;
     });
-    return false;
+    return false;*/
 }
 
 // Updates all proposals emails linked to lead, this wil be executed when eq lead email is changed

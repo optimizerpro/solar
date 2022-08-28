@@ -1149,3 +1149,35 @@ function get_upload_path_by_type($type)
 
     return hooks()->apply_filters('get_upload_path_by_type', $path, $type);
 }
+
+/**
+ 27-08-2022
+ * Handles upload for lead location image
+ * @param  mixed $id lead id
+ * @return void
+ */
+function handle_lead_location_photo()
+{
+    $path = get_upload_path_by_type('lead') . 'location/';
+    $CI   = & get_instance();
+    if (isset($_FILES['location_photo']['name'])) {
+        // Get the temp file path
+        $tmpFilePath = $_FILES['location_photo']['tmp_name'];
+        // Make sure we have a filepath
+        if (!empty($tmpFilePath) && $tmpFilePath != '') {
+            _maybe_create_upload_path($path);
+            $filename    = date('YmdHis').'_'.$_FILES['location_photo']['name'];
+            $newFilePath = $path . $filename;
+            // Upload the file into the temp dir
+            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                $attachment   = [];
+                $attachment[] = [
+                    'file_name' => $filename,
+                    'filetype'  => $_FILES['location_photo']['type'],
+                    ];
+                return $filename;
+            }
+        }
+    }
+    return null;
+}

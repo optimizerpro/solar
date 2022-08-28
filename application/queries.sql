@@ -74,3 +74,8 @@ ALTER TABLE `tblleads_trade_types`
 
 ALTER TABLE `tblleads_trade_types`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+ALTER TABLE `tblleads` ADD `job_category` INT(11) NULL AFTER `assigned`, ADD `work_type` INT(11) NULL AFTER `job_category`, ADD `trade_type` INT(11) NULL AFTER `work_type`;
+ALTER TABLE `tblleads` ADD `location_photo` VARCHAR(150) NULL AFTER `lead_value`, ADD `same_as_mailing` TINYINT(2) NULL DEFAULT '0' COMMENT '0=no,1=yes' AFTER `location_photo`, ADD `bill_country` INT(15) NULL AFTER `same_as_mailing`, ADD `bill_zip` VARCHAR(15) NULL AFTER `bill_country`, ADD `bill_city` VARCHAR(100) NULL AFTER `bill_zip`, ADD `bill_state` VARCHAR(50) NULL AFTER `bill_city`; 
+ALTER TABLE `tblleads` ADD `bill_address` VARCHAR(100) NULL AFTER `bill_state`; 
+ALTER TABLE `tblleads` ADD `ano_email` VARCHAR(255) NULL AFTER `bill_address`, ADD `ano_phone` VARCHAR(255) NULL AFTER `ano_email`; 
