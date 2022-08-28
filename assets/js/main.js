@@ -8020,17 +8020,16 @@ function delete_template(wrapper, rel_type, id) {
 function insert_template(wrapper, rel_type, id) {
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
         var data = response.data;
-        console.log(tinymce);
-        tinymce.activeEditor.setContent('');
-        tinymce.activeEditor.mode.set("design");
+        tinymce.activeEditor.setMode('design');
+        tinymce.activeEditor.setContent('');        
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
-        tinymce.activeEditor.mode.set("readonly");
+        
         if (rel_type == 'proposals') {
             $('a[aria-controls="tab_proposal"]').click()
         } else if (rel_type == 'contracts') {
             $('a[aria-controls="tab_content"]').click()
         }
-        
+        tinymce.activeEditor.setMode('readonly');
         tinymce.activeEditor.focus();
     });
     
