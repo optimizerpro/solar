@@ -8019,9 +8019,9 @@ function delete_template(wrapper, rel_type, id) {
 
 function insert_template(wrapper, rel_type, id) {
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
-        tinymce.activeEditor.setMode('design');
-        var data = response.data;
         
+        var data = response.data;
+        tinymce.activeEditor.setMode('design');
         tinymce.activeEditor.setContent('');
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
         
@@ -8030,8 +8030,9 @@ function insert_template(wrapper, rel_type, id) {
         } else if (rel_type == 'contracts') {
             $('a[aria-controls="tab_content"]').click()
         }
-        tinymce.activeEditor.focus();
+        
         tinymce.activeEditor.setMode('readonly');
+        tinymce.activeEditor.focus();
     });
 }
 
