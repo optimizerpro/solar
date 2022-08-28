@@ -644,6 +644,7 @@
  });
 
 function save_contract_content(manual) {
+   tinymce.activeEditor.setMode('design');
  var editor = tinyMCE.activeEditor;
  var data = {};
  data.contract_id = contract_id;
@@ -660,6 +661,7 @@ function save_contract_content(manual) {
        var response = JSON.parse(error.responseText);
        alert_float('danger', response.message);
     });
+    tinymce.activeEditor.setMode('readonly');
  }
 
  function delete_contract_attachment(wrapper, id) {
