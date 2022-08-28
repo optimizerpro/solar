@@ -8020,8 +8020,9 @@ function delete_template(wrapper, rel_type, id) {
 function insert_template(wrapper, rel_type, id) {
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
         var data = response.data;
-        tinymce.activeEditor.setMode('design');
-        tinymce.activeEditor.setContent('');        
+        
+        tinymce.activeEditor.setContent('');
+        tinymce.activeEditor.setMode('design');        
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
         
         if (rel_type == 'proposals') {
