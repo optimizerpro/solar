@@ -8021,7 +8021,7 @@ function insert_template(wrapper, rel_type, id) {
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
         
         var data = response.data;
-        tinymce.get('content').setMode('design');
+        tinymce.activeEditor.mode.set("design");
         tinymce.activeEditor.setContent('');
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
         
@@ -8031,7 +8031,7 @@ function insert_template(wrapper, rel_type, id) {
             $('a[aria-controls="tab_content"]').click()
         }
         
-        tinymce.get('content').setMode('readonly');
+        tinymce.activeEditor.mode.set("readonly");
         tinymce.activeEditor.focus();
     });
 }
