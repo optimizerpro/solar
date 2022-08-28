@@ -8020,6 +8020,7 @@ function delete_template(wrapper, rel_type, id) {
 function insert_template(wrapper, rel_type, id) {
     requestGetJSON(admin_url + 'templates/index/' + id).done(function (response) {
         var data = response.data;
+        console.log(tinymce);
         tinymce.activeEditor.setContent('');
         tinymce.activeEditor.mode.set("design");
         tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
