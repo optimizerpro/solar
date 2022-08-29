@@ -233,3 +233,23 @@ function load_lead_language($lead_id)
 
     return true;
 }
+
+/**
+ * Get trade type name list
+ * @return string return loaded language
+ */
+function get_trade_type($trade_type)
+{
+    $CI = & get_instance();
+    $trade_typeArr = explode(",", $trade_type);
+    $tradeRes = $CI->db->where_in('id', $trade_typeArr)->get(db_prefix() . 'leads_trade_types');
+    if($tradeRes->num_rows() > 0){
+         $tradeRes = $tradeRes->result_array();
+         $tradeResArr = [];
+         foreach ($tradeRes as $kk1 => $vv1) {
+            $tradeResArr[] = $vv1['name'];
+         }
+         return implode(", ", $tradeResArr);
+    }
+    return '-';
+}

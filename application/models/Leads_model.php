@@ -122,9 +122,22 @@ class Leads_model extends App_Model
         if (isset($data['ano_phone'])) {
             $data['ano_phone'] = implode("|", $data['ano_phone']);
         }
+        if (isset($data['trade_type']) && is_array($data['trade_type']) && count($data['trade_type']) > 0) {
+            $data['trade_type'] = implode(",", $data['trade_type']);
+        }
 
         $data['address'] = trim($data['address']);
         $data['address'] = nl2br($data['address']);
+        if(isset($data['same_as_mailing']) && $data['same_as_mailing'] == 1){
+            $data['bill_address'] = $data['address'];
+            $data['bill_city'] = $data['city'];
+            $data['bill_state'] = $data['state'];
+            $data['bill_country'] = $data['country'];
+            $data['bill_zip'] = $data['zip'];
+        } else {
+            $data['bill_address'] = trim($data['bill_address']);
+            $data['bill_address'] = nl2br($data['bill_address']);
+        }
 
         $data['email'] = trim($data['email']);
         $this->db->insert(db_prefix() . 'leads', $data);
@@ -249,6 +262,9 @@ class Leads_model extends App_Model
         if (isset($data['ano_phone'])) {
             $data['ano_phone'] = implode("|", $data['ano_phone']);
         }
+        if (isset($data['trade_type']) && is_array($data['trade_type']) && count($data['trade_type']) > 0) {
+            $data['trade_type'] = implode(",", $data['trade_type']);
+        }
         
         if (!defined('API')) {
             if (isset($data['is_public'])) {
@@ -291,6 +307,17 @@ class Leads_model extends App_Model
 
         $data['address'] = trim($data['address']);
         $data['address'] = nl2br($data['address']);
+
+        if(isset($data['same_as_mailing']) && $data['same_as_mailing'] == 1){
+            $data['bill_address'] = $data['address'];
+            $data['bill_city'] = $data['city'];
+            $data['bill_state'] = $data['state'];
+            $data['bill_country'] = $data['country'];
+            $data['bill_zip'] = $data['zip'];
+        } else {
+            $data['bill_address'] = trim($data['bill_address']);
+            $data['bill_address'] = nl2br($data['bill_address']);
+        }
 
         $data['email'] = trim($data['email']);
 

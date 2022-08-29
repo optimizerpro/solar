@@ -336,7 +336,12 @@
             <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->work_type_name != '' ? $lead->work_type_name : '-') ?></p>
 
             <p class="text-muted lead-field-heading"><?php echo _l('lead_trade_type'); ?></p>
-            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->trade_type_name != '' ? $lead->trade_type_name : '-') ?></p>
+            <p class="bold font-medium-xs mbot15">
+               <?php if(isset($lead) && $lead->trade_type != ''){
+                  echo get_trade_type($lead->trade_type);
+               } else {
+                 echo '-';
+               } ?></p>
 
 
             <p class="text-muted lead-field-heading"><?php echo _l('lead_location_photo'); ?></p>
@@ -563,7 +568,7 @@
          <div class="col-md-4">
             <?php
                $selected = (isset($lead) ? $lead->trade_type : '');
-               echo render_select('trade_type',$trade_types,array('id','name'),'lead_trade_type',$selected,[]); ?>
+               echo render_select('trade_type[]',$trade_types,array('id','name'),'lead_trade_type',$selected,['multiple'=>'multiple']); ?>
          </div>
          <div class="clearfix"></div>
 
@@ -736,41 +741,43 @@
 
          </div>
          <div class="clearfix"></div>
-         <div class="col-md-6">
+         <?php $isSameChecked = (isset($lead) && $lead->same_as_mailing == 0 ? '' : 'checked'); ?>
+         <div class="col-md-3">
             <h4>Billing Address</h4>
          </div>
          <div class="col-md-6">
-            <!-- <input type="checkbox" name="same_as_mailing" value="1" /> Same as mailing -->
+            <input type="checkbox" name="same_as_mailing" value="1" <?php echo $isSameChecked; ?> id="same_as_mailing"/> <label for="same_as_mailing">Same as mailing</label>
          </div>
          <div class="clearfix"></div>
+         <div class="div_billing <?php echo $isSameChecked != ''?'hidden':''; ?>">
+            <div class="col-md-4">
+               <?php $value = (isset($lead) ? $lead->bill_address : ''); ?>
 
-         <div class="col-md-4">
-            <?php $value = (isset($lead) ? $lead->bill_address : ''); ?>
+               <?php echo render_textarea('bill_address','lead_address',$value,array('rows'=>1,'style'=>'height:36px;font-size:100%;')); ?>
+            </div>
+            <div class="col-md-4">
+               <?php $value = (isset($lead) ? $lead->bill_city : ''); ?>
 
-            <?php echo render_textarea('bill_address','lead_address',$value,array('rows'=>1,'style'=>'height:36px;font-size:100%;')); ?>
-         </div>
-         <div class="col-md-4">
-            <?php $value = (isset($lead) ? $lead->bill_city : ''); ?>
+               <?php echo render_input('bill_city','lead_city',$value); ?>
+            </div>
+            <div class="col-md-4">
+               <?php $value = (isset($lead) ? $lead->bill_state : ''); ?>
 
-            <?php echo render_input('bill_city','lead_city',$value); ?>
-         </div>
-         <div class="col-md-4">
-            <?php $value = (isset($lead) ? $lead->bill_state : ''); ?>
+               <?php echo render_input('bill_state','lead_state',$value); ?>
+            </div>
+            <div class="col-md-4">
+               <?php
+                  $selected =( isset($lead) ? $lead->bill_country : $customer_default_country);
 
-            <?php echo render_input('bill_state','lead_state',$value); ?>
-         </div>
-         <div class="col-md-4">
-            <?php
-               $selected =( isset($lead) ? $lead->bill_country : $customer_default_country);
+                  echo render_select( 'bill_country',$get_default_countries,array( 'country_id',array( 'short_name')), 'lead_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
 
-               echo render_select( 'bill_country',$get_default_countries,array( 'country_id',array( 'short_name')), 'lead_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
+                  ?>
+            </div>
+            <div class="col-md-4">
+               <?php $value = (isset($lead) ? $lead->bill_zip : ''); ?>
 
-               ?>
-         </div>
-         <div class="col-md-4">
-            <?php $value = (isset($lead) ? $lead->bill_zip : ''); ?>
-
-            <?php echo render_input('bill_zip','lead_zip',$value); ?>
+               <?php echo render_input('bill_zip','lead_zip',$value); ?>
+            </div>
          </div>
          <div class="clearfix"></div>
          <div class="col-md-12">
@@ -1090,9 +1097,16 @@ $(document).ready(function() {
    let ijkm = 1;
 
    $('body').on('click','.add_ano_phone', function(e){
-      let newHtml = '<div class="form-group" ><label for="phone'+ijkm+'" class="control-label">Another Phone</label><input type="text" id="phone'+ijkm+'" name="ano_phone[]" class="form-control" value=""></div>';
-      $('#lead_form').find('.mul_phone').append(newHtml);
+      let newHtml2 = '<div class="form-group" ><label for="phone'+ijkm+'" class="control-label">Another Phone</label><input type="text" id="phone'+ijkm+'" name="ano_phone[]" class="form-control" value=""></div>';
+      $('#lead_form').find('.mul_phone').append(newHtml2);
       ijkm++;
+   })
+
+   $('body').on('change','input[name="same_as_mailing"]', function(e){
+      $('#lead_form').find('.div_billing').removeClass('hidden').addClass('hidden');
+      if(!$(this).prop('checked')){
+         $('#lead_form').find('.div_billing').removeClass('hidden');
+      }
    })
 });
 </script>

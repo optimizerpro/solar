@@ -79,3 +79,6 @@ ALTER TABLE `tblleads` ADD `job_category` INT(11) NULL AFTER `assigned`, ADD `wo
 ALTER TABLE `tblleads` ADD `location_photo` VARCHAR(150) NULL AFTER `lead_value`, ADD `same_as_mailing` TINYINT(2) NULL DEFAULT '0' COMMENT '0=no,1=yes' AFTER `location_photo`, ADD `bill_country` INT(15) NULL AFTER `same_as_mailing`, ADD `bill_zip` VARCHAR(15) NULL AFTER `bill_country`, ADD `bill_city` VARCHAR(100) NULL AFTER `bill_zip`, ADD `bill_state` VARCHAR(50) NULL AFTER `bill_city`; 
 ALTER TABLE `tblleads` ADD `bill_address` VARCHAR(100) NULL AFTER `bill_state`; 
 ALTER TABLE `tblleads` ADD `ano_email` VARCHAR(255) NULL AFTER `bill_address`, ADD `ano_phone` VARCHAR(255) NULL AFTER `ano_email`; 
+
+--29-08-2022
+ALTER TABLE `tblleads` CHANGE `trade_type` `trade_type` VARCHAR(255) NULL DEFAULT NULL COMMENT 'comma separated ids from tblleads_trade_types'; 

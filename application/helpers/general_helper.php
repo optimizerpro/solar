@@ -967,3 +967,11 @@ if (!function_exists('collect')) {
         return new Illuminate\Support\Collection($items);
     }
 }
+if (!function_exists('pre')) {
+    function pre($array, $isExist = true)
+    {
+        echo '<pre>'; print_r($array);
+        if($isExist) exit;
+        echo '</pre>';
+    }
+}
