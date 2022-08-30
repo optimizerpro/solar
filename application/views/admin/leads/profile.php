@@ -350,7 +350,7 @@
                if(isset($lead) && $lead->location_photo != ''){
                   $locationPath = 'uploads/leads/location/'. $lead->location_photo;
                  if (file_exists($locationPath)) {
-                  echo '<img src="'.site_url($locationPath).'" />';
+                  echo '<img src="'.site_url($locationPath).'" style="height:75px;width:75px;" />';
                  } else {
                   echo '-';
                  }
