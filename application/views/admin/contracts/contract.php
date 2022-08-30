@@ -83,17 +83,44 @@
                ); ?>
             </div>
             <div class="col-md-6">
-               <?php $value = (isset($contract) ? _d($contract->dateend) : ''); ?>
-               <?php echo render_date_input(
-                  'dateend',
-                  'contract_end_date',
-                  $value,
-                  isset($contract) && $contract->signed == 1 ? ['disabled'=>true] : []
-               ); ?>
+               <div class="form-group">
+                  <label for="manufacturer_warranty">Manufacturer Warranty (yrs)</label>
+                  <input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="<?php if(isset($contract)){if($contract->manufacturer_warranty !=''){echo $contract->manufacturer_warranty;}else{ echo ''; }}; ?>">    
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="form-group">
+                  <label for="roll_yard">Roll yard with magnetic roller</label>
+                  <input type="text" id="roll_yard" name="roll_yard" value="<?php if(isset($contract)){if($contract->roll_yard !=''){echo $contract->roll_yard;}else{ echo ''; }}; ?>">    
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="form-group">
+                  <label for="shingle_color">Shingle Color</label>
+                  <input type="text" id="shingle_color" name="shingle_color" value="<?php if(isset($contract)){if($contract->shingle_color !=''){echo $contract->shingle_color;}else{ echo ''; }}; ?>">    
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="form-group">
+                  <label for="ventilation">Ventilation</label>
+                  <input type="text" id="ventilation" name="ventilation" value="<?php if(isset($contract)){if($contract->ventilation !=''){echo $contract->ventilation;}else{ echo ''; }}; ?>">    
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="form-group">
+                  <label for="install_decking">Install Decking</label>
+                  <input type="text" id="install_decking" name="install_decking" value="<?php if(isset($contract)){if($contract->install_decking !=''){echo $contract->install_decking;}else{ echo ''; }}; ?>">    
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="form-group">
+                  <label for="fastners">Fasteners</label>
+                  <input type="text" id="fastners" name="fastners" value="<?php if(isset($contract)){if($contract->fastners !=''){echo $contract->fastners;}else{ echo ''; }}; ?>">    
+               </div>
             </div>
          </div>
          <?php $value = (isset($contract) ? $contract->description : ''); ?>
-         <?php echo render_textarea('description','contract_description',$value,array('rows'=>10)); ?>
+         <?php echo render_textarea('description','Extra Work & Notes',$value,array('rows'=>10)); ?>
          <?php $rel_id = (isset($contract) ? $contract->id : false); ?>
          <?php echo render_custom_fields('contracts',$rel_id); ?>
          <div class="btn-bottom-toolbar text-right">
