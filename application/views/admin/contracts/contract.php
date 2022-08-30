@@ -83,6 +83,15 @@
                ); ?>
             </div>
             <div class="col-md-6">
+               <?php $value = (isset($contract) ? _d($contract->dateend) : _d(date('Y-m-d'))); ?>
+               <?php echo render_date_input(
+                  'dateend',
+                  'contract_end_date',
+                  $value,
+                  isset($contract) && $contract->signed == 1 ? ['disabled'=>true] : []
+               ); ?>
+            </div>
+            <div class="col-md-6">
                <div class="form-group">
                   <label for="manufacturer_warranty">Manufacturer Warranty (yrs)</label>
                   <input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="<?php if(isset($contract)){if($contract->manufacturer_warranty !=''){echo $contract->manufacturer_warranty;}else{ echo ''; }}; ?>">    
