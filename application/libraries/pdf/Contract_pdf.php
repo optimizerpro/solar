@@ -6,7 +6,7 @@ include_once(__DIR__ . '/App_pdf.php');
 
 class Contract_pdf extends App_pdf
 {
-    protected $contract;
+    public $contract;
 
     public function __construct($contract)
     {
