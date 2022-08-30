@@ -7,7 +7,7 @@ include_once(__DIR__ . '/PDF_Signature.php');
 abstract class App_pdf extends TCPDF
 {
     use PDF_Signature;
-
+    public $contract = [];
     public $font_size = '';
 
     public $font_name = '';
@@ -42,6 +42,7 @@ abstract class App_pdf extends TCPDF
 
     public function __construct($contract=[])
     {
+        $this->contract=$contract;
         $this->formatArray = $this->get_format_array();
 
         parent::__construct($this->formatArray['orientation'], 'mm', $this->formatArray['format'], true, 'UTF-8', false, false);
@@ -269,13 +270,13 @@ abstract class App_pdf extends TCPDF
                     //echo $signature;die();
                     $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
 
-                    $content = str_replace('{{AGR_MFG_WRNTY}}', $contract->manufacturer_warranty, $content);
-                    $content = str_replace('{{AGR_RYARD}}', $contract->roll_yard, $content);
-                    $content = str_replace('{{AGR_SHINGLE_CLR}}', $contract->shingle_color, $content);
-                    $content = str_replace('{{AGR_VENTILATION}}', $contract->ventilation, $content);
-                    $content = str_replace('{{AGR_INSTL_DECKING}}', $contract->install_decking, $content);
-                    $content = str_replace('{{AGR_FASTNERS}}', $contract->fastners, $content);
-                    $content = str_replace('{{AGR_EXTRA_WORK_AND_NOTES}}', $contract->description, $content);
+                    $content = str_replace('{{AGR_MFG_WRNTY}}', $this->contract->manufacturer_warranty, $content);
+                    $content = str_replace('{{AGR_RYARD}}', $this->contract->roll_yard, $content);
+                    $content = str_replace('{{AGR_SHINGLE_CLR}}', $this->contract->shingle_color, $content);
+                    $content = str_replace('{{AGR_VENTILATION}}', $this->contract->ventilation, $content);
+                    $content = str_replace('{{AGR_INSTL_DECKING}}', $this->contract->install_decking, $content);
+                    $content = str_replace('{{AGR_FASTNERS}}', $this->contract->fastners, $content);
+                    $content = str_replace('{{AGR_EXTRA_WORK_AND_NOTES}}', $this->contract->description, $content);
                 }
             }
             $staff=get_staff(get_staff_user_id());
@@ -283,7 +284,7 @@ abstract class App_pdf extends TCPDF
             $CONTRACTOR__SIGNATURE='';
             if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
                 $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;">';
-                $content = str_replace('{{AGR_MFG_WRNTY}}', $CONTRACTOR__SIGNATURE, $content);
+                $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
             }
             
         }
