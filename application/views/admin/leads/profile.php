@@ -348,7 +348,7 @@
             <p class="bold font-medium-xs mbot15">
                <?php
                if(isset($lead) && $lead->location_photo != ''){
-                  $locationPath = 'uploads/leads/location/'. $lead->location_photo;
+                  $locationPath = site_url('uploads/leads/location/'. $lead->location_photo);
                  if (file_exists($locationPath)) {
                   echo '<img src="'.base_url($locationPath).'" />';
                  } else {
