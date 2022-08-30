@@ -14,7 +14,7 @@ class Contract_pdf extends App_pdf
         $contract                = hooks()->apply_filters('contract_html_pdf_data', $contract);
         $GLOBALS['contract_pdf'] = $contract;
 
-        parent::__construct();
+        parent::__construct($contract);
 
         $this->contract = $contract;
         $this->SetTitle($this->contract->subject);

@@ -40,7 +40,7 @@ abstract class App_pdf extends TCPDF
 
     protected $ci;
 
-    public function __construct()
+    public function __construct($contract=[])
     {
         $this->formatArray = $this->get_format_array();
 
@@ -268,6 +268,14 @@ abstract class App_pdf extends TCPDF
                     $signature .= '</span><br />';
                     //echo $signature;die();
                     $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
+
+                    $content = str_replace('{{AGR_MFG_WRNTY}}', $contract->manufacturer_warranty, $content);
+                    $content = str_replace('{{AGR_RYARD}}', $contract->roll_yard, $content);
+                    $content = str_replace('{{AGR_SHINGLE_CLR}}', $contract->shingle_color, $content);
+                    $content = str_replace('{{AGR_VENTILATION}}', $contract->ventilation, $content);
+                    $content = str_replace('{{AGR_INSTL_DECKING}}', $contract->install_decking, $content);
+                    $content = str_replace('{{AGR_FASTNERS}}', $contract->fastners, $content);
+                    $content = str_replace('{{AGR_EXTRA_WORK_AND_NOTES}}', $contract->description, $content);
                 }
             }
             $staff=get_staff(get_staff_user_id());
@@ -275,7 +283,7 @@ abstract class App_pdf extends TCPDF
             $CONTRACTOR__SIGNATURE='';
             if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
                 $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;">';
-                $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                $content = str_replace('{{AGR_MFG_WRNTY}}', $CONTRACTOR__SIGNATURE, $content);
             }
             
         }
