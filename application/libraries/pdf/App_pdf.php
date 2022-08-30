@@ -280,6 +280,8 @@ abstract class App_pdf extends TCPDF
             }
             
         }
+        
+        $content = str_replace('{{LOGO_IMAGE}}', site_url('elite.png'), $content);
         if ($this->type() == 'contract') {
             $content = str_replace('{{AGR_MFG_WRNTY}}', $this->contract->manufacturer_warranty, $content);
             $content = str_replace('{{AGR_RYARD}}', $this->contract->roll_yard, $content);
