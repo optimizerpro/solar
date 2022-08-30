@@ -269,14 +269,6 @@ abstract class App_pdf extends TCPDF
                     $signature .= '</span><br />';
                     //echo $signature;die();
                     $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
-
-                    $content = str_replace('{{AGR_MFG_WRNTY}}', $this->contract->manufacturer_warranty, $content);
-                    $content = str_replace('{{AGR_RYARD}}', $this->contract->roll_yard, $content);
-                    $content = str_replace('{{AGR_SHINGLE_CLR}}', $this->contract->shingle_color, $content);
-                    $content = str_replace('{{AGR_VENTILATION}}', $this->contract->ventilation, $content);
-                    $content = str_replace('{{AGR_INSTL_DECKING}}', $this->contract->install_decking, $content);
-                    $content = str_replace('{{AGR_FASTNERS}}', $this->contract->fastners, $content);
-                    $content = str_replace('{{AGR_EXTRA_WORK_AND_NOTES}}', $this->contract->description, $content);
                 }
             }
             $staff=get_staff(get_staff_user_id());
@@ -287,6 +279,15 @@ abstract class App_pdf extends TCPDF
                 $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
             }
             
+        }
+        if ($this->type() == 'contract') {
+            $content = str_replace('{{AGR_MFG_WRNTY}}', $this->contract->manufacturer_warranty, $content);
+            $content = str_replace('{{AGR_RYARD}}', $this->contract->roll_yard, $content);
+            $content = str_replace('{{AGR_SHINGLE_CLR}}', $this->contract->shingle_color, $content);
+            $content = str_replace('{{AGR_VENTILATION}}', $this->contract->ventilation, $content);
+            $content = str_replace('{{AGR_INSTL_DECKING}}', $this->contract->install_decking, $content);
+            $content = str_replace('{{AGR_FASTNERS}}', $this->contract->fastners, $content);
+            $content = str_replace('{{AGR_EXTRA_WORK_AND_NOTES}}', $this->contract->description, $content);
         }
         //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
         //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);
