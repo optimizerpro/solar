@@ -74,7 +74,7 @@
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="dripedge">Drip Edge</label><input type="text" id="dripedge" name="dripedge" value="'.$dripedge.'"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'"></div></div></div>';
-         $work_order_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Special &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
+         $work_order_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Special Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
          ?>
          <div class="col-md-5 left-column">
             <div class="panel_s">
