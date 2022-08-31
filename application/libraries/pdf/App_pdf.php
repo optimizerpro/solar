@@ -309,12 +309,12 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{ACV_RCV_TEXT}}', strtoupper($this->contract->acv_rcv), $content);
             $content = str_replace('{{ACV_RCV_TAX}}', $this->contract->acv_rcv_plus_tax, $content);
             $content = str_replace('{{ADVERTISING_ALLOWANCE}}', $this->contract->ad_allowance, $content);
-            $content = str_replace('{{CUSTOMER_TOTAL}}', (((int)($this->contract->acv_rcv_plus_tax))+((int)($this->contract->ad_allowance))), $content);
+            $content = str_replace('{{CUSTOMER_TOTAL}}', (((float)($this->contract->acv_rcv_plus_tax))+((float)($this->contract->ad_allowance))), $content);
 
             $content = str_replace('{{FIRST_CHECK}}', $this->contract->first_check, $content);
             $content = str_replace('{{SECOND_CHECK}}', $this->contract->second_check, $content);
             $content = str_replace('{{DEDUCTIBLE}}', $this->contract->deductible, $content);
-            $content = str_replace('{{TOTAL_TO_COLLECT}}', (((int)($this->contract->first_check))+((int)($this->contract->second_check))-((int)($this->contract->deductible))), $content);
+            $content = str_replace('{{TOTAL_TO_COLLECT}}', (((float)($this->contract->first_check))+((float)($this->contract->second_check))-((float)($this->contract->deductible))), $content);
             
             $content = str_replace('{{SOFFIT}}', $this->contract->soffit, $content);
             $content = str_replace('{{FASCIA}}', $this->contract->fascia, $content);
