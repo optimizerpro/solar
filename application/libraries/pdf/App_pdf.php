@@ -295,9 +295,10 @@ abstract class App_pdf extends TCPDF
 
             /*Replace workorder variables*/
             $staff=get_staff(get_staff_user_id());
-            $content = str_replace('{{CUSTOMER_NAME}}', '{contact_firstname} {contact_lastname}', $content);
-            $content = str_replace('{{CUSTOMER_PHONE}}', '{contact_phonenumber}', $content);
-            $content = str_replace('{{CUSTOMER_ADDRESS}}', '{client_address}', $content);
+            $client_detail=$this->contract->client_detail;
+            $content = str_replace('{{CUSTOMER_NAME}}', $client_detail->company, $content);
+            $content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
+            $content = str_replace('{{CUSTOMER_ADDRESS}}', ucwords($client_detail->billing_street.', '.$client_detail->billing_city.', '.$client_detail->billing_zip.', '.$client_detail->billing_state), $content);
             $content = str_replace('{{REPRESENTATIVE_NAME}}', $staff->firstname.' '.$staff->lastname, $content);
             $content = str_replace('{{REPRESENTATIVE_PHONE}}', $staff->phonenumber, $content);
 
