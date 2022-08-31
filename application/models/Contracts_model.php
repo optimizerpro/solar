@@ -235,7 +235,6 @@ class Contracts_model extends App_Model
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'contracts', $data);
-
         if ($this->db->affected_rows() > 0) {
             hooks()->do_action('after_contract_updated', $id);
             log_activity('Contract Updated [' . $data['subject'] . ']');
