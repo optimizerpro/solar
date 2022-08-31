@@ -269,6 +269,7 @@ abstract class App_pdf extends TCPDF
                     $signature .= '</span><br />';
                     //echo $signature;die();
                     $content = str_replace('{{CUSTOMER__SIGNATURE}}', $signature, $content);
+                    $content = str_replace('{{CUSTOMER_SIGNATURE}}', $signature, $content);
                 }
             }
             $staff=get_staff(get_staff_user_id());
@@ -277,33 +278,11 @@ abstract class App_pdf extends TCPDF
             if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
                 $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;">';
                 $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
             }
             
         }
-        $path   = $this->getSignaturePath();
-        if (!empty($path) && file_exists($path)) {
-            $record = $this->getSignatureableInstance();
-            $signature = '';
-            if ($this->type() == 'contract') {
-                $imageData = base64_encode(file_get_contents($path));
-                $src = 'data: image/png;base64,'.$imageData;
-                $instance = $this->getSignatureableInstance();
-                $signature .= '<br /><img src="uploads/contracts/'.$instance->id.'/'.$instance->signature.'" data-imgsrc="'.$src.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
-                //$signature .= _l('contract_signed_by') . ": {$record->acceptance_firstname} {$record->acceptance_lastname}<br />";
-                $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
-                $signature .= "&nbsp;&nbsp;IP: {$record->acceptance_ip}";
-                $signature .= '</span><br />';
-                //echo $signature;die();
-                $content = str_replace('{{CUSTOMER_SIGNATURE}}', $signature, $content);
-            }
-        }
-        $staff=get_staff(get_staff_user_id());
-        $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
-        $CONTRACTOR__SIGNATURE='';
-        if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
-            $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;">';
-            $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
-        }
+        
         //$content = str_replace('{{LOGO_IMAGE}}', "https://www.hashevo.com/elightsolar/elite.png", $content);
         if ($this->type() == 'contract') {
             $content = str_replace('{{AGR_MFG_WRNTY}}', $this->contract->manufacturer_warranty, $content);
