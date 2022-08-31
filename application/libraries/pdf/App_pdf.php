@@ -303,7 +303,7 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{LAYERS}}', $this->contract->layers, $content);
             $content = str_replace('{{PITCH}}', $this->contract->pitch, $content);
 
-            $content = str_replace('{{ACV_RCV_TEXT}}', strtoupperr($this->contract->acv_rcv), $content);
+            $content = str_replace('{{ACV_RCV_TEXT}}', strtoupper($this->contract->acv_rcv), $content);
             $content = str_replace('{{ACV_RCV_TAX}}', $this->contract->acv_rcv_plus_tax, $content);
             $content = str_replace('{{ADVERTISING_ALLOWANCE}}', $this->contract->ad_allowance, $content);
             $content = str_replace('{{CUSTOMER_TOTAL}}', (((int)($this->contract->acv_rcv_plus_tax))+((int)($this->contract->ad_allowance))), $content);
