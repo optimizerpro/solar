@@ -290,6 +290,40 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{AGR_INSTL_DECKING}}', $this->contract->install_decking, $content);
             $content = str_replace('{{AGR_FASTNERS}}', $this->contract->fastners, $content);
             $content = str_replace('{{AGR_EXTRA_WORK_AND_NOTES}}', $this->contract->description, $content);
+
+            /*Replace workorder variables*/
+            $staff=get_staff(get_staff_user_id());
+            $content = str_replace('{{CUSTOMER_NAME}}', '{contact_firstname} {contact_lastname}', $content);
+            $content = str_replace('{{CUSTOMER_PHONE}}', '{contact_phonenumber}', $content);
+            $content = str_replace('{{CUSTOMER_ADDRESS}}', '{client_address}', $content);
+            $content = str_replace('{{REPRESENTATIVE_NAME}}', $staff->firstname.' '.$staff->lastname, $content);
+            $content = str_replace('{{REPRESENTATIVE_PHONE}}', $staff->phonenumber, $content);
+
+            $content = str_replace('{{ROOF_TYPE}}', $this->contract->roof_type, $content);
+            $content = str_replace('{{LAYERS}}', $this->contract->layers, $content);
+            $content = str_replace('{{PITCH}}', $this->contract->pitch, $content);
+
+            $content = str_replace('{{ACV_RCV_TEXT}}', strtoupperr($this->contract->acv_rcv), $content);
+            $content = str_replace('{{ACV_RCV_TAX}}', $this->contract->acv_rcv_plus_tax, $content);
+            $content = str_replace('{{ADVERTISING_ALLOWANCE}}', $this->contract->ad_allowance, $content);
+            $content = str_replace('{{CUSTOMER_TOTAL}}', (((int)($this->contract->acv_rcv_plus_tax))+((int)($this->contract->ad_allowance))), $content);
+
+            $content = str_replace('{{FIRST_CHECK}}', $this->contract->first_check, $content);
+            $content = str_replace('{{SECOND_CHECK}}', $this->contract->second_check, $content);
+            $content = str_replace('{{DEDUCTIBLE}}', $this->contract->deductible, $content);
+            $content = str_replace('{{TOTAL_TO_COLLECT}}', (((int)($this->contract->first_check))+((int)($this->contract->second_check))-((int)($this->contract->deductible))), $content);
+            
+            $content = str_replace('{{SOFFIT}}', $this->contract->soffit, $content);
+            $content = str_replace('{{FASCIA}}', $this->contract->fascia, $content);
+            $content = str_replace('{{SIDE_WALL}}', $this->contract->sidewall, $content);
+            $content = str_replace('{{DRIVEWAY}}', $this->contract->driveway, $content);
+            $content = str_replace('{{SHINGLE}}', $this->contract->shingle, $content);
+            $content = str_replace('{{COLOR}}', $this->contract->color, $content);
+            $content = str_replace('{{DRIP_EDGE}}', $this->contract->dripedge, $content);
+            $content = str_replace('{{MATERIAL_DROP}}', $this->contract->material_drop, $content);
+            $content = str_replace('{{VENTILATION}}', $this->contract->ventilation, $content);
+
+            $content = str_replace('{{DESCRIPTION}}', $this->contract->description, $content); 
         }
         //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
         //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);

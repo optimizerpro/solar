@@ -397,11 +397,11 @@
                            <div class=" avilable_merge_fields mtop15 hide">
                               <ul class="list-group">
                                  <?php
-                                 foreach($contract_merge_fields as $field){
+                                 /*foreach($contract_merge_fields as $field){
                                   foreach($field as $f){
                                      echo '<li class="list-group-item"><b>'.$f['name'].'</b>  <a href="#" class="pull-right" onclick="insert_merge_field(this); return false">'.$f['key'].'</a></li>';
                                   }
-                               }
+                               }*/
                                ?>
                             </ul>
                          </div>
@@ -672,8 +672,6 @@
     });
 
     var editor_settings = {
-       
-      readonly:1,
        selector: 'div.editable',
        inline: true,
        theme: 'inlite',
@@ -754,10 +752,11 @@
     }
 
     tinymce.init(editor_settings);
+    //setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
  });
 
 function save_contract_content(manual) {
-   tinymce.activeEditor.setMode('design');
+   //tinymce.activeEditor.setMode('design');
  var editor = tinyMCE.activeEditor;
  var data = {};
  data.contract_id = contract_id;
@@ -774,7 +773,7 @@ function save_contract_content(manual) {
        var response = JSON.parse(error.responseText);
        alert_float('danger', response.message);
     });
-    tinymce.activeEditor.setMode('readonly');
+    //tinymce.activeEditor.setMode('readonly');
  }
 
  function delete_contract_attachment(wrapper, id) {
@@ -904,9 +903,30 @@ function contractTypeChanged(){
    var contract_type=$("#contract_type").val();
    if(contract_type=='' || contract_type=="1"){
       $("#dynamic_variables").html(agreement_fields);
+      requestGetJSON(admin_url + 'templates/index/1').done(function (response) {
+         var data = response.data;
+         tinymce.activeEditor.setMode('design'); 
+         setTimeout(function(){
+               tinymce.activeEditor.setContent('');
+               tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
+               $('a[aria-controls="tab_content"]').click();
+               setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
+         },1000);       
+      });
    }
-   else{
+   else
+   {
       $("#dynamic_variables").html(work_order_fields);
+      requestGetJSON(admin_url + 'templates/index/2').done(function (response) {
+         var data = response.data;
+         tinymce.activeEditor.setMode('design'); 
+         setTimeout(function(){
+               tinymce.activeEditor.setContent('');
+               tinymce.activeEditor.execCommand('mceInsertContent', false, data.content);
+               $('a[aria-controls="tab_content"]').click();
+               setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
+         },1000);       
+      });
    }  
 }
 </script>
