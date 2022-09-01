@@ -929,7 +929,7 @@ function contractTypeChanged(){
       });
    }  
 }
-setTimeout(function(){contractTypeChanged();},1000);
+setTimeout(function(){contractTypeChanged();},100);
 </script>
 </body>
 </html>
