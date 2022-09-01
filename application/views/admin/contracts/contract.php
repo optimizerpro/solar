@@ -929,6 +929,7 @@ function contractTypeChanged(){
       });
    }  
 }
+contractTypeChanged();
 </script>
 </body>
 </html>
