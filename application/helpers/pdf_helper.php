@@ -196,8 +196,13 @@ function contract_pdf($contract)
     
     $CI = & get_instance();
     $CI->load->model('Clients_model');
+    $CI->load->model('Leads_model');
     $client=$CI->clients_model->get($contract->client);
     $contract->client_detail=$client;
+    $leadid = $client->leadid;
+    if($leadid != '' && $leadid > 0){
+        $contract->leadDetail = $CI->Leads_model->get($leadid);
+    }
     //print_r($contract->client_detail);die();
     return app_pdf('contract', LIBSPATH . 'pdf/Contract_pdf', $contract);
 }

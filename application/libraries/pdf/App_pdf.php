@@ -273,6 +273,7 @@ abstract class App_pdf extends TCPDF
                 }
             }
             $staff=get_staff(get_staff_user_id());
+
             $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
             $CONTRACTOR__SIGNATURE='';
             if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
@@ -327,6 +328,9 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{VENTILATION}}', $this->contract->ventilation, $content);
 
             $content = str_replace('{{DESCRIPTION}}', $this->contract->description, $content); 
+            $content = str_replace('{{CUSTOMER_ADDRESS_ONLY}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->address:'-', $content); 
+            $content = str_replace('{{CUSTOMER_CITY_STATE_ZIP}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->city.'/'.$this->contract->leadDetail->state.'/'.$this->contract->leadDetail->zip:'-', $content); 
+            $content = str_replace('{{CUSTOMER_EMAIL}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->email:'-', $content); 
         }
         //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
         //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);
