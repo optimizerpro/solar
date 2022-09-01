@@ -897,8 +897,8 @@ function save_contract_content(manual) {
      window.location.href = location.split('?')[0] + '?tab=attachments';
   });
 }
-var agreement_fields='<?php echo $agreement_fields; ?>';
-var work_order_fields='<?php echo $work_order_fields; ?>';
+var agreement_fields="<?php echo addslashes($agreement_fields); ?>";
+var work_order_fields="<?php echo addslashes($work_order_fields); ?>";
 function contractTypeChanged(){
    var contract_type=$("#contract_type").val();
    if(contract_type=='' || contract_type=="1"){
