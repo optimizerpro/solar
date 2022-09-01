@@ -19,7 +19,7 @@
             if(isset($contract)){if($contract->ventilation !=''){$ventilation= $contract->ventilation;}}; 
             if(isset($contract)){if($contract->install_decking !=''){$install_decking= $contract->install_decking;}}; 
             if(isset($contract)){if($contract->fastners !=''){$fastners= $contract->fastners;}}; 
-            if(isset($contract)){if($contract->description !=''){$description= $contract->description;}}; 
+            if(isset($contract)){if($contract->description !=''){$description= addslashes($contract->description);}}; 
             $agreement_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Agreement Details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="manufacturer_warranty">Manufacturer Warranty (yrs)</label>';
             $agreement_fields.='<input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="'.$manufacturer_warranty.'"></div></div>';
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="roll_yard">Roll yard with magnetic roller</label><input type="text" id="roll_yard" name="roll_yard" value="'.$roll_yard.'"></div></div>';
