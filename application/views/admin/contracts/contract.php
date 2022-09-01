@@ -929,7 +929,8 @@ function contractTypeChanged(){
       });
    }  
 }
-setTimeout(function(){contractTypeChanged();},100);
+contractTypeChanged();
+//setTimeout(function(){},100);
 </script>
 </body>
 </html>
