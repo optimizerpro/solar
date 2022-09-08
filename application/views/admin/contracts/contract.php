@@ -12,6 +12,17 @@
             </div>
          <?php } ?>
          <?php
+            $rel_type = '';
+            $rel_id = '';
+            if(isset($contract) || ($this->input->get('rel_id') && $this->input->get('rel_type'))){
+             if($this->input->get('rel_id')){
+               $rel_id = $this->input->get('rel_id');
+               $rel_type = $this->input->get('rel_type');
+             } else {
+               $rel_id = $contract->clientid;
+               $rel_type = $contract->rel_type;
+             }
+            }
             $description=$manufacturer_warranty=$roll_yard=$shingle_color=$ventilation=$install_decking=$fastners='';
             if(isset($contract)){if($contract->manufacturer_warranty !=''){$manufacturer_warranty= $contract->manufacturer_warranty;}}; 
             if(isset($contract)){if($contract->roll_yard !=''){$roll_yard= $contract->roll_yard;}}; 
@@ -90,20 +101,30 @@
                         <label for="not_visible_to_client">Disable Customer Side</label>
                      </div>
                   </div>
-                  <div class="form-group select-placeholder f_client_id">
+                  <div class="form-group select-placeholder">
+                     <label for="rel_type" class="control-label"><?php echo _l('proposal_related'); ?></label>
+                     <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                        <option value=""></option>
+                        <option value="lead" <?php if((isset($contract) && $contract->rel_type == 'lead') || $this->input->get('rel_type')){if($rel_type == 'lead'){echo 'selected';}} ?>>Contract for lead</option>
+                        <option value="customer" <?php if((isset($contract) &&  $contract->rel_type == 'customer') || $this->input->get('rel_type')){if($rel_type == 'customer'){echo 'selected';}} ?>>Contract for customer</option>
+                     </select>
+                  </div>
+                  <div class="form-group select-placeholder f_client_id" id="rel_id_wrapper">
                      <label for="clientid" class="control-label"><span class="text-danger">* </span><?php echo _l('contract_client_string'); ?></label>
-                     <select id="clientid" name="client" data-live-search="true" data-width="100%" class="ajax-search" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>"<?php echo isset($contract) && $contract->signed == 1 ? ' disabled' : ''; ?>>
-                        <?php $selected = (isset($contract) ? $contract->client : '');
-                        if($selected == ''){
-                          $selected = (isset($customer_id) ? $customer_id: '');
-                       }
-                       if($selected != ''){
-                        $rel_data = get_relation_data('customer',$selected);
-                        $rel_val = get_relation_values($rel_data,'customer');
-                        echo '<option value="'.$rel_val['id'].'" selected>'.$rel_val['name'].'</option>';
-                     } ?>
-                  </select>
-               </div>
+                     <div id="rel_id_select">
+                        <select id="clientid" name="client" data-live-search="true" data-width="100%" class="ajax-search" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>"<?php echo isset($contract) && $contract->signed == 1 ? ' disabled' : ''; ?>>
+                           <?php $selected = (isset($contract) ? $contract->client : '');
+                           if($selected == ''){
+                              $selected = (isset($customer_id) ? $customer_id: '');
+                           }
+                           if($selected != ''){
+                              $rel_data = get_relation_data('customer',$selected);
+                              $rel_val = get_relation_values($rel_data,'customer');
+                              echo '<option value="'.$rel_val['id'].'" selected>'.$rel_val['name'].'</option>';
+                           } ?>
+                        </select>
+                     </div>
+                  </div>
                <div class="form-group select-placeholder projects-wrapper<?php if((!isset($contract)) || (isset($contract) && !customer_has_projects($contract->client))){ echo ' hide';} ?>">
                   <label for="project_id"><?php echo _l('project'); ?></label>
                   <div id="project_ajax_search_wrapper">
@@ -416,7 +437,7 @@
                <?php } ?>
                <div class="tc-content<?php if(staff_can('edit','contracts') &&
                   !($contract->signed == 1)){echo ' editable';} ?>"
-                  style="border:1px solid #d2d2d2;min-height:70px; border-radius:4px;">
+                  style="border:1px solid #d2d2d2;min-height:70px; border-radius:4px;display:none;">
                   <?php
                   if(empty($contract->content) && staff_can('edit','contracts')){
                    echo hooks()->apply_filters('new_contract_default_content', '<span class="text-danger text-uppercase mtop15 editor-add-content-notice"> ' . _l('click_to_add_content') . '</span>');
@@ -426,7 +447,7 @@
                 ?>
              </div>
              <?php if(!empty($contract->signature)) { ?>
-               <div class="row mtop25">
+               <div class="row mtop25" style="display:none;">
                   <div class="col-md-6 col-md-offset-6 text-right">
                      <div class="bold">
                         <p class="no-mbot"><?php echo _l('contract_signed_by') . ": {$contract->acceptance_firstname} {$contract->acceptance_lastname}"?></p>
@@ -931,6 +952,24 @@ function contractTypeChanged(){
 }
 contractTypeChanged();
 //setTimeout(function(){},100);
+</script>
+<script>
+   var _rel_id = $('#clientid'),
+   _rel_type = $('#rel_type'),
+   _rel_id_wrapper = $('#rel_id_wrapper'),
+   _project_wrapper = $('.projects-wrapper'),
+   data = {};
+
+   $(function(){
+       <?php if (isset($proposal) && $proposal->rel_type === 'customer') { ?>
+       init_proposal_project_select('select#project_id')
+       <?php } ?>
+       $('body').on('change','#rel_type', function() {
+           if (_rel_type.val() != 'customer') {
+                _project_wrapper.addClass('hide')
+           }
+       });
+   });
 </script>
 </body>
 </html>
