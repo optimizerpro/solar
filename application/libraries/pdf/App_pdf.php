@@ -295,10 +295,26 @@ abstract class App_pdf extends TCPDF
 
             /*Replace workorder variables*/
             $staff=get_staff(get_staff_user_id());
-            $client_detail=$this->contract->client_detail;
-            $content = str_replace('{{CUSTOMER_NAME}}', $client_detail->company, $content);
+            
+            $custName = $custEmail = $custAdd = $custAddOnly = $custAddCSZ = '';
+            if($this->contract->rel_type == 'customer'){
+                $clientDet = $this->contract->client_detail;
+                $custName = $clientDet->company;
+                $custEmail = $clientDet->email;
+                $custAdd = ucwords($clientDet->billing_street.', '.$clientDet->billing_city.', '.$clientDet->billing_zip.', '.$clientDet->billing_state);
+                $custAddOnly = ucwords($clientDet->billing_street);
+                $custAddCSZ = ucwords($clientDet->billing_city.'/'.$clientDet->billing_state.'/'.$clientDet->billing_zip);
+            } else {
+                $leadDet = $this->contract->leadDetail;
+                $custName = $leadDet->name.' '.$leadDet->leadlastname;
+                $custEmail = $leadDet->email;
+                $custAdd = ucwords($leadDet->address.', '.$leadDet->city.', '.$leadDet->zip.', '.$leadDet->state);
+                $custAddOnly = ucwords($leadDet->address);
+                $custAddCSZ = ucwords($leadDet->city.'/'.$leadDet->state.'/'.$leadDet->zip);
+            }
+            $content = str_replace('{{CUSTOMER_NAME}}', $custName, $content);
             //$content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
-            $content = str_replace('{{CUSTOMER_ADDRESS}}', ucwords($client_detail->billing_street.', '.$client_detail->billing_city.', '.$client_detail->billing_zip.', '.$client_detail->billing_state), $content);
+            $content = str_replace('{{CUSTOMER_ADDRESS}}', $custAdd, $content);
 
             $content = str_replace('{{REPRESENTATIVE_NAME}}', $staff->firstname.' '.$staff->lastname, $content);
             $content = str_replace('{{REPRESENTATIVE_PHONE}}', $staff->phonenumber, $content);
@@ -330,9 +346,9 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{DESCRIPTION}}', $this->contract->description, $content); 
 
             /* Replace Agreement Variable variables */
-            $content = str_replace('{{CUSTOMER_ADDRESS_ONLY}}', ucwords($client_detail->billing_street.', '.$client_detail->billing_city.', '.$client_detail->billing_zip.', '.$client_detail->billing_state), $content);
-            $content = str_replace('{{CUSTOMER_CITY_STATE_ZIP}}', ucwords($client_detail->billing_city.'/'.$client_detail->billing_state.'/'.$client_detail->billing_zip), $content);
-            $content = str_replace('{{CUSTOMER_EMAIL}}', $this->contract->acceptance_email, $content);
+            $content = str_replace('{{CUSTOMER_ADDRESS_ONLY}}', $custAddOnly, $content);
+            $content = str_replace('{{CUSTOMER_CITY_STATE_ZIP}}', $custAddCSZ, $content);
+            $content = str_replace('{{CUSTOMER_EMAIL}}', $custEmail, $content);
             $content = str_replace('{{INSURANCE_COMPANY_PHONE}}', $this->contract->phonenumber, $content);
             $aggreDate = ($this->contract->dateadded)?date('d M y, h:i A', strtotime($this->contract->dateadded)):'-';
             $content = str_replace('{{AGREEMENT_DATE}}', $aggreDate, $content);
@@ -370,8 +386,7 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{ADJ_TIME}}', $adjt_value, $content);
 
             $racv_value = ($this->contract->acv_rcv_aggre != '')?strtoupper($this->contract->acv_rcv_aggre):'-';
-            $content = str_replace('RCV / ACV', ' '.$racv_value, $content);
-                      
+            $content = str_replace('RCV / ACV', ' '.$racv_value, $content);      
         }
         //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
         //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);

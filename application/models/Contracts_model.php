@@ -23,7 +23,7 @@ class Contracts_model extends App_Model
         $this->db->select('*,' . db_prefix() . 'contracts_types.name as type_name,' . db_prefix() . 'contracts.id as id, ' . db_prefix() . 'contracts.addedfrom');
         $this->db->where($where);
         $this->db->join(db_prefix() . 'contracts_types', '' . db_prefix() . 'contracts_types.id = ' . db_prefix() . 'contracts.contract_type', 'left');
-        $this->db->join(db_prefix() . 'clients', '' . db_prefix() . 'clients.userid = ' . db_prefix() . 'contracts.client');
+        $this->db->join(db_prefix() . 'clients', '' . db_prefix() . 'clients.userid = ' . db_prefix() . 'contracts.client','left');
         if (is_numeric($id)) {
             $this->db->where(db_prefix() . 'contracts.id', $id);
             $contract = $this->db->get(db_prefix() . 'contracts')->row();
@@ -149,6 +149,20 @@ class Contracts_model extends App_Model
      */
     public function add($data)
     {
+        $this->load->model('templates_model');
+        $contentt = '';
+        if($data['contract_type'] == 2){
+            $templates = $this->templates_model->get(2, ['type'=>'contracts']);
+            if($templates){
+                $contentt = $templates->content;
+            }
+        } else {
+            $templates = $this->templates_model->get(1, ['type'=>'contracts']);
+            if($templates){
+                $contentt = $templates->content;
+            }
+        }
+        $data['content'] = $contentt;
         $data['dateadded'] = date('Y-m-d H:i:s');
         $data['addedfrom'] = get_staff_user_id();
 
@@ -179,7 +193,7 @@ class Contracts_model extends App_Model
         $data['hash'] = app_generate_hash();
 
         $data = hooks()->apply_filters('before_contract_added', $data);
-
+        
         $this->db->insert(db_prefix() . 'contracts', $data);
         $insert_id = $this->db->insert_id();
 
@@ -567,7 +581,13 @@ class Contracts_model extends App_Model
             $i = 0;
             foreach ($sent_to as $contact_id) {
                 if ($contact_id != '') {
-                    $contact = $this->clients_model->get_contact($contact_id);
+                    if($contract->rel_type == 'customer'){
+                        $contact =$this->clients_model->get_contact($contact_id);
+                    } else {
+                        $this->load->model('leads_model');
+                        $leads = $this->leads_model->get($contract->rel_id);
+                        $contact = (object)['id'=>1, 'email'=>$contact_id,'contact_firstname'=>$leads->name,'contact_lastname'=>$leads->leadlastname];
+                    }
 
                     // Send cc only for the first contact
                     if (!empty($cc) && $i > 0) {

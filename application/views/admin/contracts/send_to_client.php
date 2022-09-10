@@ -24,12 +24,21 @@
                             foreach($contacts as $contact){
                                 array_push($selected,$contact['id']);
                             }
-                            if(count($selected) == 0){
-                                echo '<p class="text-danger">' . _l('sending_email_contact_permissions_warning',_l('customer_permission_contract')) . '</p><hr />';
-                            }
-                            echo render_select('sent_to[]',$contacts,array('id','email','firstname,lastname'),'contract_send_to',$selected,array('multiple'=>true),array(),'','',false);
-
-                            ?>
+                            if($contract->rel_type == 'customer'){
+                                if(count($selected) == 0){
+                                    echo '<p class="text-danger">' . _l('sending_email_contact_permissions_warning',_l('customer_permission_contract')) . '</p><hr />';
+                                }
+                                echo render_select('sent_to[]',$contacts,array('id','email','firstname,lastname'),'contract_send_to',$selected,array('multiple'=>true),array(),'','',false);
+                            } else {
+                                $leads = $this->leads_model->get($contract->rel_id);
+                                $leadEmail = '';
+                                if($leads){
+                                    $leadEmail = $leads->email;
+                                    echo render_input('sent_to[]','Send To',$leadEmail,'text',['readonly'=>true]);
+                                } else {
+                                    echo render_input('sent_to[]','Send To',$leadEmail,'text');
+                                }
+                            } ?>
                         </div>
                         <?php echo render_input('cc','CC'); ?>
                         <hr />

@@ -12,17 +12,17 @@
             </div>
          <?php } ?>
          <?php
-            $rel_type = '';
+            /*$rel_type = '';
             $rel_id = '';
             if(isset($contract) || ($this->input->get('rel_id') && $this->input->get('rel_type'))){
              if($this->input->get('rel_id')){
                $rel_id = $this->input->get('rel_id');
                $rel_type = $this->input->get('rel_type');
              } else {
-               $rel_id = $contract->clientid;
+               $rel_id = $contract->client_id;
                $rel_type = $contract->rel_type;
              }
-            }
+            }*/
             $description=$manufacturer_warranty=$roll_yard=$shingle_color=$ventilation=$install_decking=$fastners='';
             if(isset($contract)){if($contract->manufacturer_warranty !=''){$manufacturer_warranty= $contract->manufacturer_warranty;}}; 
             if(isset($contract)){if($contract->roll_yard !=''){$roll_yard= $contract->roll_yard;}}; 
@@ -37,7 +37,39 @@
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle_color">Shingle Color</label><input type="text" id="shingle_color" name="shingle_color" value="'.$shingle_color.'"></div></div>';
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'"></div></div>';
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="install_decking">Install Decking</label><input type="text" id="install_decking" name="install_decking" value="'.$install_decking.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'"></div></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'"></div></div>';
+
+            /* 10-09-2022 */
+            $policy_number = $acv_rcv = $adj_appoint_date = $adj_appoint_time = '';
+            if(isset($contract)){
+               if($contract->policy_number !=''){
+                  $policy_number= $contract->policy_number;
+               }
+               if($contract->acv_rcv_aggre !=''){
+                  $acv_rcv= $contract->acv_rcv_aggre;
+               }
+               if($contract->adj_appoint_date !=''){
+                  $adj_appoint_date= $contract->adj_appoint_date;
+               }
+               if($contract->adj_appoint_time !=''){
+                  $adj_appoint_time= $contract->adj_appoint_time;
+               }
+            }
+            $acv_checked=$rcv_checked='';
+            if($acv_rcv=='acv' || $acv_rcv==''){
+               $acv_checked=' checked';
+            }
+            else{
+               $rcv_checked=' checked';
+            }
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><label>RCV/ACV</label><div class="form-group"><label for="acv_aggre"><input type="radio" id="acv_aggre" name="acv_rcv_aggre" value="acv" '.$acv_checked.'>&nbsp;&nbsp;ACV</label>&nbsp;&nbsp;<label for="rcv_aggre"><input type="radio" id="rcv_aggre" name="acv_rcv_aggre" value="rcv" '.$rcv_checked.'>&nbsp;&nbsp;RCV</label></div></div>';
+            $agreement_fields.='<div class="clearfix"></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_date">Adjusment Appointment Date</label><input type="date" id="adj_appoint_date" name="adj_appoint_date" value="'.$adj_appoint_date.'"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_time">Adjusment Appointment Time</label><input type="time" id="adj_appoint_time" name="adj_appoint_time" value="'.$adj_appoint_time.'"></div></div>';
+
+            $agreement_fields.= '</div>';
+
             $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
          $description=$roof_type=$layers=$pitch=$acv_rcv=$acv_rcv_plus_tax=$ad_allowance=$first_check=$second_check=$deductible='';
          $soffit=$fascia=$sidewall=$driveway=$shingle=$color=$dripedge=$material_drop=$ventilation='';
@@ -101,7 +133,7 @@
                         <label for="not_visible_to_client">Disable Customer Side</label>
                      </div>
                   </div>
-                  <div class="form-group select-placeholder">
+                  <!-- <div class="form-group select-placeholder">
                      <label for="rel_type" class="control-label"><?php echo _l('proposal_related'); ?></label>
                      <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                         <option value=""></option>
@@ -124,7 +156,45 @@
                            } ?>
                         </select>
                      </div>
+                  </div> -->
+
+                  <!-- 04-09-2022 -->
+                  <?php
+                  $rel_type = '';
+                  $rel_id = '';
+                  if(isset($contract) || ($this->input->get('rel_id') && $this->input->get('rel_type'))){
+                   if($this->input->get('rel_id')){
+                     $rel_id = $this->input->get('rel_id');
+                     $rel_type = $this->input->get('rel_type');
+                   } else {
+                     $rel_id = $contract->rel_id;
+                     $rel_type = $contract->rel_type;
+                   }
+                  }
+                  ?>
+                  <div class="form-group select-placeholder">
+                     <label for="rel_type" class="control-label"><?php echo _l('proposal_related'); ?></label>
+                     <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                        <option value=""></option>
+                        <option value="lead" <?php if((isset($contract) && $contract->rel_type == 'lead') || $this->input->get('rel_type')){if($rel_type == 'lead'){echo 'selected';}} ?>><?php echo _l('proposal_for_lead'); ?></option>
+                        <option value="customer" <?php if((isset($contract) &&  $contract->rel_type == 'customer') || $this->input->get('rel_type')){if($rel_type == 'customer'){echo 'selected';}} ?>><?php echo _l('proposal_for_customer'); ?></option>
+                     </select>
                   </div>
+
+                  <div class="form-group select-placeholder<?php if($rel_id == ''){echo ' hide';} ?> " id="rel_id_wrapper">
+                     <label for="rel_id"><span class="rel_id_label"></span></label>
+                     <div id="rel_id_select">
+                        <select name="rel_id" id="rel_id" class="ajax-search" data-width="100%" data-live-search="true" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                        <?php if($rel_id != '' && $rel_type != ''){
+                           $rel_data = get_relation_data($rel_type,$rel_id);
+                           $rel_val = get_relation_values($rel_data,$rel_type);
+                              echo '<option value="'.$rel_val['id'].'" selected>'.$rel_val['name'].'</option>';
+                           } ?>
+                        </select>
+                     </div>
+                  </div>
+                  <!-- 04-09-2022 End -->
+
                <div class="form-group select-placeholder projects-wrapper<?php if((!isset($contract)) || (isset($contract) && !customer_has_projects($contract->client))){ echo ' hide';} ?>">
                   <label for="project_id"><?php echo _l('project'); ?></label>
                   <div id="project_ajax_search_wrapper">
@@ -924,7 +994,7 @@ function contractTypeChanged(){
    var contract_type=$("#contract_type").val();
    if(contract_type=='' || contract_type=="1"){
       $("#dynamic_variables").html(agreement_fields);
-      requestGetJSON(admin_url + 'templates/index/1').done(function (response) {
+      /*requestGetJSON(admin_url + 'templates/index/1').done(function (response) {
          var data = response.data;
          tinymce.activeEditor.setMode('design'); 
          setTimeout(function(){
@@ -933,12 +1003,12 @@ function contractTypeChanged(){
                $('a[aria-controls="tab_content"]').click();
                setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
          },1000);       
-      });
+      });*/
    }
    else
    {
       $("#dynamic_variables").html(work_order_fields);
-      requestGetJSON(admin_url + 'templates/index/2').done(function (response) {
+      /*requestGetJSON(admin_url + 'templates/index/2').done(function (response) {
          var data = response.data;
          tinymce.activeEditor.setMode('design'); 
          setTimeout(function(){
@@ -947,14 +1017,14 @@ function contractTypeChanged(){
                $('a[aria-controls="tab_content"]').click();
                setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
          },1000);       
-      });
+      });*/
    }  
 }
 contractTypeChanged();
 //setTimeout(function(){},100);
 </script>
 <script>
-   var _rel_id = $('#clientid'),
+   /*var _rel_id = $('#clientid'),
    _rel_type = $('#rel_type'),
    _rel_id_wrapper = $('#rel_id_wrapper'),
    _project_wrapper = $('.projects-wrapper'),
@@ -969,7 +1039,74 @@ contractTypeChanged();
                 _project_wrapper.addClass('hide')
            }
        });
-   });
+   });*/
+var _rel_id = $('#rel_id'),
+   _rel_type = $('#rel_type'),
+   _rel_id_wrapper = $('#rel_id_wrapper'),
+   data = {};
+$('body').on('change','#rel_id', function() {
+  if($(this).val() != ''){
+   $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type.val(), function(response) {
+     $('input[name="proposal_to"]').val(response.to);
+     $('textarea[name="address"]').val(response.address);
+     $('input[name="email"]').val(response.email);
+     $('input[name="phone"]').val(response.phone);
+     $('input[name="city"]').val(response.city);
+     $('input[name="state"]').val(response.state);
+     $('input[name="zip"]').val(response.zip);
+     $('select[name="country"]').selectpicker('val',response.country);
+     var currency_selector = $('#currency');
+     if(_rel_type.val() == 'customer'){
+       if(typeof(currency_selector.attr('multi-currency')) == 'undefined'){
+         currency_selector.attr('disabled',true);
+       }
+
+      } else {
+        currency_selector.attr('disabled',false);
+     }
+     var proposal_to_wrapper = $('[app-field-wrapper="proposal_to"]');
+     if(response.is_using_company == false && !empty(response.company)) {
+       proposal_to_wrapper.find('#use_company_name').remove();
+       proposal_to_wrapper.find('#use_company_help').remove();
+       proposal_to_wrapper.append('<div id="use_company_help" class="hide">'+response.company+'</div>');
+       proposal_to_wrapper.find('label')
+       .prepend("<a href=\"#\" id=\"use_company_name\" data-toggle=\"tooltip\" data-title=\"<?php echo _l('use_company_name_instead'); ?>\" onclick='document.getElementById(\"proposal_to\").value = document.getElementById(\"use_company_help\").innerHTML.trim(); this.remove();'><i class=\"fa fa-building-o\"></i></a> ");
+     } else {
+       proposal_to_wrapper.find('label #use_company_name').remove();
+       proposal_to_wrapper.find('label #use_company_help').remove();
+     }
+    /* Check if customer default currency is passed */
+    if(response.currency){
+      currency_selector.selectpicker('val',response.currency);
+    } else {
+     /* Revert back to base currency */
+     currency_selector.selectpicker('val',currency_selector.data('base'));
+   }
+   currency_selector.selectpicker('refresh');
+   currency_selector.change();
+ }, 'json');
+ }
+});
+proposal_rel_id_select();
+_rel_type.on('change', function() {
+   var clonedSelect = _rel_id.html('').clone();
+   _rel_id.selectpicker('destroy').remove();
+   _rel_id = clonedSelect;
+   $('#rel_id_select').append(clonedSelect);
+   proposal_rel_id_select();
+   if($(this).val() != ''){
+     _rel_id_wrapper.removeClass('hide');
+   } else {
+     _rel_id_wrapper.addClass('hide');
+   }
+   $('.rel_id_label').html(_rel_type.find('option:selected').text());
+ });
+ function proposal_rel_id_select(){
+   var serverData = {};
+   serverData.rel_id = _rel_id.val();
+   data.type = _rel_type.val();
+   init_ajax_search(_rel_type.val(),_rel_id,serverData);
+}
 </script>
 </body>
 </html>
