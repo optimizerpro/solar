@@ -117,6 +117,7 @@ class Contracts extends AdminController
             $title = _l('add_new', _l('contract_lowercase'));
         } else {
             $data['contract']                 = $this->contracts_model->get($id, [], true);
+            
             $data['contract_renewal_history'] = $this->contracts_model->get_contract_renewal_history($id);
             $data['totalNotes']               = total_rows(db_prefix() . 'notes', ['rel_id' => $id, 'rel_type' => 'contract']);
             if (!$data['contract'] || (!has_permission('contracts', '', 'view') && $data['contract']->addedfrom != get_staff_user_id())) {
@@ -181,9 +182,12 @@ class Contracts extends AdminController
         }
 
         $contract = $this->contracts_model->get($id);
+         
+        
 
         try {
             $pdf = contract_pdf($contract);
+        
         } catch (Exception $e) {
             echo $e->getMessage();
             die;

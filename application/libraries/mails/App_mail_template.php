@@ -185,6 +185,7 @@ class App_mail_template
 
         $this->ci->email->message($this->template->message);
         $this->ci->email->to($this->send_to);
+        
 
         if (is_array($this->cc) || !empty($this->cc)) {
             $this->ci->email->cc($this->cc);

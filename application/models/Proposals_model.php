@@ -92,7 +92,7 @@ class Proposals_model extends App_Model
         if (isset($data['rel_id'], $data['rel_type']) && $data['rel_type'] !== 'customer') {
             $data['project_id'] = null;
         }
-
+        
         $hook = hooks()->apply_filters('before_create_proposal', [
             'data'  => $data,
             'items' => $items,

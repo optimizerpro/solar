@@ -19,6 +19,7 @@ class Contracts_model extends App_Model
      */
     public function get($id = '', $where = [], $for_editor = false)
     {
+       
         $this->db->select('*,' . db_prefix() . 'contracts_types.name as type_name,' . db_prefix() . 'contracts.id as id, ' . db_prefix() . 'contracts.addedfrom');
         $this->db->where($where);
         $this->db->join(db_prefix() . 'contracts_types', '' . db_prefix() . 'contracts_types.id = ' . db_prefix() . 'contracts.contract_type', 'left');
@@ -46,7 +47,7 @@ class Contracts_model extends App_Model
                     }
                 }
             }
-
+            
             return $contract;
         }
         $contracts = $this->db->get(db_prefix() . 'contracts')->result_array();
@@ -574,7 +575,7 @@ class Contracts_model extends App_Model
                     }
 
                     $template = mail_template('contract_send_to_customer', $contract, $contact, $cc);
-
+                    
                     if ($attachpdf) {
                         $template->add_attachment([
                             'attachment' => $attach,

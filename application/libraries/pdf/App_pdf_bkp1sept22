@@ -297,9 +297,8 @@ abstract class App_pdf extends TCPDF
             $staff=get_staff(get_staff_user_id());
             $client_detail=$this->contract->client_detail;
             $content = str_replace('{{CUSTOMER_NAME}}', $client_detail->company, $content);
-            //$content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
+            $content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
             $content = str_replace('{{CUSTOMER_ADDRESS}}', ucwords($client_detail->billing_street.', '.$client_detail->billing_city.', '.$client_detail->billing_zip.', '.$client_detail->billing_state), $content);
-
             $content = str_replace('{{REPRESENTATIVE_NAME}}', $staff->firstname.' '.$staff->lastname, $content);
             $content = str_replace('{{REPRESENTATIVE_PHONE}}', $staff->phonenumber, $content);
 
@@ -328,50 +327,6 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{VENTILATION}}', $this->contract->ventilation, $content);
 
             $content = str_replace('{{DESCRIPTION}}', $this->contract->description, $content); 
-
-            /* Replace Agreement Variable variables */
-            $content = str_replace('{{CUSTOMER_ADDRESS_ONLY}}', ucwords($client_detail->billing_street.', '.$client_detail->billing_city.', '.$client_detail->billing_zip.', '.$client_detail->billing_state), $content);
-            $content = str_replace('{{CUSTOMER_CITY_STATE_ZIP}}', ucwords($client_detail->billing_city.'/'.$client_detail->billing_state.'/'.$client_detail->billing_zip), $content);
-            $content = str_replace('{{CUSTOMER_EMAIL}}', $this->contract->acceptance_email, $content);
-            $content = str_replace('{{INSURANCE_COMPANY_PHONE}}', $this->contract->phonenumber, $content);
-            $aggreDate = ($this->contract->dateadded)?date('d M y, h:i A', strtotime($this->contract->dateadded)):'-';
-            $content = str_replace('{{AGREEMENT_DATE}}', $aggreDate, $content);
-            $content = str_replace('{{CUSTOMER_PHONE}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->phonenumber:'-', $content);
-            $ic_value = $dol_value = $cn_value = $an_value = $ap_value = '-';
-            if(isset($this->contract->leadDetail)){
-                $ic_value = get_custom_field_value($this->contract->leadDetail->id, 1, 'leads');              
-                $ic_value = ($ic_value?$ic_value:'-');
-                
-                $dol_value = get_custom_field_value($this->contract->leadDetail->id, 3, 'leads');     
-                $dol_value = ($dol_value?$dol_value:'-');
-                
-                $cn_value = get_custom_field_value($this->contract->leadDetail->id, 5, 'leads');
-                $cn_value = ($cn_value?$cn_value:'-'); 
-
-                $an_value = get_custom_field_value($this->contract->leadDetail->id, 7, 'leads');
-                $an_value = ($an_value?$an_value:'-');
-
-                $ap_value = get_custom_field_value($this->contract->leadDetail->id, 8, 'leads');
-                $ap_value = ($ap_value?$ap_value:'-');
-            }
-            $content = str_replace('{{INSURANCE_COMPANY}}', $ic_value, $content);
-            $content = str_replace('{{DATE_OF_LOSS}}', $dol_value, $content);
-            $content = str_replace('{{CLAIM_NUMBER}}', $cn_value, $content);
-            $content = str_replace('{{ADJUSTER_NAME}}', $an_value, $content);
-            $content = str_replace('{{ADJUSTER_PHONE}}', $ap_value, $content);
-
-            $pn_value = ($this->contract->policy_number != '')?$this->contract->policy_number:'-';
-            $content = str_replace('{{POLICY_NUMBER}}', $pn_value, $content);
-
-            $adjd_value = ($this->contract->adj_appoint_date != '')?$this->contract->adj_appoint_date:'-';
-            $content = str_replace('{{ADJ_DATE} }', $adjd_value.' ', $content);
-
-            $adjt_value = ($this->contract->adj_appoint_time != '')?$this->contract->adj_appoint_time:'-';
-            $content = str_replace('{{ADJ_TIME}}', $adjt_value, $content);
-
-            $racv_value = ($this->contract->acv_rcv_aggre != '')?strtoupper($this->contract->acv_rcv_aggre):'-';
-            $content = str_replace('RCV / ACV', ' '.$racv_value, $content);
-                      
         }
         //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
         //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);
