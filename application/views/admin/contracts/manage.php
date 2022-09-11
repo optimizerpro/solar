@@ -44,7 +44,7 @@
                                         <canvas class="chart" height="400" id="contracts-by-type-chart"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <h4>
                                         <?php echo _l('contract_summary_by_type_value'); ?>
                                         (<span data-toggle="tooltip"
@@ -55,7 +55,7 @@
                                     <div class="relative" style="max-height:400px">
                                         <canvas class="chart" height="400" id="contracts-value-by-type-chart"></canvas>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                 }
             }
         });
-        new Chart($('#contracts-value-by-type-chart'), {
+        /*new Chart($('#contracts-value-by-type-chart'), {
             type: 'line',
             data: <?php echo $chart_types_values; ?>,
             options: {
@@ -117,7 +117,7 @@
                     }]
                 }
             }
-        });
+        });*/
     });
 </script>
 </body>

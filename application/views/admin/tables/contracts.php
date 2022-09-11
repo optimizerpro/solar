@@ -146,7 +146,7 @@ foreach ($rResult as $aRow) {
 
     $row[] = $aRow['type_name'];
 
-    $row[] = app_format_money($aRow['contract_value'], $base_currency);
+    //$row[] = app_format_money($aRow['contract_value'], $base_currency);
 
     $row[] = _d($aRow['datestart']);
 

@@ -8,7 +8,7 @@ $table_data = array(
    'th_attrs'=>array('class'=> (isset($client) ? 'not_visible' : ''))
  ),
  _l('contract_types_list_name'),
- _l('contract_value'),
+ // _l('contract_value'),
  _l('contract_list_start_date'),
  _l('contract_list_end_date'),
  (!isset($project) ? _l('project') : array(
