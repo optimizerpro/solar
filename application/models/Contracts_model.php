@@ -864,4 +864,72 @@ class Contracts_model extends App_Model
     {
         return $this->contract_types_model->get_values_chart_data();
     }
+
+    public function update_lead_or_convert_to_customer($id)
+    {
+        $contract = $this->get($id);
+        if($contract){
+            if($contract->rel_type == 'lead'){
+                $lead_id = $contract->rel_id;
+                if($contract->contract_type == 1){ //aggrement
+                    $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+                    if($leadStRow){
+                        $this->db->where('id', $lead_id);
+                        $status = $leadStRow->id;
+                        $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+                    }
+                } else if($contract->contract_type == 2){ //work order
+                    $this->load->model('leads_model');
+                    $leadRow = $this->leads_model->get($lead_id);
+                    if(!$leadRow){
+                        return false;
+                    }
+                    $custAddData = [
+                        'leadid' => $lead_id, 'default_language' => '',
+                        'firstname' => $leadRow->name, 'lastname' => $leadRow->leadlastname,
+                        'title' => $leadRow->title, 'email' => $leadRow->email,
+                        'phonenumber' => $leadRow->phonenumber, 'website' => $leadRow->website,
+                        'address' => $leadRow->address, 'city' => $leadRow->city,
+                        'state' => $leadRow->state, 'country' => $leadRow->country,
+                        'zip' => $leadRow->zip,
+                        'fakeusernameremembered' => '', 'fakepasswordremembered' => '',
+                        'password' => '', 'send_set_password_email' => 'on'];
+                    
+                    $custAddData['billing_street'] = $custAddData['address'];
+                    $custAddData['billing_city'] = $custAddData['city'];
+                    $custAddData['billing_state'] = $custAddData['state'];
+                    $custAddData['billing_zip'] = $custAddData['zip'];
+                    $custAddData['billing_country'] = $custAddData['country'];
+                    $custAddData['company'] = $custAddData['firstname']." ".$custAddData['lastname'];
+                    $custAddData['is_primary'] = 1;
+                    $this->load->model('clients_model');
+                    $id = $this->clients_model->add($custAddData, true);
+                    if ($id) {
+                        $this->db->insert(db_prefix() . 'customer_admins', [
+                            'date_assigned' => date('Y-m-d H:i:s'),
+                            'customer_id'   => $id,
+                            'staff_id'      => $leadRow->assigned,
+                        ]);
+                    
+                        /*$this->leads_model->log_lead_activity($custAddData['leadid'], 'not_lead_activity_converted', false, serialize([
+                            get_staff_full_name(),
+                        ]));*/
+                        $default_status = $this->leads_model->get_status('', [
+                            'isdefault' => 1,
+                        ]);
+                        $this->db->where('id', $custAddData['leadid']);
+                        $this->db->update(db_prefix() . 'leads', [
+                            'date_converted' => date('Y-m-d H:i:s'),
+                            'status'         => $default_status[0]['id'],
+                            'junk'           => 0,
+                            'lost'           => 0,
+                        ]);
+                        
+                        log_activity('Created Lead Client Profile [LeadID: ' . $custAddData['leadid'] . ', ClientID: ' . $id . ']');
+                        hooks()->do_action('lead_converted_to_customer', ['lead_id' => $custAddData['leadid'], 'customer_id' => $id]);
+                    }
+                }
+            }
+        }
+    }
 }

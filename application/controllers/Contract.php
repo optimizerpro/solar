@@ -32,6 +32,10 @@ class Contract extends ClientsController
                     $this->db->update(db_prefix().'contracts', array_merge(get_acceptance_info_array(), [
                         'signed' => 1,
                     ]));
+                    /* Update Lead To Prospect 11-09-2022 */
+                    $this->load->model('contracts_model');
+                    $this->contracts_model->update_lead_or_convert_to_customer($id);
+                    /* Update Lead To Prospect End */
 
                     // Notify contract creator that customer signed the contract
                     send_contract_signed_notification_to_staff($id);

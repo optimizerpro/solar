@@ -783,6 +783,16 @@ class Proposals_model extends App_Model
                     ]);
                 }
             }
+            /* Update Lead To Prospect 11-09-2022 */
+            if($original_proposal->rel_type == 'lead'){
+                $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+                if($leadStRow){
+                    $this->db->where('id', $original_proposal->rel_id);
+                    $status = $leadStRow->id;
+                    $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+                }
+            }
+            /* Update Lead To Prospect end */
 
             log_activity('Proposal Status Changes [ProposalID:' . $id . ', Status:' . format_proposal_status($status, '', false) . ',Client Action: ' . (int) $client . ']');
 
