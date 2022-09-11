@@ -60,6 +60,8 @@ class Contract extends ClientsController
         $data['title']     = $contract->subject;
         $data['contract']  = hooks()->apply_filters('contract_html_pdf_data', $contract);
         $data['bodyclass'] = 'contract contract-view';
+        $contractObj = contract_pdf($data['contract']);
+        $data['contract']->content =$contractObj->fix_editor_html($data['contract']->content);
 
         $data['identity_confirmation_enabled'] = true;
         $data['bodyclass'] .= ' identity-confirmation';
