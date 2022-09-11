@@ -14,6 +14,8 @@ $aColumns = [
     'dateend',
     db_prefix() . 'projects.name as project_name',
     'signature',
+    'rel_type',
+    'rel_id',
     ];
 
 $sIndexColumn = 'id';
@@ -116,7 +118,7 @@ $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [db
 
 $output  = $result['output'];
 $rResult = $result['rResult'];
-
+$this->ci->load->model('leads_model');
 foreach ($rResult as $aRow) {
     $row = [];
 
@@ -141,8 +143,13 @@ foreach ($rResult as $aRow) {
 
     $subjectOutput .= '</div>';
     $row[] = $subjectOutput;
-
-    $row[] = '<a href="' . admin_url('clients/client/' . $aRow['client']) . '">' . $aRow['company'] . '</a>';
+    if($aRow['rel_type'] == 'customer'){
+        $row[] = '<a href="' . admin_url('clients/client/' . $aRow['client']) . '">' . $aRow['company'] . '</a>';
+    } else {
+        $leadRow = $this->ci->leads_model->get($aRow['rel_id']);
+        $showName = $leadRow ? $leadRow->name.' '.$leadRow->leadlastname:'-';
+        $row[] = $showName;
+    }
 
     $row[] = $aRow['type_name'];
 

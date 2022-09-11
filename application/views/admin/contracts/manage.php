@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                                 <hr class="hr-panel-heading" />
-                                <div class="col-md-6 border-right">
+                                <div class="col-md-12 border-right">
                                     <h4><?php echo _l('contract_summary_by_type'); ?></h4>
                                     <div class="relative" style="max-height:400px">
                                         <canvas class="chart" height="400" id="contracts-by-type-chart"></canvas>
