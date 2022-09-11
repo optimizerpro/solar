@@ -44,7 +44,11 @@
    <div class="col-md-8 contract-left">
       <div class="panel_s mtop20">
          <div class="panel-body tc-content padding-30 contract-html-content">
-            <?php echo $contract->content; ?>
+            <?php
+            $contractObj = contract_pdf($contract);
+            $contractContent =$contractObj->fix_editor_html($contract->content);
+            echo $contractContent;
+            ?>
          </div>
       </div>
    </div>
