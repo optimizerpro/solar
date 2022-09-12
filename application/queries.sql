@@ -93,3 +93,8 @@ ALTER TABLE `tblcontracts` ADD `roof_type` VARCHAR(500) NULL DEFAULT NULL AFTER 
 ALTER TABLE `tblcontracts` ADD `policy_number` VARCHAR(255) NULL AFTER `fastners`, ADD `acv_rcv_aggre` VARCHAR(20) NULL AFTER `policy_number`, ADD `adj_appoint_date` VARCHAR(50) NULL AFTER `acv_rcv_aggre`, ADD `adj_appoint_time` VARCHAR(50) NULL AFTER `adj_appoint_date`; 
 --04-09-2022
 ALTER TABLE `tblcontracts` ADD `rel_id` INT(11) NULL AFTER `material_drop`, ADD `rel_type` VARCHAR(40) NULL COMMENT 'lead or customer' AFTER `rel_id`; 
+
+--12-09-2022
+ALTER TABLE `tblestimates` ADD `rel_id` INT(11) NULL AFTER `deleted_customer_name`, ADD `rel_type` VARCHAR(40) NULL COMMENT 'lead or customer' AFTER `rel_id`, ADD `estimate_to` VARCHAR(191) NULL AFTER `rel_type`; 
+
+ALTER TABLE `tblleads` CHANGE `location_photo` `location_photo` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;

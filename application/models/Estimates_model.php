@@ -467,6 +467,9 @@ class Estimates_model extends App_Model
      */
     public function add($data)
     {
+        if(isset($data['rel_type']) && $data['rel_type'] == 'customer'){
+            $data['clientid'] = $data['rel_id'];
+        }
         $data['datecreated'] = date('Y-m-d H:i:s');
 
         $data['addedfrom'] = get_staff_user_id();

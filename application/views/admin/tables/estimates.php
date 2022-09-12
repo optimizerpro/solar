@@ -9,6 +9,7 @@ $aColumns = [
     'total',
     'total_tax',
     'YEAR(date) as year',
+    'estimate_to',
     get_sql_select_client_company(),
     db_prefix() . 'projects.name as project_name',
     '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'estimates.id and rel_type="estimate" ORDER by tag_order ASC) as tags',
@@ -151,11 +152,14 @@ foreach ($rResult as $aRow) {
     $row[] = app_format_money($aRow['total_tax'], $aRow['currency_name']);
 
     $row[] = $aRow['year'];
-
-    if (empty($aRow['deleted_customer_name'])) {
-        $row[] = '<a href="' . admin_url('clients/client/' . $aRow['clientid']) . '">' . $aRow['company'] . '</a>';
+    if($aRow['clientid'] > 0){
+        if (empty($aRow['deleted_customer_name'])) {
+            $row[] = '<a href="' . admin_url('clients/client/' . $aRow['clientid']) . '">' . $aRow['company'] . '</a>';
+        } else {
+            $row[] = $aRow['deleted_customer_name'];
+        }
     } else {
-        $row[] = $aRow['deleted_customer_name'];
+        $row[] = $aRow['estimate_to'];
     }
 
     $row[] = '<a href="' . admin_url('projects/view/' . $aRow['project_id']) . '">' . $aRow['project_name'] . '</a>';

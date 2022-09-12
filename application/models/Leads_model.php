@@ -110,7 +110,7 @@ class Leads_model extends App_Model
             unset($data['custom_fields']);
         }
         
-        if (isset($_FILES['location_photo']['name'])) {
+        if (isset($_FILES['location_photo']['name'][0]) && $_FILES['location_photo']['error'][0] == 0) {
             $location_photo = handle_lead_location_photo();
             if(isset($data['location_photo'])){ unset($data['location_photo']); }
             $data['location_photo'] = $location_photo;
@@ -250,7 +250,7 @@ class Leads_model extends App_Model
             unset($data['custom_fields']);
         }
 
-        if (isset($_FILES['location_photo']['name'])) {
+        if (isset($_FILES['location_photo']['name'][0]) && $_FILES['location_photo']['error'][0] == 0) {
             $location_photo = handle_lead_location_photo();
             if(isset($data['location_photo'])){ unset($data['location_photo']); }
             $data['location_photo'] = $location_photo;

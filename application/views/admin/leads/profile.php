@@ -348,12 +348,17 @@
             <p class="bold font-medium-xs mbot15">
                <?php
                if(isset($lead) && $lead->location_photo != ''){
-                  $locationPath = 'uploads/leads/location/'. $lead->location_photo;
-                 if (file_exists($locationPath)) {
-                  echo '<img src="'.site_url($locationPath).'" style="height:75px;width:75px;" />';
-                 } else {
-                  echo '-';
-                 }
+                  $locimgArr = explode("|", $lead->location_photo);
+                  $locationPath = 'uploads/leads/location/';
+                  if(count($locimgArr) > 0){
+                     for ($ijk=0; $ijk < count($locimgArr); $ijk++) {
+                        if (file_exists($locationPath.$locimgArr[$ijk])) {
+                           echo '<img src="'.site_url($locationPath.$locimgArr[$ijk]).'" style="height:75px;width:75px;'.($ijk != 0?"margin-left: 5px;":"").'" />';
+                        }
+                     }
+                  } else {
+                     echo '-';
+                  }
                } else {
                   echo '-';
                }
@@ -686,8 +691,8 @@
 
          <div class="col-md-6">
             <div class="form-group">
-               <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo'); ?></label>
-               <input type="file" name="location_photo" class="form-control" id="location_photo">
+               <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo_choose'); ?></label>
+               <input type="file" name="location_photo[]" class="form-control" id="location_photo" multiple>
             </div>
             <?php if(!is_language_disabled()){ ?>
                <div class="form-group">

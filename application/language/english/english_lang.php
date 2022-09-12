@@ -471,6 +471,7 @@ $lang['lead_category'] = 'Job Category';
 $lang['lead_work_type'] = 'Work Type';
 $lang['lead_trade_type'] = 'Trade Type';
 $lang['lead_location_photo'] = 'Location Photo';
+$lang['lead_location_photo_choose'] = 'Location Photo (Select multiple to add more photos)';
 
 # Misc
 $lang['access_denied'] = 'Access denied';
