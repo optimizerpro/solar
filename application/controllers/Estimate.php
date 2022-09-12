@@ -44,6 +44,7 @@ class Estimate extends ClientsController
 
                     $this->db->where('id', $id);
                     $this->db->update(db_prefix() . 'estimates', get_acceptance_info_array());
+                    $this->estimates_model->update_lead_to_prospect($id);
                 }
             }
             redirect($redURL);

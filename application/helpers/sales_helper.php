@@ -371,7 +371,9 @@ if (!function_exists('format_customer_info')) {
         } elseif ($companyName != '') {
             $companyName = '<b>' . $companyName . '</b>';
         }
-
+        if(isset($data->rel_type) && isset($data->estimate_to) && $data->rel_type == 'lead'){
+            $companyName = $data->estimate_to;
+        }
         $format = _info_format_replace('company_name', $companyName, $format);
         $format = _info_format_replace('customer_id', $clientId, $format);
         $format = _info_format_replace('street', $street, $format);

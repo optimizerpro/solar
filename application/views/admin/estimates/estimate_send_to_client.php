@@ -24,10 +24,22 @@
 							foreach($contacts as $contact){
 								array_push($selected,$contact['id']);
 							}
-							 if(count($selected) == 0){
-                                    echo '<p class="text-danger">' . _l('sending_email_contact_permissions_warning',_l('customer_permission_estimate')) . '</p><hr />';
+							if($estimate->rel_type == 'customer'){
+								if(count($selected) == 0){
+	                                echo '<p class="text-danger">' . _l('sending_email_contact_permissions_warning',_l('customer_permission_estimate')) . '</p><hr />';
+	                            }
+								echo render_select('sent_to[]',$contacts,array('id','email','firstname,lastname'),'invoice_estimate_sent_to_email',$selected,array('multiple'=>true),array(),'','',false);
+							} else {
+								$this->load->model('leads_model');
+                                $leads = $this->leads_model->get($estimate->rel_id);
+                                $leadEmail = '';
+                                if($leads){
+                                    $leadEmail = $leads->email;
+                                    echo render_input('sent_to[]','Send To',$leadEmail,'text',['readonly'=>true]);
+                                } else {
+                                    echo render_input('sent_to[]','Send To',$leadEmail,'text');
                                 }
-							echo render_select('sent_to[]',$contacts,array('id','email','firstname,lastname'),'invoice_estimate_sent_to_email',$selected,array('multiple'=>true),array(),'','',false);
+                            }
 							?>
 						</div>
 						<?php echo render_input('cc','CC'); ?>
