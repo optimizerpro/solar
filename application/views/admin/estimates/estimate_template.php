@@ -11,7 +11,7 @@
           }
           ?>
          <div class="col-md-6">
-            <div class="f_client_id">
+            <!-- <div class="f_client_id">
              <div class="form-group select-placeholder">
                 <label for="clientid" class="control-label"><?php echo _l('estimate_select_customer'); ?></label>
                 <select id="clientid" name="clientid" data-live-search="true" data-width="100%" class="ajax-search<?php if(isset($estimate) && empty($estimate->clientid)){echo ' customer-removed';} ?>" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
@@ -26,8 +26,57 @@
                  } ?>
                 </select>
               </div>
+            </div> -->
+            <?php
+               $rel_type = '';
+               $rel_id = '';
+               if(isset($estimate) || ($this->input->get('rel_id') && $this->input->get('rel_type'))){
+                if($this->input->get('rel_id')){
+                  $rel_id = $this->input->get('rel_id');
+                  $rel_type = $this->input->get('rel_type');
+                } else {
+                  $rel_id = $estimate->rel_id;
+                  $rel_type = $estimate->rel_type;
+                }
+               }
+            ?>
+            <div class="form-group select-placeholder">
+               <label for="rel_type" class="control-label"><?php echo _l('proposal_related'); ?></label>
+               <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                  <option value=""></option>
+                  <option value="lead" <?php if((isset($estimate) && $estimate->rel_type == 'lead') || $this->input->get('rel_type')){if($rel_type == 'lead'){echo 'selected';}} ?>><?php echo _l('proposal_for_lead'); ?></option>
+                  <option value="customer" <?php if((isset($estimate) &&  $estimate->rel_type == 'customer') || $this->input->get('rel_type')){if($rel_type == 'customer'){echo 'selected';}} ?>><?php echo _l('proposal_for_customer'); ?></option>
+               </select>
             </div>
-            <div class="form-group select-placeholder projects-wrapper<?php if((!isset($estimate)) || (isset($estimate) && !customer_has_projects($estimate->clientid))){echo (isset($customer_id) && (!isset($project_id) || !$project_id)) ? ' hide' : '';} ?>">
+            <div class="form-group select-placeholder<?php if($rel_id == ''){echo ' hide';} ?> " id="rel_id_wrapper">
+               <label for="rel_id"><span class="rel_id_label"></span></label>
+               <div id="rel_id_select">
+                  <select name="rel_id" id="rel_id" class="ajax-search" data-width="100%" data-live-search="true" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                  <?php if($rel_id != '' && $rel_type != ''){
+                     $rel_data = get_relation_data($rel_type,$rel_id);
+                     $rel_val = get_relation_values($rel_data,$rel_type);
+                        echo '<option value="'.$rel_val['id'].'" selected>'.$rel_val['name'].'</option>';
+                     } ?>
+                  </select>
+               </div>
+            </div>
+            <div class="form-group select-placeholder projects-wrapper <?php echo ((!isset($estimate)) || (isset($estimate) && $estimate->rel_type !== 'customer')) ? 'hide' : '' ?>">
+                 <label for="project_id"><?php echo _l('project'); ?></label>
+                 <div id="project_ajax_search_wrapper">
+                     <select name="project_id" id="project_id" class="projects ajax-search" data-live-search="true" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                         <?php
+
+                         if(isset($estimate) && $estimate->project_id != 0){
+                             echo '<option value="'.$estimate->project_id.'" selected>'.get_project_name_by_id($estimate->project_id).'</option>';
+                         }
+                         ?>
+                     </select>
+                 </div>
+            </div>
+            <?php $value = (isset($estimate) ? $estimate->estimate_to : ''); ?>
+            <?php echo render_input('estimate_to','estimate_to',$value, 'hidden',[],[], 'hidden'); ?>
+
+            <!-- <div class="form-group select-placeholder projects-wrapper<?php if((!isset($estimate)) || (isset($estimate) && !customer_has_projects($estimate->clientid))){echo (isset($customer_id) && (!isset($project_id) || !$project_id)) ? ' hide' : '';} ?>">
              <label for="project_id"><?php echo _l('project'); ?></label>
              <div id="project_ajax_search_wrapper">
                <select name="project_id" id="project_id" class="projects ajax-search" data-live-search="true" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
@@ -44,7 +93,7 @@
                 ?>
               </select>
             </div>
-           </div>
+           </div> -->
             <div class="row">
                <div class="col-md-12">
                   <a href="#" class="edit_shipping_billing_info" data-toggle="modal" data-target="#billing_and_shipping_details"><i class="fa fa-pencil-square-o"></i></a>

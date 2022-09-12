@@ -1159,25 +1159,35 @@ function get_upload_path_by_type($type)
 function handle_lead_location_photo()
 {
     $path = get_upload_path_by_type('lead') . 'location/';
+    _maybe_create_upload_path($path);
     $CI   = & get_instance();
-    if (isset($_FILES['location_photo']['name'])) {
-        // Get the temp file path
-        $tmpFilePath = $_FILES['location_photo']['tmp_name'];
-        // Make sure we have a filepath
-        if (!empty($tmpFilePath) && $tmpFilePath != '') {
-            _maybe_create_upload_path($path);
-            $filename    = date('YmdHis').'_'.$_FILES['location_photo']['name'];
-            $newFilePath = $path . $filename;
-            // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
-                $attachment   = [];
-                $attachment[] = [
-                    'file_name' => $filename,
-                    'filetype'  => $_FILES['location_photo']['type'],
-                    ];
-                return $filename;
+    $filesCount = count($_FILES['location_photo']['name']);
+    $allowed_types = ['jpg','png','jpeg'];
+    $locimgArr   = [];
+    if($filesCount > 0){
+        for($i = 0; $i < $filesCount; $i++){
+            if (isset($_FILES['location_photo']['name'][$i])) {
+                // Get the temp file path
+                $tmpFilePath = $_FILES['location_photo']['tmp_name'][$i];
+                // Make sure we have a filepath
+                if (!empty($tmpFilePath) && $tmpFilePath != '') {
+                    
+                    $filename = date('YmdHis').'_'.$_FILES['location_photo']['name'][$i];
+                    $newFilePath = $path . $filename;
+                    // Upload the file into the temp dir
+                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        $attachment   = [];
+                        $attachment[] = [
+                            'file_name' => $filename,
+                            'filetype'  => $_FILES['location_photo']['type'][$i],
+                            ];
+                        $locimgArr[] = $filename;
+                    }
+                }
             }
         }
+        return implode("|", $locimgArr);
     }
     return null;
+    
 }
