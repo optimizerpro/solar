@@ -109,7 +109,7 @@
                         $_tooltip_already_send = _l('estimate_already_send_to_client_tooltip', time_ago($estimate->datesend));
                      }
                      ?>
-                  <?php if(!empty($estimate->clientid)){ ?>
+                  <?php if(!empty($estimate->rel_id)){ ?>
                   <a href="#" class="estimate-send-to-client btn btn-default btn-with-tooltip" data-toggle="tooltip" title="<?php echo $_tooltip; ?>" data-placement="bottom"><span data-toggle="tooltip" data-title="<?php echo $_tooltip_already_send; ?>"><i class="fa fa-envelope"></i></span></a>
                   <?php } ?>
                   <div class="btn-group">
