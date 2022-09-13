@@ -273,7 +273,7 @@
                   isset($contract) && $contract->signed == 1 ? ['disabled'=>true] : []
                ); ?>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                <?php $value = (isset($contract) ? _d($contract->dateend) : _d(date('Y-m-d'))); ?>
                <?php echo render_date_input(
                   'dateend',
@@ -281,7 +281,7 @@
                   $value,
                   isset($contract) && $contract->signed == 1 ? ['disabled'=>true] : []
                ); ?>
-            </div>
+            </div> -->
          </div>
          <div class="row" id='dynamic_variables'>
             <?php
@@ -344,14 +344,14 @@
                         <span class="badge comments-indicator<?php echo $totalComments == 0 ? ' hide' : ''; ?>"><?php echo $totalComments; ?></span>
                      </a>
                   </li>
-                  <li role="presentation" class="<?php if($this->input->get('tab') == 'renewals'){echo 'active';} ?>">
+                  <!-- <li role="presentation" class="<?php if($this->input->get('tab') == 'renewals'){echo 'active';} ?>">
                      <a href="#renewals" aria-controls="renewals" role="tab" data-toggle="tab">
                         <?php echo _l('no_contract_renewals_history_heading'); ?>
                         <?php if($totalRenewals = count($contract_renewal_history)) { ?>
                            <span class="badge"><?php echo $totalRenewals; ?></span>
                         <?php } ?>
                      </a>
-                  </li>
+                  </li> -->
                   <li role="presentation" class="tab-separator">
                      <a href="#tab_tasks" aria-controls="tab_tasks" role="tab" data-toggle="tab" onclick="init_rel_tasks_table(<?php echo $contract->id; ?>,'contract'); return false;">
                         <?php echo _l('tasks'); ?>
@@ -599,7 +599,7 @@
          ?>
       </div>
    </div>
-   <div role="tabpanel" class="tab-pane<?php if($this->input->get('tab') == 'renewals'){echo ' active';} ?>" id="renewals">
+   <!-- <div role="tabpanel" class="tab-pane<?php if($this->input->get('tab') == 'renewals'){echo ' active';} ?>" id="renewals">
      <div class="mtop15">
       <?php if(has_permission('contracts', '', 'edit')){ ?>
          <div class="_buttons">
@@ -660,7 +660,7 @@
 </div>
 <?php } ?>
 </div>
-</div>
+</div> -->
 <div role="tabpanel" class="tab-pane" id="tab_emails_tracking">
  <div class="mtop15">
    <?php

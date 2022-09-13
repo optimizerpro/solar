@@ -4123,7 +4123,7 @@ function validate_lead_convert_to_client_form() {
     var rules_convert_lead = {
         firstname: 'required',
         lastname: 'required',
-        password: {
+        /*password: {
             required: {
                 depends: function (element) {
                     var sent_set_password = $('input[name="send_set_password_email"]');
@@ -4132,7 +4132,7 @@ function validate_lead_convert_to_client_form() {
                     }
                 }
             }
-        },
+        },*/
         email: {
             required: true,
             email: true,

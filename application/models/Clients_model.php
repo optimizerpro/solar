@@ -574,21 +574,21 @@ class Clients_model extends App_Model
             }
 
             if ($send_welcome_email == true && !empty($data['email'])) {
-                send_mail_template(
+                /*send_mail_template(
                     'customer_created_welcome_mail',
                     $data['email'],
                     $data['userid'],
                     $contact_id,
                     $password_before_hash
-                );
+                );*/
             }
 
             if ($send_set_password_email) {
-                $this->authentication_model->set_password_email($data['email'], 0);
+                //$this->authentication_model->set_password_email($data['email'], 0);
             }
 
             if (defined('CONTACT_REGISTERING')) {
-                $this->send_verification_email($contact_id);
+                //$this->send_verification_email($contact_id);
             } else {
                 // User already verified because is added from admin area, try to transfer any tickets
                 $this->load->model('tickets_model');
