@@ -503,6 +503,11 @@
 </div>
 <?php init_tail(); ?>
 <script>
+    window.addEventListener('beforeunload', function (event) {
+  event.stopImmediatePropagation();
+});
+</script>
+<script>
    $(function() {
 
        $('select[name="role"]').on('change', function() {
