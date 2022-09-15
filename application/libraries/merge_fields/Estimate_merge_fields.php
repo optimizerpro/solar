@@ -109,6 +109,16 @@ class Estimate_merge_fields extends App_merge_fields
         $fields['{project_name}']          = get_project_name_by_id($estimate->project_id);
         $fields['{estimate_short_url}']    = get_estimate_shortlink($estimate);
 
+        if($estimate->rel_type == 'lead'){
+            $this->ci->db->where('id', $estimate->rel_id);
+            $leadRow = $this->ci->db->get(db_prefix().'leads')->row();
+            if($leadRow){
+                $fields['{contact_firstname}'] = $leadRow->name;
+                $fields['{contact_lastname}'] = $leadRow->leadlastname;
+                $fields['{client_company}'] = $leadRow->leadlastname;
+            }
+        }
+        
         $custom_fields = get_custom_fields('estimate');
         foreach ($custom_fields as $field) {
             $fields['{' . $field['slug'] . '}'] = get_custom_field_value($estimate_id, $field['id'], 'estimate');

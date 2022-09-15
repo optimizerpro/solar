@@ -815,7 +815,7 @@ class Estimates_model extends App_Model
                     : get_contact_user_id();
 
                 if ($action == 4) {
-                    if (get_option('estimate_auto_convert_to_invoice_on_client_accept') == 1) {
+                    /*if (get_option('estimate_auto_convert_to_invoice_on_client_accept') == 1) {
                         $invoiceid = $this->convert_to_invoice($id, true);
                         $this->load->model('invoices_model');
                         if ($invoiceid) {
@@ -827,14 +827,23 @@ class Estimates_model extends App_Model
                         }
                     } else {
                         $this->log_estimate_activity($id, 'estimate_activity_client_accepted', true);
-                    }
+                    }*/
 
                     // Send thank you email to all contacts with permission estimates
-                    $contacts = $this->clients_model->get_contacts($estimate->clientid, ['active' => 1, 'estimate_emails' => 1]);
-
-                    foreach ($contacts as $contact) {
-                        send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
+                    if($estimate->rel_type == 'customer'){
+                        $contacts = $this->clients_model->get_contacts($estimate->clientid, ['active' => 1, 'estimate_emails' => 1]);
+                        foreach ($contacts as $contact) {
+                            send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
+                        }
+                    } else {
+                        $this->db->where('id', $estimate->rel_id);
+                        $leadRow = $this->db->get(db_prefix().'leads')->row();
+                        if($leadRow){
+                            $contact = ['id'=>1, 'email'=>$leadRow->email,'contact_firstname'=>$leadRow->name,'contact_lastname'=>$leadRow->leadlastname];
+                            send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
+                        }
                     }
+
 
                     foreach ($staff_estimate as $member) {
                         $notified = add_notification([
@@ -850,7 +859,7 @@ class Estimates_model extends App_Model
                         if ($notified) {
                             array_push($notifiedUsers, $member['staffid']);
                         }
-
+                        //$member['email'] = 'mahendra.developer007@gmail.com';
                         send_mail_template('estimate_accepted_to_staff', $estimate, $member['email'], $contact_id);
                     }
 
@@ -1250,7 +1259,7 @@ class Estimates_model extends App_Model
                         $this->load->model('leads_model');
                         $leads = $this->leads_model->get($estimate->rel_id);
                         if($leads){
-                            $contact_id = 'mahendra.developer007@gmail.com';
+                            //$contact_id = 'mahendra.developer007@gmail.com';
                             $contact = (object)['id'=>1, 'email'=>$contact_id,'contact_firstname'=>$leads->name,'contact_lastname'=>$leads->leadlastname];
                         }
                     }
