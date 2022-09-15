@@ -815,7 +815,7 @@ class Estimates_model extends App_Model
                     : get_contact_user_id();
 
                 if ($action == 4) {
-                    /*if (get_option('estimate_auto_convert_to_invoice_on_client_accept') == 1) {
+                    if (get_option('estimate_auto_convert_to_invoice_on_client_accept') == 1) {
                         $invoiceid = $this->convert_to_invoice($id, true);
                         $this->load->model('invoices_model');
                         if ($invoiceid) {
@@ -827,7 +827,7 @@ class Estimates_model extends App_Model
                         }
                     } else {
                         $this->log_estimate_activity($id, 'estimate_activity_client_accepted', true);
-                    }*/
+                    }
 
                     // Send thank you email to all contacts with permission estimates
                     if($estimate->rel_type == 'customer'){
