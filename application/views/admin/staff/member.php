@@ -152,6 +152,7 @@
                            <option value="rtl" <?php if(isset($member) && $member->direction == 'rtl'){echo 'selected';} ?>>RTL</option>
                         </select>
                      </div>
+                     <?php if(isset($member)){ ?>
                      
                      <div class="form-group">
                         <label for="custom_signature">Create / Change Signature for documents</label>
@@ -166,6 +167,7 @@
                         <button type="button" id="accept_action" class="btn btn-success pull-right action-button">Create New Signature</button>
                         <br/>
                      </div>
+                     <?php } ?>
                      
                      <div class="form-group">
                         <?php if(count($departments) > 0){ ?>

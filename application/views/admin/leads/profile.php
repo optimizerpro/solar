@@ -749,10 +749,11 @@
          <?php $isSameChecked = (isset($lead) && $lead->same_as_mailing == 0 ? '' : 'checked'); ?>
          <div class="col-md-3">
             <h4>Billing Address</h4>
-         </div>
-         <div class="col-md-6">
             <input type="checkbox" name="same_as_mailing" value="1" <?php echo $isSameChecked; ?> id="same_as_mailing"/> <label for="same_as_mailing">Same as mailing</label>
          </div>
+         <!-- <div class="col-md-6">
+            <input type="checkbox" name="same_as_mailing" value="1" <?php echo $isSameChecked; ?> id="same_as_mailing"/> <label for="same_as_mailing">Same as mailing</label>
+         </div> -->
          <div class="clearfix"></div>
          <div class="div_billing <?php echo $isSameChecked != ''?'hidden':''; ?>">
             <div class="col-md-4">
