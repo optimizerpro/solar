@@ -136,7 +136,6 @@ function send_contract_signed_notification_to_staff($contract_id)
         if ($notified) {
             array_push($notifiedUsers, $member['staffid']);
         }
-
         send_mail_template('contract_signed_to_staff', $contract, $member);
     }
 

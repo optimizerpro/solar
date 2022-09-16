@@ -1120,6 +1120,7 @@ $lang['client_add_edit_profile']                = 'Profile';
 $lang['custom_field']                          = 'Custom field';
 $lang['custom_field_lowercase']                = 'custom field';
 $lang['custom_fields']                         = 'Custom Fields';
+$lang['additional_fields']                     = 'Additional Fields';
 $lang['new_custom_field']                      = 'New Custom Field';
 $lang['custom_field_name']                     = 'Field Name';
 $lang['custom_field_add_edit_type']            = 'Type';

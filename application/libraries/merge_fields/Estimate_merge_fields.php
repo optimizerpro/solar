@@ -115,7 +115,7 @@ class Estimate_merge_fields extends App_merge_fields
             if($leadRow){
                 $fields['{contact_firstname}'] = $leadRow->name;
                 $fields['{contact_lastname}'] = $leadRow->leadlastname;
-                $fields['{client_company}'] = $leadRow->leadlastname;
+                $fields['{client_company}'] = $leadRow->name.' '.$leadRow->leadlastname;
             }
         }
         

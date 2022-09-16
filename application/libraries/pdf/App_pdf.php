@@ -262,7 +262,7 @@ abstract class App_pdf extends TCPDF
                     $imageData = base64_encode(file_get_contents($path));
                     $src = 'data: image/png;base64,'.$imageData;
                     $instance = $this->getSignatureableInstance();
-                    $signature .= '<br /><img src="uploads/contracts/'.$instance->id.'/'.$instance->signature.'" data-imgsrc="'.$src.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
+                    $signature .= '<br /><img src="'.site_url().'uploads/contracts/'.$instance->id.'/'.$instance->signature.'" data-imgsrc="'.$src.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
                     //$signature .= _l('contract_signed_by') . ": {$record->acceptance_firstname} {$record->acceptance_lastname}<br />";
                     $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
                     $signature .= "&nbsp;&nbsp;IP: {$record->acceptance_ip}";
@@ -276,7 +276,7 @@ abstract class App_pdf extends TCPDF
             $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
             $CONTRACTOR__SIGNATURE='';
             if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
-                $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/><br/>';
+                $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/><br/>';
                 $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
                 $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
             }

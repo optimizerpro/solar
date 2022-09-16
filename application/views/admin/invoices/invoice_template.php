@@ -300,7 +300,7 @@
                </div>
 
                <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-6 hidden">
                      <?php
                         $currency_attr = array('disabled'=>true,'data-show-subtext'=>true);
                         $currency_attr = apply_filters_deprecated('invoice_currency_disabled', [$currency_attr], '2.3.0', 'invoice_currency_attributes');
@@ -321,7 +321,8 @@
                         }
                         $currency_attr = hooks()->apply_filters('invoice_currency_attributes',$currency_attr);
                         ?>
-                     <?php echo render_select('currency', $currencies, array('id','name','symbol'), 'invoice_add_edit_currency', $selected, $currency_attr); ?>
+                     <?php echo '';//render_select('currency', $currencies, array('id','name','symbol'), 'invoice_add_edit_currency', $selected, $currency_attr); ?>
+                     <?php echo render_input('currency','currency',$selected, 'hidden',[],[], 'hidden'); ?>
                   </div>
                   <div class="col-md-6">
                      <?php

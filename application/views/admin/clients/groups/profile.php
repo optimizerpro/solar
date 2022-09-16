@@ -21,7 +21,7 @@
                    ?>
                <li role="presentation" class="<?php if($this->input->get('tab') == 'custom_fields'){echo 'active';}; ?>">
                   <a href="#custom_fields" aria-controls="custom_fields" role="tab" data-toggle="tab">
-                  <?php echo hooks()->apply_filters('customer_profile_tab_custom_fields_text', _l( 'custom_fields')); ?>
+                  <?php echo hooks()->apply_filters('customer_profile_tab_custom_fields_text', _l( 'additional_fields')); ?>
                   </a>
                </li>
                <?php } ?>

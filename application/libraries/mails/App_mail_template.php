@@ -138,7 +138,7 @@ class App_mail_template
         $this->template = hooks()->apply_filters('after_parse_email_template_message', $this->template);
 
         $this->template->message = get_option('email_header') . $this->template->message . get_option('email_footer');
-
+        
 
         // Parse merge fields again in case there is merge fields found in email_header and email_footer option.
         // We cant parse this in parse_email_template function because in case the template content is send via $_POST wont work
@@ -185,7 +185,7 @@ class App_mail_template
 
         $this->ci->email->message($this->template->message);
         $this->ci->email->to($this->send_to);
-        
+        //pre(['from'=>$from, 'message'=>$this->template->message,'send_to'=>$this->send_to]);
 
         if (is_array($this->cc) || !empty($this->cc)) {
             $this->ci->email->cc($this->cc);
