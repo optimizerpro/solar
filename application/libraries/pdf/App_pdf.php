@@ -306,11 +306,13 @@ abstract class App_pdf extends TCPDF
                 $custAddCSZ = ucwords($clientDet->billing_city.'/'.$clientDet->billing_state.'/'.$clientDet->billing_zip);
             } else {
                 $leadDet = $this->contract->leadDetail;
-                $custName = $leadDet->name.' '.$leadDet->leadlastname;
-                $custEmail = $leadDet->email;
-                $custAdd = ucwords($leadDet->address.', '.$leadDet->city.', '.$leadDet->zip.', '.$leadDet->state);
-                $custAddOnly = ucwords($leadDet->address);
-                $custAddCSZ = ucwords($leadDet->city.'/'.$leadDet->state.'/'.$leadDet->zip);
+                if($leadDet){
+                    $custName = $leadDet->name.' '.$leadDet->leadlastname;
+                    $custEmail = $leadDet->email;
+                    $custAdd = ucwords($leadDet->address.', '.$leadDet->city.', '.$leadDet->zip.', '.$leadDet->state);
+                    $custAddOnly = ucwords($leadDet->address);
+                    $custAddCSZ = ucwords($leadDet->city.'/'.$leadDet->state.'/'.$leadDet->zip);
+                }
             }
             $content = str_replace('{{CUSTOMER_NAME}}', $custName, $content);
             //$content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
