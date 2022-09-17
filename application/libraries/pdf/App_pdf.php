@@ -276,7 +276,17 @@ abstract class App_pdf extends TCPDF
             $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
             $CONTRACTOR__SIGNATURE='';
             if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
-                $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/><br/>';
+                $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/>';
+                if ($this->type() == 'contract') {
+                    $record = $this->getSignatureableInstance();
+                    if(isset($record->created_ip)){
+                        $CONTRACTOR__SIGNATURE .='<br /><span style="font-weight:bold;text-align: left;">';
+                        $CONTRACTOR__SIGNATURE .= 'Date : ' . _dt($record->dateadded) . '&nbsp;&nbsp;';
+                        $CONTRACTOR__SIGNATURE .= "&nbsp;&nbsp;IP: {$record->created_ip}";
+                        $CONTRACTOR__SIGNATURE .= '</span><br />';
+                    }
+                }
+                $CONTRACTOR__SIGNATURE .= '<br/>';
                 $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
                 $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
             }
@@ -300,7 +310,11 @@ abstract class App_pdf extends TCPDF
             if($this->contract->rel_type == 'customer'){
                 $clientDet = $this->contract->client_detail;
                 $custName = $clientDet->company;
-                $custEmail = $clientDet->email;
+                $this->ci->load->model('clients_model');
+                $hasContact = $this->ci->clients_model->get_contacts($this->contract->rel_id,array('active'=>1));
+                if($hasContact && count($hasContact) > 0){
+                    $custEmail = $hasContact[0]['email'];
+                }
                 $custAdd = ucwords($clientDet->billing_street.', '.$clientDet->billing_city.', '.$clientDet->billing_zip.', '.$clientDet->billing_state);
                 $custAddOnly = ucwords($clientDet->billing_street);
                 $custAddCSZ = ucwords($clientDet->billing_city.'/'.$clientDet->billing_state.'/'.$clientDet->billing_zip);

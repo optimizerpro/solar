@@ -98,3 +98,6 @@ ALTER TABLE `tblcontracts` ADD `rel_id` INT(11) NULL AFTER `material_drop`, ADD 
 ALTER TABLE `tblestimates` ADD `rel_id` INT(11) NULL AFTER `deleted_customer_name`, ADD `rel_type` VARCHAR(40) NULL COMMENT 'lead or customer' AFTER `rel_id`, ADD `estimate_to` VARCHAR(191) NULL AFTER `rel_type`; 
 
 ALTER TABLE `tblleads` CHANGE `location_photo` `location_photo` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+--17-09-2022
+ALTER TABLE `tblcontracts` ADD `created_ip` VARCHAR(40) NULL AFTER `acceptance_ip`; 

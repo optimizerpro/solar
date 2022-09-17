@@ -164,6 +164,7 @@ class Contracts_model extends App_Model
         }
         $data['content'] = $contentt;
         $data['dateadded'] = date('Y-m-d H:i:s');
+        $data['created_ip'] = $this->input->ip_address();
         $data['addedfrom'] = get_staff_user_id();
 
         $data['datestart'] = to_sql_date($data['datestart']);
@@ -871,14 +872,20 @@ class Contracts_model extends App_Model
         if($contract){
             if($contract->rel_type == 'lead'){
                 $lead_id = $contract->rel_id;
-                if($contract->contract_type == 1){ //aggrement
+                /*if($contract->contract_type == 1){ //aggrement
                     $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
                     if($leadStRow){
                         $this->db->where('id', $lead_id);
                         $status = $leadStRow->id;
                         $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
                     }
-                } else if($contract->contract_type == 2){ //work order
+                } else if($contract->contract_type == 2){ //work order*/
+                    $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+                    if($leadStRow){
+                        $this->db->where('id', $lead_id);
+                        $status = $leadStRow->id;
+                        $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+                    }
                     $this->load->model('leads_model');
                     $leadRow = $this->leads_model->get($lead_id);
                     if(!$leadRow){
@@ -928,7 +935,7 @@ class Contracts_model extends App_Model
                         log_activity('Created Lead Client Profile [LeadID: ' . $custAddData['leadid'] . ', ClientID: ' . $id . ']');
                         hooks()->do_action('lead_converted_to_customer', ['lead_id' => $custAddData['leadid'], 'customer_id' => $id]);
                     }
-                }
+                /*} */ /* } else if($contract->contract_type == 2){ */
             }
         }
     }
