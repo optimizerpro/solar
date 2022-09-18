@@ -16,7 +16,6 @@ class Contract extends ClientsController
         if (!is_client_logged_in()) {
             load_client_language($contract->client);
         }
-
         if ($this->input->post()) {
             $action = $this->input->post('action');
 
@@ -39,6 +38,9 @@ class Contract extends ClientsController
 
                     // Notify contract creator that customer signed the contract
                     send_contract_signed_notification_to_staff($id);
+                    
+                    // Send thank you mail to customer
+                    send_contract_signed_notification_to_customer($id);
 
                     set_alert('success', _l('document_signed_successfully'));
                     redirect($_SERVER['HTTP_REFERER']);
