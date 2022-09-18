@@ -210,7 +210,6 @@ class App_mail_template
             ]);
 
             $this->clear();
-
             return true;
         }
 

@@ -134,22 +134,24 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
     }
-
-    $CI->app_menu->add_sidebar_menu_item('projects', [
-        'name'     => _l('projects'),
-        'href'     => admin_url('projects'),
-        'icon'     => 'fa fa-bars',
-        'position' => 30,
-        'badge'    => [],
-    ]);
-
-    $CI->app_menu->add_sidebar_menu_item('tasks', [
-        'name'     => _l('als_tasks'),
-        'href'     => admin_url('tasks'),
-        'icon'     => 'fa fa-tasks',
-        'position' => 35,
-        'badge'    => [],
-    ]);
+    if (has_permission('projects', '', 'view') || has_permission('projects', '', 'view_own')) {
+        $CI->app_menu->add_sidebar_menu_item('projects', [
+            'name'     => _l('projects'),
+            'href'     => admin_url('projects'),
+            'icon'     => 'fa fa-bars',
+            'position' => 30,
+            'badge'    => [],
+        ]);
+    }
+    if (has_permission('tasks', '', 'view') || has_permission('tasks', '', 'view_own')) {
+        $CI->app_menu->add_sidebar_menu_item('tasks', [
+            'name'     => _l('als_tasks'),
+            'href'     => admin_url('tasks'),
+            'icon'     => 'fa fa-tasks',
+            'position' => 35,
+            'badge'    => [],
+        ]);
+    }
 
     if ((!is_staff_member() && get_option('access_tickets_to_none_staff_members') == 1) || is_staff_member()) {
         $enable_badge = get_option('enable_support_menu_badges');

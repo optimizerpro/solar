@@ -44,6 +44,13 @@
                     || isset($role) && has_role_permission($role->roleid, $capability, $feature)){
                   $checked = ' checked ';
                   }
+
+                  if($permission['name'] == 'Tasks' || $permission['name'] == 'Jobs'){
+                     $disabled = '';
+                     if($capability == 'view_own' && (isset($member) && staff_can($capability, $feature, $member->staffid))){
+                        $checked = ' checked ';
+                     }
+                  }
                   ?>
                <div class="checkbox">
                   <input

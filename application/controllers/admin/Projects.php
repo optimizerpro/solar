@@ -18,6 +18,9 @@ class Projects extends AdminController
 
     public function index()
     {
+        if(!has_permission('projects','','view_own') && !has_permission('projects','','view')){
+            redirect(admin_url());
+        }
         close_setup_menu();
         $data['statuses'] = $this->projects_model->get_project_statuses();
         $data['title']    = _l('projects');

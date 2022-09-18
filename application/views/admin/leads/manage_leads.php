@@ -245,10 +245,10 @@
                                     'th_attrs'=>array('id'=>'th-consent', 'class'=>'not-export')
                                  );
                               }
-                              $_table_data[] = array(
+                              /*$_table_data[] = array(
                                'name'=>_l('lead_company'),
                                'th_attrs'=>array('class'=>'toggleable', 'id'=>'th-company')
-                              );
+                              );*/
                               $_table_data[] =   array(
                                'name'=>_l('leads_dt_email'),
                                'th_attrs'=>array('class'=>'toggleable', 'id'=>'th-email')

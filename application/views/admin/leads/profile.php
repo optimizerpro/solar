@@ -260,9 +260,9 @@
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->lead_value != 0 ? app_format_money($lead->lead_value , $base_currency->id) : '-') ?></p> -->
 
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_company'); ?></p>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_company'); ?></p>
 
-            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p>
+            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p> -->
 
             <h4><?php echo _l('Billing Address'); ?></h4>
             <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
