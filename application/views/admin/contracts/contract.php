@@ -498,6 +498,15 @@
                          </div>
                       <?php } ?>
                    </div>-->
+                   <style>
+                     .contract-html-content .table-responsive:nth-child(2) table, .contract-html-content .table-responsive:nth-child(3) table,
+                     .contract-html-content table:nth-child(2), .contract-html-content table:nth-child(3) {
+                        width: 100%;
+                     }
+                     </style>
+                   <div class="col-md-12 contract-html-content" style="overflow: auto;">
+                      <?php echo $contract->content; ?>
+                   </div>
                 </div>
                 <hr class="hr-panel-heading" />
                 <?php if(!staff_can('edit','contracts')) { ?>
@@ -1107,6 +1116,7 @@ _rel_type.on('change', function() {
    data.type = _rel_type.val();
    init_ajax_search(_rel_type.val(),_rel_id,serverData);
 }
+$('.contract-html-content').css("height", $('#contract-form').height() - 200);
 </script>
 </body>
 </html>

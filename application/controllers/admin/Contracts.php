@@ -140,6 +140,10 @@ class Contracts extends AdminController
         $data['types']         = $this->contracts_model->get_contract_types();
         $data['title']         = $title;
         $data['bodyclass']     = 'contract';
+
+        $contractObj = contract_pdf($data['contract']);
+        $data['contract']->content =$contractObj->fix_editor_html($data['contract']->content);
+        
         $this->load->view('admin/contracts/contract', $data);
     }
 

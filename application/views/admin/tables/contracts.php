@@ -147,7 +147,7 @@ foreach ($rResult as $aRow) {
         $row[] = '<a href="' . admin_url('clients/client/' . $aRow['client']) . '">' . $aRow['company'] . '</a>';
     } else {
         $leadRow = $this->ci->leads_model->get($aRow['rel_id']);
-        $showName = $leadRow ? $leadRow->name.' '.$leadRow->leadlastname:'-';
+        $showName = $leadRow && isset($leadRow->name) ? $leadRow->name.' '.$leadRow->leadlastname:'-';
         $row[] = $showName;
     }
 
