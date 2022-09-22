@@ -2052,14 +2052,34 @@ $(function () {
         proposal_pipeline_open(proposal_id);
     }
 
+    $("body").on('blur', '._transaction_form input[name="section_name[]"]', function () {
+        let cuVall = $(this).val();
+        let _thel = $(this).closest('.item_to_be_clone');
+        _thel.find('table.items').find('.sectionname').val(cuVall);
+    });
     $("body").on('submit', '._transaction_form', function () {
 
         // On submit re-calculate total and reorder the items for all cases.
         calculate_total();
 
         $('body').find('#items-warning').remove();
+
         var $itemsTable = $(this).find('table.items');
         var $previewItem = $itemsTable.find('.main');
+
+        if($(this).find('input[name="section_name[]"]').length > 0){
+            var thSecs = $(this).find('input[name="section_name[]"]');
+            let errCount = 0;
+            thSecs.each(function(index, el) {
+                if($(el).val() == ''){
+                    errCount++;
+                }
+            });
+            if(errCount > 0){
+                alert('Section name is required');
+                return false;
+            }
+        }
 
         if ($previewItem.find('[name="description"]').length && $previewItem.find('[name="description"]').val().trim().length > 0 &&
             $previewItem.find('[name="rate"]').val().trim().length > 0) {
@@ -6015,9 +6035,9 @@ function add_item_to_preview(id,multiitem=false) {
             }
 
            $('#'+id_of_dom+' .main select.tax').selectpicker('val', taxSelectedArray);
-           console.log('response.unit 5978', response.unit);
+           //console.log('response.unit 5978', response.unit);
            let unitArr = response.unit.toString().split(",");
-           console.log(unitArr, unitArr.length);
+           //console.log(unitArr, unitArr.length);
            if(unitArr.length > 1){
                 let cltd = $('#'+id_of_dom+' .main input[name="unit"]').closest('td');
                 $('#'+id_of_dom+' .main input[name="unit"]').remove();
@@ -6030,7 +6050,7 @@ function add_item_to_preview(id,multiitem=false) {
                 cltd.append(selectHtml);
                 $('#'+id_of_dom+' .main').find('select[name="unit"]').val(fval);
            } else {
-                console.log(5992, $('#'+id_of_dom+' .main select[name="unit"]'));
+                //console.log(5992, $('#'+id_of_dom+' .main select[name="unit"]'));
                 if($('#'+id_of_dom+' .main select[name="unit"]').length > 0){
                     let cltd = $('#'+id_of_dom+' .main select[name="unit"]').closest('td');
                     $('#'+id_of_dom+' .main select[name="unit"]').remove();
@@ -6184,7 +6204,6 @@ function clear_item_preview_values(default_taxes) {
 
 // Append the added items to the preview to the table as items
 function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=false) {
-    console.log(data);
     // If not custom data passed get from the preview
     data = typeof (data) == 'undefined' || data == 'undefined' ? get_item_preview_values(table_id) : data;
     if (data.description === "" && data.long_description === "" && data.rate === "") {
@@ -6302,7 +6321,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=fa
         }
 
         table_row += '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="newitems[' + item_key + '][qty]" value="' + data.qty + '" class="form-control">';
-        console.log('data.unit',data);
+        //console.log('data.unit',data);
         if (!data.unit || typeof (data.unit) == 'undefined') {
             data.unit = '';
         }

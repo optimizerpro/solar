@@ -57,7 +57,7 @@
                   <div class="col-md-12 item_to_be_clone " style="marginbottom:10px;" id="section_items">
                      <div class="row" style="">
                         <div class="col-md-3">
-                           <input type="text" name="section_name[]" value="" placeholder="Section Name Here" class="form-control">
+                           <input type="text" name="section_name[]" value="" placeholder="Section Name Here" class="form-control" required>
                         </div>
                         <div class="col-md-9">
                            <div class="row">

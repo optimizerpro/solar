@@ -161,7 +161,8 @@ $this->app_scripts->theme('signature-pad','assets/plugins/signature-pad/signatur
        }
 
        $('#signatureInput-error').remove();
-       var partBase64 = signaturePad.toDataURLAndRemoveBlanks();
+       //var partBase64 = signaturePad.toDataURLAndRemoveBlanks();
+       var partBase64 = signaturePad.toDataURL();
        partBase64 = partBase64.split(',')[1];
        input.value = partBase64;
      }
