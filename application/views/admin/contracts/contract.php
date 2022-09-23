@@ -367,7 +367,7 @@
                         </span>
                      </a>
                   </li>
-                  <li role="presentation" class="tab-separator">
+                  <!-- <li role="presentation" class="tab-separator">
                      <a href="#tab_templates" onclick="get_templates('contracts', <?php echo $contract->id ?>); return false" aria-controls="tab_templates" role="tab" data-toggle="tab">
                         <?php echo _l('templates');
                         $total_templates = total_rows(db_prefix() . 'templates', [
@@ -377,7 +377,7 @@
                         ?>
                          <span class="badge total_templates <?php echo $total_templates === 0 ? 'hide' : ''; ?>"><?php echo $total_templates ?></span>
                      </a>
-                  </li>
+                  </li> -->
                   <li role="presentation" data-toggle="tooltip" title="<?php echo _l('emails_tracking'); ?>" class="tab-separator">
                      <a href="#tab_emails_tracking" aria-controls="tab_emails_tracking" role="tab" data-toggle="tab">
                         <?php if(!is_mobile()){ ?>
@@ -413,8 +413,16 @@
                               <?php echo _l('contract_marked_as_signed_info'); ?>
                            </div>
                         </div>
-                     <?php } ?>
+                     <?php } ?> 
                      <div class="col-md-12 text-right _buttons">
+                        <?php if($contract->signed == 0 && $contract->marked_as_signed == 0) { ?>
+                           <div class="btn-group">
+                              <button type="submit" id="accept_action" class="btn btn-success pull-right action-button"><?php echo _l('e_signature_sign'); ?></button>
+                           </div>
+                        <?php } ?>
+                        <div class="btn-group">
+                           <a href="<?php echo admin_url('contracts/pdf/'.$contract->id); ?>" class="btn btn-default action-button mright5 contract-html-pdf"><i class="fa fa-file-pdf-o"></i> <?php echo _l('clients_invoice_html_btn_download'); ?></a>
+                        </div>
                         <div class="btn-group">
                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file-pdf-o"></i><?php if(is_mobile()){echo ' PDF';} ?> <span class="caret"></span></a>
                            <ul class="dropdown-menu dropdown-menu-right">
@@ -671,31 +679,30 @@
 </div>
 </div> -->
 <div role="tabpanel" class="tab-pane" id="tab_emails_tracking">
- <div class="mtop15">
-   <?php
-   $this->load->view('admin/includes/emails_tracking',array(
-     'tracked_emails'=>
-     get_tracked_emails($contract->id, 'contract'))
-);
-?>
-</div>
-</div>
-<div role="tabpanel" class="tab-pane" id="tab_tasks">
- <div class="mtop15">
-   <?php init_relation_tasks_table(array('data-new-rel-id'=>$contract->id,'data-new-rel-type'=>'contract')); ?>
-</div>
-</div>
-<div role="tabpanel" class="tab-pane" id="tab_templates">
-   <div class="row contract-templates mtop15">
-      <div class="col-md-12">
-         <button type="button" class="btn btn-info" onclick="add_template('contracts', <?php echo $contract->id ?>);"><?php echo _l('add_template'); ?></button>
-         <hr>
-      </div>
-      <div class="col-md-12">
-         <div id="contract-templates" class="contract-templates-wrapper"></div>
-      </div>
+   <div class="mtop15">
+      <?php
+         $this->load->view('admin/includes/emails_tracking',array(
+           'tracked_emails'=>
+           get_tracked_emails($contract->id, 'contract'))
+      ); ?>
    </div>
 </div>
+<div role="tabpanel" class="tab-pane" id="tab_tasks">
+   <div class="mtop15">
+      <?php init_relation_tasks_table(array('data-new-rel-id'=>$contract->id,'data-new-rel-type'=>'contract')); ?>
+   </div>
+</div>
+   <!-- <div role="tabpanel" class="tab-pane" id="tab_templates">
+      <div class="row contract-templates mtop15">
+         <div class="col-md-12">
+            <button type="button" class="btn btn-info" onclick="add_template('contracts', <?php echo $contract->id ?>);"><?php echo _l('add_template'); ?></button>
+            <hr>
+         </div>
+         <div class="col-md-12">
+            <div id="contract-templates" class="contract-templates-wrapper"></div>
+         </div>
+      </div>
+   </div> -->
 </div>
 </div>
 </div>
@@ -706,15 +713,32 @@
 </div>
 <div id="modal-wrapper"></div>
 <?php init_tail(); ?>
+
 <?php if(isset($contract)){ ?>
    <!-- init table tasks -->
    <script>
       var contract_id = '<?php echo $contract->id; ?>';
+      $("body").addClass("identity-confirmation");
    </script>
    <?php $this->load->view('admin/contracts/send_to_client'); ?>
    <?php $this->load->view('admin/contracts/renew_contract'); ?>
 <?php } ?>
 <?php $this->load->view('admin/contracts/contract_type'); ?>
+
+<?php if(isset($contract) && $contract->signed == 0 && $contract->marked_as_signed == 0) { ?>
+<script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/themes/perfex/js/global.min.js?v='.time()); ?>"></script>
+<script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/plugins/signature-pad/signature_pad.min.js?v=2.9.4'); ?>"></script>
+<?php
+   $dfltArr = array('formData' => form_hidden('action', 'sign_contract'));
+   if($this->session->staff_user_id && $this->session->staff_user_id != ''){
+      $staffDet = get_staff($this->session->staff_user_id);
+      if($staffDet){
+         $dfltArr['contact'] = (object)['firstname'=>$staffDet->firstname,'lastname'=>$staffDet->lastname,'email'=>$staffDet->email];
+      }
+   }
+   get_template_part('identity_confirmation_form', $dfltArr);
+}/*if 728*/
+?>
 <script>
    Dropzone.autoDiscover = false;
    $(function () {

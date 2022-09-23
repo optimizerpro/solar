@@ -321,7 +321,7 @@ abstract class App_pdf extends TCPDF
             } else {
                 $leadDet = $this->contract->leadDetail;
                 if($leadDet){
-                    $custName = $leadDet->name.' '.$leadDet->leadlastname;
+                    $custName = (isset($leadDet->name))?$leadDet->name.' '.$leadDet->leadlastname:'';
                     $custEmail = $leadDet->email;
                     $custAdd = ucwords($leadDet->address.', '.$leadDet->city.', '.$leadDet->zip.', '.$leadDet->state);
                     $custAddOnly = ucwords($leadDet->address);

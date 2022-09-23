@@ -86,6 +86,26 @@ class Contracts extends AdminController
     public function contract($id = '')
     {
         if ($this->input->post()) {
+            /* Action code added 24-09-2022 */
+            if(isset($_POST['action']) && $_POST['action']=='sign_contract'){
+                process_digital_signature_image($this->input->post('signature', false), CONTRACTS_UPLOADS_FOLDER . $id);
+                $this->db->where('id', $id);
+                $this->db->update(db_prefix().'contracts', array_merge(get_acceptance_info_array(), [
+                    'signed' => 1,
+                ]));
+                /* Update Lead To Prospect 11-09-2022 */
+                $this->contracts_model->update_lead_or_convert_to_customer($id);
+                /* Update Lead To Prospect End */
+
+                // Notify contract creator that customer signed the contract
+                send_contract_signed_notification_to_staff($id);
+                
+                // Send thank you mail to customer
+                send_contract_signed_notification_to_customer($id);
+                set_alert('success', _l('document_signed_successfully'));
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+
             if ($id == '') {
                 if (!has_permission('contracts', '', 'create')) {
                     access_denied('contracts');
@@ -140,9 +160,10 @@ class Contracts extends AdminController
         $data['types']         = $this->contracts_model->get_contract_types();
         $data['title']         = $title;
         $data['bodyclass']     = 'contract';
-
-        $contractObj = contract_pdf($data['contract']);
-        $data['contract']->content =$contractObj->fix_editor_html($data['contract']->content);
+        if(isset($data['contract'])){
+            $contractObj = contract_pdf($data['contract']);
+            $data['contract']->content =$contractObj->fix_editor_html($data['contract']->content);
+        }
         
         $this->load->view('admin/contracts/contract', $data);
     }

@@ -135,7 +135,7 @@ class Clients extends AdminController
         } else {
             $client                = $this->clients_model->get($id);
             $data['customer_tabs'] = get_customer_profile_tabs($id);
-
+            
             if (!$client) {
                 show_404();
             }
