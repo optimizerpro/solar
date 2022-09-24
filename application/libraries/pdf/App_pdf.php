@@ -280,7 +280,7 @@ abstract class App_pdf extends TCPDF
                 if ($this->type() == 'contract') {
                     $record = $this->getSignatureableInstance();
                     if(isset($record->created_ip)){
-                        $CONTRACTOR__SIGNATURE .='<br /><span style="font-weight:bold;text-align: left;">';
+                        $CONTRACTOR__SIGNATURE .='<span style="font-weight:bold;text-align: left;">';
                         $CONTRACTOR__SIGNATURE .= 'Date : ' . _dt($record->dateadded) . '&nbsp;&nbsp;';
                         $CONTRACTOR__SIGNATURE .= "&nbsp;&nbsp;IP: {$record->created_ip}";
                         $CONTRACTOR__SIGNATURE .= '</span><br />';
@@ -369,7 +369,7 @@ abstract class App_pdf extends TCPDF
             $aggreDate = ($this->contract->dateadded)?date('d M y, h:i A', strtotime($this->contract->dateadded)):'-';
             $content = str_replace('{{AGREEMENT_DATE}}', $aggreDate, $content);
             $content = str_replace('{{CUSTOMER_PHONE}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->phonenumber:'-', $content);
-            $ic_value = $dol_value = $cn_value = $an_value = $ap_value = '-';
+            $ic_value = $dol_value = $cn_value = $an_value = $ap_value = $pn_value = '-';
             if(isset($this->contract->leadDetail)){
                 $ic_value = get_custom_field_value($this->contract->leadDetail->id, 1, 'leads');              
                 $ic_value = ($ic_value?$ic_value:'-');
@@ -385,6 +385,9 @@ abstract class App_pdf extends TCPDF
 
                 $ap_value = get_custom_field_value($this->contract->leadDetail->id, 8, 'leads');
                 $ap_value = ($ap_value?$ap_value:'-');
+
+                $pn_value = get_custom_field_value($this->contract->leadDetail->id, 29, 'leads');
+                $pn_value = ($pn_value?$pn_value:'-');
             }
             $content = str_replace('{{INSURANCE_COMPANY}}', $ic_value, $content);
             $content = str_replace('{{DATE_OF_LOSS}}', $dol_value, $content);
@@ -392,7 +395,7 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{ADJUSTER_NAME}}', $an_value, $content);
             $content = str_replace('{{ADJUSTER_PHONE}}', $ap_value, $content);
 
-            $pn_value = ($this->contract->policy_number != '')?$this->contract->policy_number:'-';
+            //$pn_value = ($this->contract->policy_number != '')?$this->contract->policy_number:'-';
             $content = str_replace('{{POLICY_NUMBER}}', $pn_value, $content);
 
             $adjd_value = ($this->contract->adj_appoint_date != '')?$this->contract->adj_appoint_date:'-';

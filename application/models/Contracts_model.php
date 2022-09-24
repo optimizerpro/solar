@@ -891,6 +891,12 @@ class Contracts_model extends App_Model
                     if(!$leadRow){
                         return false;
                     }
+                    $this->load->model('clients_model');
+                    $wh2 = [db_prefix() . 'contacts.email'=>$leadRow->email];
+                    $isExist = $this->clients_model->get('', $wh2);
+                    if($isExist && count($isExist) > 0){
+                        return false;
+                    }
                     $custAddData = [
                         'leadid' => $lead_id, 'default_language' => '',
                         'firstname' => $leadRow->name, 'lastname' => $leadRow->leadlastname,
@@ -909,7 +915,7 @@ class Contracts_model extends App_Model
                     $custAddData['billing_country'] = $custAddData['country'];
                     $custAddData['company'] = $custAddData['firstname']." ".$custAddData['lastname'];
                     $custAddData['is_primary'] = 1;
-                    $this->load->model('clients_model');
+                    
                     $id = $this->clients_model->add($custAddData, true);
                     if ($id) {
                         $this->db->insert(db_prefix() . 'customer_admins', [

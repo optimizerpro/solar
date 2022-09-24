@@ -32,12 +32,27 @@
             if(isset($contract)){if($contract->fastners !=''){$fastners= $contract->fastners;}}; 
             if(isset($contract)){if($contract->description !=''){$description= addslashes($contract->description);}}; 
             $agreement_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Agreement Details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="manufacturer_warranty">Manufacturer Warranty (yrs)</label>';
-            $agreement_fields.='<input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="'.$manufacturer_warranty.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="roll_yard">Roll yard with magnetic roller</label><input type="text" id="roll_yard" name="roll_yard" value="'.$roll_yard.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle_color">Shingle Color</label><input type="text" id="shingle_color" name="shingle_color" value="'.$shingle_color.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="install_decking">Install Decking</label><input type="text" id="install_decking" name="install_decking" value="'.$install_decking.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'"></div></div>';
+            $agreement_fields.='<input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="'.$manufacturer_warranty.'" class="form-control"></div></div>';
+            //$agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="roll_yard">Roll yard with magnetic roller</label><input type="text" id="roll_yard" name="roll_yard" value="'.$roll_yard.'" class="form-control"></div></div>';
+            $rollyard = '';
+            if(isset($contract)){
+               if($contract->roll_yard !=''){
+                  $rollyard= $contract->roll_yard;
+               }
+            }
+            $rollyardyes_checked = $rollyardno_checked='';
+            if($rollyard=='Yes' || $rollyard==''){
+               $rollyardyes_checked=' checked';
+            } else {
+               $rollyardno_checked=' checked';
+            }
+
+            $agreement_fields.='<div class="col-md-6"><label>Roll yard with magnetic roller</label><div class="form-group"><label for="rollyardyes"><input type="radio" id="rollyardyes" name="roll_yard" value="Yes" '.$rollyardyes_checked.'>&nbsp;&nbsp;Yes</label>&nbsp;&nbsp;<label for="rollyardno"><input type="radio" id="rollyardno" name="roll_yard" value="No" '.$rollyardno_checked.'>&nbsp;&nbsp;No</label></div></div>';
+            $agreement_fields.='<div class="clearfix"></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle_color">Shingle Color</label><input type="text" id="shingle_color" name="shingle_color" value="'.$shingle_color.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="install_decking">Install Decking</label><input type="text" id="install_decking" name="install_decking" value="'.$install_decking.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'" class="form-control"></div></div>';
 
             /* 10-09-2022 */
             $policy_number = $acv_rcv = $adj_appoint_date = $adj_appoint_time = '';
@@ -62,15 +77,15 @@
             else{
                $rcv_checked=' checked';
             }
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'"></div></div>';
+            //$agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'"></div></div>';
             $agreement_fields.='<div class="col-md-6"><label>RCV/ACV</label><div class="form-group"><label for="acv_aggre"><input type="radio" id="acv_aggre" name="acv_rcv_aggre" value="acv" '.$acv_checked.'>&nbsp;&nbsp;ACV</label>&nbsp;&nbsp;<label for="rcv_aggre"><input type="radio" id="rcv_aggre" name="acv_rcv_aggre" value="rcv" '.$rcv_checked.'>&nbsp;&nbsp;RCV</label></div></div>';
             $agreement_fields.='<div class="clearfix"></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_date">Adjusment Appointment Date</label><input type="date" id="adj_appoint_date" name="adj_appoint_date" value="'.$adj_appoint_date.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_time">Adjusment Appointment Time</label><input type="time" id="adj_appoint_time" name="adj_appoint_time" value="'.$adj_appoint_time.'"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_date">Adjusment Appointment Date</label><input type="date" id="adj_appoint_date" name="adj_appoint_date" value="'.$adj_appoint_date.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_time">Adjusment Appointment Time</label><input type="time" id="adj_appoint_time" name="adj_appoint_time" value="'.$adj_appoint_time.'" class="form-control"></div></div>';
 
             $agreement_fields.= '</div>';
 
-            $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
+            $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false" class="form-control">'.$description.'</textarea></div></div>';
          $description=$roof_type=$layers=$pitch=$acv_rcv=$acv_rcv_plus_tax=$ad_allowance=$first_check=$second_check=$deductible='';
          $soffit=$fascia=$sidewall=$driveway=$shingle=$color=$dripedge=$material_drop=$ventilation='';
          if(isset($contract)){if($contract->roof_type !=''){$roof_type= $contract->roof_type;}}; 
@@ -99,24 +114,24 @@
          else{
             $rcv_checked=' checked';
          }
-         $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="layers">Layers</label><input type="text" id="layers" name="layers" value="'.$layers.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="pitch">Pitch</label><input type="text" id="pitch" name="pitch" value="'.$pitch.'"></div></div></div>';
+         $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="layers">Layers</label><input type="text" id="layers" name="layers" value="'.$layers.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="pitch">Pitch</label><input type="text" id="pitch" name="pitch" value="'.$pitch.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="row"><div class="col-md-12" id="adjuster_label"><h4>Adjuster Estimate</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="acv"><input type="radio" id="acv" name="acv_rcv" value="acv" '.$acv_checked.'>&nbsp;&nbsp;ACV</label>&nbsp;&nbsp;<label for="rcv"><input type="radio" id="rcv" name="acv_rcv" value="rcv" '.$rcv_checked.'>&nbsp;&nbsp;RCV</label></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="acv_rcv_plus_tax">ACV/RCV + Tax</label><input type="text" id="acv_rcv_plus_tax" name="acv_rcv_plus_tax" value="'.$acv_rcv_plus_tax.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ad_allowance">Advertising Allowance</label><input type="text" id="ad_allowance" name="ad_allowance" value="'.$ad_allowance.'"></div></div></div>';
-         $work_order_fields.='<div class="row"><div class="col-md-12" id="payment_schedule"><h4>Payment Schedule</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="first_check">First Check</label><input type="text" id="first_check" name="first_check" value="'.$first_check.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="second_check">Second Check</label><input type="text" id="second_check" name="second_check" value="'.$second_check.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="deductible">Deductible</label><input type="text" id="deductible" name="deductible" value="'.$deductible.'"></div></div></div>';
-         $work_order_fields.='<div class="row"><div class="col-md-12" id="pre_existing_structural_defects"><h4>Pre-existing Structural Defects</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="soffit">Soffit</label><input type="text" id="soffit" name="soffit" value="'.$soffit.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="fascia">Fascia</label><input type="text" id="fascia" name="fascia" value="'.$fascia.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="sidewall">Sidewall</label><input type="text" id="sidewall" name="sidewall" value="'.$sidewall.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="driveway">Driveway</label><input type="text" id="driveway" name="driveway" value="'.$driveway.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle">Shingle</label><input type="text" id="shingle" name="shingle" value="'.$shingle.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="color">Color</label><input type="text" id="color" name="color" value="'.$color.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="dripedge">Drip Edge</label><input type="text" id="dripedge" name="dripedge" value="'.$dripedge.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'"></div></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="acv_rcv_plus_tax">ACV/RCV + Tax</label><input type="text" id="acv_rcv_plus_tax" name="acv_rcv_plus_tax" value="'.$acv_rcv_plus_tax.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ad_allowance">Advertising Allowance</label><input type="text" id="ad_allowance" name="ad_allowance" value="'.$ad_allowance.'" class="form-control"></div></div></div>';
+         $work_order_fields.='<div class="row"><div class="col-md-12" id="payment_schedule"><h4>Payment Schedule</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="first_check">First Check</label><input type="text" id="first_check" name="first_check" value="'.$first_check.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="second_check">Second Check</label><input type="text" id="second_check" name="second_check" value="'.$second_check.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="deductible">Deductible</label><input type="text" id="deductible" name="deductible" value="'.$deductible.'" class="form-control"></div></div></div>';
+         $work_order_fields.='<div class="row"><div class="col-md-12" id="pre_existing_structural_defects"><h4>Pre-existing Structural Defects</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="soffit">Soffit</label><input type="text" id="soffit" name="soffit" value="'.$soffit.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="fascia">Fascia</label><input type="text" id="fascia" name="fascia" value="'.$fascia.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="sidewall">Sidewall</label><input type="text" id="sidewall" name="sidewall" value="'.$sidewall.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="driveway">Driveway</label><input type="text" id="driveway" name="driveway" value="'.$driveway.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle">Shingle</label><input type="text" id="shingle" name="shingle" value="'.$shingle.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="color">Color</label><input type="text" id="color" name="color" value="'.$color.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="dripedge">Drip Edge</label><input type="text" id="dripedge" name="dripedge" value="'.$dripedge.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Special Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
          ?>
          <div class="col-md-5 left-column">
@@ -420,9 +435,9 @@
                               <button type="submit" id="accept_action" class="btn btn-success pull-right action-button"><?php echo _l('e_signature_sign'); ?></button>
                            </div>
                         <?php } ?>
-                        <div class="btn-group">
+                        <!-- <div class="btn-group">
                            <a href="<?php echo admin_url('contracts/pdf/'.$contract->id); ?>" class="btn btn-default action-button mright5 contract-html-pdf"><i class="fa fa-file-pdf-o"></i> <?php echo _l('clients_invoice_html_btn_download'); ?></a>
-                        </div>
+                        </div> -->
                         <div class="btn-group">
                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file-pdf-o"></i><?php if(is_mobile()){echo ' PDF';} ?> <span class="caret"></span></a>
                            <ul class="dropdown-menu dropdown-menu-right">

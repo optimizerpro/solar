@@ -131,7 +131,8 @@ trait PDF_Signature
             return $GLOBALS['estimate_pdf'];
         } elseif (isset($GLOBALS['proposal_pdf']) && !empty($GLOBALS['proposal_pdf']->signature)) {
             return $GLOBALS['proposal_pdf'];
-        } elseif (isset($GLOBALS['contract_pdf']) && !empty($GLOBALS['contract_pdf']->signature)) {
+        } elseif (isset($GLOBALS['contract_pdf'])) {
+            // && !empty($GLOBALS['contract_pdf']->signature)
             return $GLOBALS['contract_pdf'];
         }
     }

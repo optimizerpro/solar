@@ -101,3 +101,8 @@ ALTER TABLE `tblleads` CHANGE `location_photo` `location_photo` TEXT CHARACTER S
 
 --17-09-2022
 ALTER TABLE `tblcontracts` ADD `created_ip` VARCHAR(40) NULL AFTER `acceptance_ip`; 
+
+--24-09-2022
+INSERT INTO `tblcustomfields` (`id`, `fieldto`, `name`, `slug`, `required`, `type`, `options`, `display_inline`, `field_order`, `active`, `show_on_pdf`, `show_on_ticket_form`, `only_admin`, `show_on_table`, `show_on_client_portal`, `disalow_client_to_edit`, `bs_column`, `default_value`) VALUES
+(29, 'leads', 'Policy Number', 'leads_policy_number', 0, 'input', '', 0, 7, 1, 0, 0, 0, 0, 0, 0, 6, '');
+UPDATE `tblcustomfields` SET `field_order` = '8' WHERE `tblcustomfields`.`id` = 7;
