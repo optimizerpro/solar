@@ -745,12 +745,12 @@
 <script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/plugins/signature-pad/signature_pad.min.js?v=2.9.4'); ?>"></script>
 <?php
    $dfltArr = array('formData' => form_hidden('action', 'sign_contract'));
-   if($this->session->staff_user_id && $this->session->staff_user_id != ''){
+   /*if($this->session->staff_user_id && $this->session->staff_user_id != ''){
       $staffDet = get_staff($this->session->staff_user_id);
       if($staffDet){
          $dfltArr['contact'] = (object)['firstname'=>$staffDet->firstname,'lastname'=>$staffDet->lastname,'email'=>$staffDet->email];
       }
-   }
+   }*/
    get_template_part('identity_confirmation_form', $dfltArr);
 }/*if 728*/
 ?>

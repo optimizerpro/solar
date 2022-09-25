@@ -2322,11 +2322,30 @@ $(function () {
     $("body").on('change', 'select[name="discount_type"]', function () {
         // if discount_type == ''
         if ($(this).val() === '') {
-            $('input[name="discount_percent"]').val(0);
+            $('input[name="profit_percent"]').val(0);
         }
         // Recalculate the total
         calculate_total();
     });
+
+    /* Profit 25-09-2022 */
+    $('body').on('click', '.profit-margin-total-type', function (e) {
+        e.preventDefault();
+        $('#profit-margin-total-type-dropdown').find('.profit-margin-total-type').removeClass('selected');
+        $(this).addClass('selected');
+        $('.profit-margin-total-type-selected').html($(this).text());
+        if ($(this).hasClass('profit-margin-type-percent')) {
+            $('.input-profit-margin-fixed').addClass('hide').val(0);
+            $('.input-profit-margin-percent').removeClass('hide');
+        } else {
+            $('.input-profit-margin-fixed').removeClass('hide');
+            $('.input-profit-margin-percent').addClass('hide').val(0);
+            $('#profit_percent-error').remove();
+        }
+        calculate_total();
+    });
+
+    /* Profit End */
 
     // In case user enter discount percent but there is no discount type set
     $("body").on('blur', 'input[name="discount_percent"],input[name="discount_total"]', function () {
@@ -2350,7 +2369,7 @@ $(function () {
     });
 
     // profit_percent
-    $("body").on('blur', 'input[name="profit_percent"], input[name="profit_margin_percent"], input[name="overhead_percent"]', function () {
+    $("body").on('blur', 'input[name="profit_percent"],input[name="profit_margin_total"], input[name="profit_margin_percent"], input[name="overhead_percent"]', function () {
         if ($(this).valid() === true) {
             calculate_total();
         }
@@ -6687,7 +6706,12 @@ function calculate_total() {
         discount_percent = $('input[name="discount_percent"]').val(),
         discount_fixed = $('input[name="discount_total"]').val(),
         discount_total_type = $('.discount-total-type.selected'),
-        discount_type = $('select[name="discount_type"]').val();
+        discount_type = $('select[name="discount_type"]').val(),
+
+        profit_margin_percent = $('input[name="profit_margin_percent"]').val(),
+        profit_margin_fixed = $('input[name="profit_margin_total"]').val(),
+        profit_margin_total_type = $('.profit-margin-total-type.selected');
+
 
     $('.tax-area').remove();
 
@@ -6774,9 +6798,17 @@ function calculate_total() {
     //profit margin 19-07-2022
     var profitMarginAmount = 0;
     if(profit_margin_area.length > 0){
-        var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
+        var total_pro_mar_calculated = 0;
+        if ((profit_margin_percent !== '' && profit_margin_percent != 0) && profit_margin_total_type.hasClass('profit-margin-type-percent')) {
+            total_pro_mar_calculated = (subtotal2 * profit_margin_percent) / 100;
+        } else if ((profit_margin_fixed !== '' && profit_margin_fixed != 0) && profit_margin_total_type.hasClass('profit-margin-type-fixed')) {
+            total_pro_mar_calculated = parseFloat(profit_margin_fixed);
+        }
+        profitMarginAmount = total_pro_mar_calculated;
+
+        /*var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
         proMarPer = (isNaN(proMarPer))?0:parseFloat(proMarPer);
-        profitMarginAmount = (subtotal2 * proMarPer) / 100;
+        profitMarginAmount = (subtotal2 * proMarPer) / 100;*/
     }
     //profit margin 19-07-2022
     var overheadAmount = 0;

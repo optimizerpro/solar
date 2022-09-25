@@ -798,6 +798,25 @@ function is_sale_discount($data, $is)
     return $discount_type == $is;
 }
 
+function is_sale_profit_margin_applied($data)
+{
+    return $data->profit_margin_total > 0;
+}
+
+function is_sale_profit_margin($data, $is)
+{
+    if ($data->profit_margin_percent == 0 && $data->profit_margin_total == 0) {
+        return false;
+    }
+
+    $profit_margin_type = 'fixed';
+    if ($data->profit_margin_percent != 0) {
+        $profit_margin_type = 'percent';
+    }
+
+    return $profit_margin_type == $is;
+}
+
 /**
  * Get items table for preview
  * @param  object  $transaction   e.q. invoice, estimate from database result row

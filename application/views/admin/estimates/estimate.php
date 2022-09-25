@@ -92,6 +92,15 @@ $('body').on('change','#rel_id', function() {
  if($(this).val() != ''){
   $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type.val(), function(response) {
     $('input[name="estimate_to"]').val(response.to);
+
+    $('textarea[name="billing_street"]').val(response.address);
+    $('input[name="billing_city"]').val(response.city);
+    $('input[name="billing_state"]').val(response.state);
+    $('input[name="billing_zip"]').val(response.zip);
+    $('input[name="billing_country"]').val(response.country);
+
+    init_billing_and_shipping_details();
+
     var currency_selector = $('#currency');
     if(_rel_type.val() == 'customer'){
       if(typeof(currency_selector.attr('multi-currency')) == 'undefined'){

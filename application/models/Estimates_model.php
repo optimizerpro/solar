@@ -865,7 +865,10 @@ class Estimates_model extends App_Model
 
                     pusher_trigger_notification($notifiedUsers);
                     hooks()->do_action('estimate_accepted', $id);
-
+                    if($estimate->rel_type == 'lead'){
+                        $this->load->model('contracts_model');
+                        $this->contracts_model->convertToCustomer($estimate->rel_id);
+                    }
                     return [
                         'invoiced'  => $invoiced,
                         'invoiceid' => $invoiceid,

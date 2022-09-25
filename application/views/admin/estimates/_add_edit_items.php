@@ -481,8 +481,51 @@
                </td>
             </tr>
 
-
             <tr id="profit_margin_area">
+               <td>
+                  <div class="row">
+                     <div class="col-md-7">
+                        <span class="bold"><?php echo _l('estimate_profit_margin'); ?></span>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="input-group" id="profit-margin-total">
+
+                           <input type="number" value="<?php echo (isset($estimate) ? $estimate->profit_margin_percent : 0); ?>" class="form-control pull-left input-profit-margin-percent<?php if(isset($estimate) && !is_sale_profit_margin($estimate,'percent') && is_sale_profit_margin_applied($estimate)){echo ' hide';} ?>" min="0" max="100" name="profit_margin_percent">
+
+                           <input type="number" data-toggle="tooltip" data-title="<?php echo _l('numbers_not_formatted_while_editing'); ?>" value="<?php echo (isset($estimate) ? $estimate->profit_margin_total : 0); ?>" class="form-control pull-left input-profit-margin-fixed<?php if(!isset($estimate) || (isset($estimate) && !is_sale_profit_margin($estimate,'fixed'))){echo ' hide';} ?>" min="0" name="profit_margin_total">
+
+                           <div class="input-group-addon">
+                              <div class="dropdown">
+                                 <a class="dropdown-toggle" href="#" id="dropdown_menu_tax_total_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                 <span class="profit-margin-total-type-selected">
+                                  <?php if(!isset($estimate) || isset($estimate) && (is_sale_profit_margin($estimate,'percent') || !is_sale_profit_margin_applied($estimate))) {
+                                    echo '%';
+                                    } else {
+                                    echo _l('discount_fixed_amount');
+                                    }
+                                    ?>
+                                 </span>
+                                 <span class="caret"></span>
+                                 </a>
+                                 <ul class="dropdown-menu" id="profit-margin-total-type-dropdown" aria-labelledby="dropdown_menu_tax_total_type">
+                                   <li>
+                                    <a href="#" class="profit-margin-total-type profit-margin-type-percent<?php if(!isset($estimate) || (isset($estimate) && is_sale_profit_margin($estimate,'percent')) || (isset($estimate) && !is_sale_profit_margin_applied($estimate))){echo ' selected';} ?>">%</a>
+                                  </li>
+                                  <li>
+                                    <a href="#" class="profit-margin-total-type profit-margin-type-fixed<?php if(isset($estimate) && is_sale_profit_margin($estimate,'fixed')){echo ' selected';} ?>">
+                                      <?php echo _l('discount_fixed_amount'); ?>
+                                    </a>
+                                  </li>
+                                 </ul>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+               <td class="profit-margin-total"></td>
+            </tr>
+            <!-- <tr id="profit_margin_area">
                <td>
                   <div class="row">
                      <div class="col-md-7">
@@ -498,7 +541,7 @@
                   </div>
                </td>
                <td class="profit-margin-total"></td>
-            </tr>
+            </tr> -->
 
             <tr id="overhead_area">
                <td>

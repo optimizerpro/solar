@@ -272,12 +272,14 @@ abstract class App_pdf extends TCPDF
                     $content = str_replace('{{CUSTOMER_SIGNATURE}}', $signature, $content);
                 }
             }
-            $staff=get_staff(get_staff_user_id());
-            $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
-            $CONTRACTOR__SIGNATURE='';
-            if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
-                $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/>';
-                if ($this->type() == 'contract') {
+            if ($this->type() == 'contract') {
+                $_staff_user_id = $this->contract->addedfrom;
+                $staff = get_staff($_staff_user_id);
+                $CONTRACTOR__SIGNATURE_IMAGE = $staff->signature;
+                $CONTRACTOR__SIGNATURE='';
+                if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.$_staff_user_id.'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
+                    $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.$_staff_user_id.'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/>';
+                
                     $record = $this->getSignatureableInstance();
                     if(isset($record->created_ip)){
                         $CONTRACTOR__SIGNATURE .='<span style="font-weight:bold;text-align: left;">';
@@ -285,12 +287,22 @@ abstract class App_pdf extends TCPDF
                         $CONTRACTOR__SIGNATURE .= "&nbsp;&nbsp;IP: {$record->created_ip}";
                         $CONTRACTOR__SIGNATURE .= '</span><br />';
                     }
+                    
+                    $CONTRACTOR__SIGNATURE .= '<br/>';
+                    $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                    $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
                 }
-                $CONTRACTOR__SIGNATURE .= '<br/>';
-                $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
-                $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+            } else {
+                $staff = get_staff(get_staff_user_id());
+                $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
+                $CONTRACTOR__SIGNATURE='';
+                if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
+                    $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/>';
+                    $CONTRACTOR__SIGNATURE .= '<br/>';
+                    $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                    $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                }
             }
-            
         }
         
         //$content = str_replace('{{LOGO_IMAGE}}', "https://www.hashevo.com/elightsolar/elite.png", $content);
