@@ -128,6 +128,16 @@
             <td><?php echo seconds_to_time_format($project_total_logged_time); ?></td>
          </tr>
          <?php } ?>
+
+         <tr class="project-overview-total-invoiced">
+            <td class="bold"><?php echo _l('Total Invoiced'); ?></td>
+            <td>$<?php echo (isset($invoice_no) && $invoice_no['due'])?($invoice_no['due'] + $invoice_no['paid']) : '0.00'; ?></td>
+         </tr>
+         <tr class="project-overview-total-invoice-paid">
+            <td class="bold"><?php echo _l('Total Paid'); ?></td>
+            <td>$<?php echo (isset($invoice_no) && $invoice_no['paid'])?$invoice_no['paid'] : '0.00'; ?></td>
+         </tr>
+
          <?php $custom_fields = get_custom_fields('projects');
          if(count($custom_fields) > 0){ ?>
          <?php foreach($custom_fields as $field){ ?>

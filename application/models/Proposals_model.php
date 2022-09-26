@@ -920,6 +920,10 @@ class Proposals_model extends App_Model
             if ($default_currency != 0) {
                 $data->currency = $default_currency;
             }
+            if(isset($_REQUEST['get_bill_ship'])){
+                $this->load->model('clients_model');
+                $data->bill = $this->clients_model->get_customer_billing_and_shipping_details($rel_id);
+            }
         } elseif ($rel_type = 'lead') {
             $this->db->where('id', $rel_id);
             $_data       = $this->db->get(db_prefix() . 'leads')->row();
@@ -941,6 +945,10 @@ class Proposals_model extends App_Model
             $data->country = $_data->country;
             $data->state   = $_data->state;
             $data->city    = $_data->city;
+            if(isset($_REQUEST['get_bill_ship'])){
+                $this->load->model('clients_model');
+                $data->bill = $this->clients_model->get_lead_billing_and_shipping_details($rel_id);
+            }
         }
 
         return $data;

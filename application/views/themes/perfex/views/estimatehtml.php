@@ -153,13 +153,13 @@
             <div class="col-md-6 col-md-offset-6">
                <table class="table text-right">
                   <tbody>
-                     <tr id="subtotal">
+                     <!-- <tr id="subtotal">
                         <td><span class="bold"><?php echo _l('estimate_subtotal'); ?></span>
                         </td>
                         <td class="subtotal">
                            <?php echo app_format_money($estimate->subtotal, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php if(is_sale_discount_applied($estimate)){ ?>
                      <!-- <tr>
                         <td>

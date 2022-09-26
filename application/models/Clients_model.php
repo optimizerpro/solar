@@ -1235,6 +1235,25 @@ class Clients_model extends App_Model
 
         return $result;
     }
+    /** 27-09-2022
+     *  Get lead billing details
+     * @param   mixed $id   lead id
+     * @return  array
+     */
+    public function get_lead_billing_and_shipping_details($id)
+    {
+        $this->db->select('bill_address as billing_street,bill_city as billing_city,bill_state as billing_state,bill_zip as billing_zip,bill_country as billing_country,address as shipping_street,city as shipping_city,state as shipping_state,zip as shipping_zip,country as shipping_country');
+        $this->db->from(db_prefix() . 'leads');
+        $this->db->where('id', $id);
+
+        $result = $this->db->get()->result_array();
+        if (count($result) > 0) {
+            $result[0]['billing_street']  = clear_textarea_breaks($result[0]['billing_street']);
+            $result[0]['shipping_street'] = clear_textarea_breaks($result[0]['shipping_street']);
+        }
+
+        return $result;
+    }
 
     /**
      * Get customer files uploaded in the customer profile

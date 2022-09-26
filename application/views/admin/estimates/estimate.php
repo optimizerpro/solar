@@ -44,6 +44,7 @@ $('body').on('change','#rel_type', function() {
    if (_rel_type.val() != 'customer') {
         _project_wrapper.addClass('hide')
    }
+   clear_billing_and_shipping_details();
 });
 
 $('body').on('change','#rel_id', function() {
@@ -90,16 +91,31 @@ _rel_id.change();
 <?php } ?>
 $('body').on('change','#rel_id', function() {
  if($(this).val() != ''){
-  $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type.val(), function(response) {
+  $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type.val()+'?get_bill_ship=1', function(response) {
     $('input[name="estimate_to"]').val(response.to);
 
-    $('textarea[name="billing_street"]').val(response.address);
-    $('input[name="billing_city"]').val(response.city);
-    $('input[name="billing_state"]').val(response.state);
-    $('input[name="billing_zip"]').val(response.zip);
-    $('input[name="billing_country"]').val(response.country);
+    console.log('billData 0', response.bill);
+    if(typeof response.bill !== 'undefined' && response.bill.length > 0){
+      const billData = response.bill[0];
+      
+      console.log('billData', billData);
+      $('select[name="billing_country"]').selectpicker('val', billData.billing_country);
+      $('textarea[name="billing_street"]').val(billData.billing_street);
+      $('input[name="billing_city"]').val(billData.billing_city);
+      $('input[name="billing_state"]').val(billData.billing_state);
+      $('input[name="billing_zip"]').val(billData.billing_zip);
 
-    init_billing_and_shipping_details();
+      if(billData.shipping_country != null && billData.shipping_country != ''){
+        $('input[name="include_shipping"]').prop("checked", true);
+      }
+      $('select[name="shipping_country"]').selectpicker('val', billData.shipping_country);
+      $('textarea[name="shipping_street"]').val(billData.shipping_street);
+      $('input[name="shipping_city"]').val(billData.shipping_city);
+      $('input[name="shipping_state"]').val(billData.shipping_state);
+      $('input[name="shipping_zip"]').val(billData.shipping_zip);
+      init_billing_and_shipping_details();
+    }
+
 
     var currency_selector = $('#currency');
     if(_rel_type.val() == 'customer'){
