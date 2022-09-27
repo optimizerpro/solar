@@ -3868,3 +3868,12 @@ $lang['staff_related_ticket_notification_to_assignee_only_help'] = 'If this opti
 $lang['import_expenses'] = 'Import Expenses';
 $lang['show_pdf_signature_proposal'] = 'Show PDF Signature on Proposal';
 $lang['enable_honeypot_spam_validation'] = 'Enable Honeypot spam validation';
+
+
+$lang['global_tasks']           	= 'Global Tasks';
+$lang['global_tasks_dt_name']       = 'Global Task Name';
+$lang['global_tasks_add_edit_name'] = 'Task Name';
+$lang['global_tasks_edit'] 			= 'Edit Task';
+$lang['global_tasks_add']  			= 'Add Task';
+$lang['new_global_tasks']           = 'New Task';
+$lang['global_tasks_added_to_tasks']= 'Global tasks that will be added to tasks';
