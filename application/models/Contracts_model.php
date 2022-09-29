@@ -899,6 +899,11 @@ class Contracts_model extends App_Model
         if(!$leadRow){
             return false;
         }
+        
+        if($leadRow->email == '' || $leadRow->email == null){
+            $isInfoExist = get_acceptance_info_array();
+            $leadRow->email = $isInfoExist['acceptance_email'];
+        }
         $this->load->model('clients_model');
         $wh2 = [db_prefix() . 'contacts.email'=>$leadRow->email];
         $isExist = $this->clients_model->get('', $wh2);

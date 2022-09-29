@@ -94,12 +94,10 @@ $('body').on('change','#rel_id', function() {
   $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type.val()+'?get_bill_ship=1', function(response) {
     $('input[name="estimate_to"]').val(response.to);
 
-    console.log('billData 0', response.bill);
     if(typeof response.bill !== 'undefined' && response.bill.length > 0){
       const billData = response.bill[0];
-      
       console.log('billData', billData);
-      $('select[name="billing_country"]').selectpicker('val', billData.billing_country);
+      /*$('select[name="billing_country"]').selectpicker('val', billData.billing_country);
       $('textarea[name="billing_street"]').val(billData.billing_street);
       $('input[name="billing_city"]').val(billData.billing_city);
       $('input[name="billing_state"]').val(billData.billing_state);
@@ -107,12 +105,21 @@ $('body').on('change','#rel_id', function() {
 
       if(billData.shipping_country != null && billData.shipping_country != ''){
         $('input[name="include_shipping"]').prop("checked", true);
+      }*/
+      if(_rel_type.val() == 'lead'){
+        $('select[name="shipping_country"]').selectpicker('val', billData.shipping_country);
+        $('textarea[name="shipping_street"]').val(billData.shipping_street);
+        $('input[name="shipping_city"]').val(billData.shipping_city);
+        $('input[name="shipping_state"]').val(billData.shipping_state);
+        $('input[name="shipping_zip"]').val(billData.shipping_zip);
+      } else {
+        $('select[name="shipping_country"]').selectpicker('val', response.country);
+        $('textarea[name="shipping_street"]').val(response.address);
+        $('input[name="shipping_city"]').val(response.city);
+        $('input[name="shipping_state"]').val(response.state);
+        $('input[name="shipping_zip"]').val(response.zip);
       }
-      $('select[name="shipping_country"]').selectpicker('val', billData.shipping_country);
-      $('textarea[name="shipping_street"]').val(billData.shipping_street);
-      $('input[name="shipping_city"]').val(billData.shipping_city);
-      $('input[name="shipping_state"]').val(billData.shipping_state);
-      $('input[name="shipping_zip"]').val(billData.shipping_zip);
+      
       init_billing_and_shipping_details();
     }
 

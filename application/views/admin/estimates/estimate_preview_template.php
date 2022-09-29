@@ -258,14 +258,14 @@
                      <div class="col-sm-6 text-right">
                         <span class="bold"><?php echo _l('estimate_to'); ?>:</span>
                         <address>
-                           <?php echo format_customer_info($estimate, 'estimate', 'billing', true); ?>
+                           <?php echo format_customer_info($estimate, 'estimate', 'shipping', true); ?>
                         </address>
-                        <?php if($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1){ ?>
+                        <!-- <?php if($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1){ ?>
                         <span class="bold"><?php echo _l('ship_to'); ?>:</span>
                         <address>
                            <?php echo format_customer_info($estimate, 'estimate', 'shipping'); ?>
                         </address>
-                        <?php } ?>
+                        <?php } ?> -->
                         <p class="no-mbot">
                            <span class="bold">
                            <?php echo _l('estimate_data_date'); ?>:

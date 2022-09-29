@@ -840,6 +840,10 @@ class Estimates_model extends App_Model
                         $leadRow = $this->db->get(db_prefix().'leads')->row();
                         if($leadRow){
                             $contact = ['id'=>1, 'email'=>$leadRow->email,'contact_firstname'=>$leadRow->name,'contact_lastname'=>$leadRow->leadlastname];
+                            if($contact['email'] == '' || $contact['email'] == null){
+                                $isInfoExist = get_acceptance_info_array();
+                                $contact['email'] = $isInfoExist['acceptance_email'];
+                            }
                             send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
                         }
                     }
@@ -1378,7 +1382,7 @@ class Estimates_model extends App_Model
 
     private function map_shipping_columns($data)
     {
-        if (!isset($data['include_shipping'])) {
+        /*if (!isset($data['include_shipping'])) {
             foreach ($this->shipping_fields as $_s_field) {
                 if (isset($data[$_s_field])) {
                     $data[$_s_field] = null;
@@ -1394,7 +1398,9 @@ class Estimates_model extends App_Model
             } else {
                 $data['show_shipping_on_estimate'] = 0;
             }
-        }
+        }*/
+        $data['include_shipping'] = 1;
+        $data['show_shipping_on_estimate'] = 1;
 
         return $data;
     }

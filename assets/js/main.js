@@ -5979,7 +5979,9 @@ function clear_billing_and_shipping_details() {
 function init_billing_and_shipping_details() {
     var _f;
     var include_shipping = $('input[name="include_shipping"]').prop('checked');
-
+    if($("#estimate-form").length > 0){
+        include_shipping = true;
+    }
     for (var f in billingAndShippingFields) {
         _f = '';
         if (billingAndShippingFields[f].indexOf('country') > -1) {

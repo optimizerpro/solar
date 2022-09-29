@@ -99,7 +99,7 @@
                   <a href="#" class="edit_shipping_billing_info" data-toggle="modal" data-target="#billing_and_shipping_details"><i class="fa fa-pencil-square-o"></i></a>
                   <?php include_once(APPPATH .'views/admin/estimates/billing_and_shipping_template.php'); ?>
                </div>
-               <div class="col-md-6">
+               <!-- <div class="col-md-6">
                   <p class="bold"><?php echo _l('invoice_bill_to'); ?></p>
                   <address>
                      <span class="billing_street">
@@ -124,9 +124,9 @@
                      <?php $billing_zip = ($billing_zip == '' ? '--' :$billing_zip); ?>
                      <?php echo $billing_zip; ?></span>
                   </address>
-               </div>
+               </div> -->
                <div class="col-md-6">
-                  <p class="bold"><?php echo _l('ship_to'); ?></p>
+                  <p class="bold"><?php echo _l('lead_address'); ?></p>
                   <address>
                      <span class="shipping_street">
                      <?php $shipping_street = (isset($estimate) ? $estimate->shipping_street : '--'); ?>

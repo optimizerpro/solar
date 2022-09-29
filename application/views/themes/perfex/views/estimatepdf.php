@@ -28,16 +28,16 @@ $organization_info .= '</div>';
 // Estimate to
 $estimate_info = '<b>' . _l('estimate_to') . '</b>';
 $estimate_info .= '<div style="color:#424242;">';
-$estimate_info .= format_customer_info($estimate, 'estimate', 'billing');
+$estimate_info .= format_customer_info($estimate, 'estimate', 'shipping');
 $estimate_info .= '</div>';
 
 // ship to to
-if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
+/*if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
     $estimate_info .= '<br /><b>' . _l('ship_to') . '</b>';
     $estimate_info .= '<div style="color:#424242;">';
     $estimate_info .= format_customer_info($estimate, 'estimate', 'shipping');
     $estimate_info .= '</div>';
-}
+}*/
 
 $estimate_info .= '<br />' . _l('estimate_data_date') . ': ' . _d($estimate->date) . '<br />';
 
