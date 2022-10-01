@@ -97,15 +97,15 @@
                     </label>
                 </div>
                 <?php if(!isset($contact) && is_email_template_active('new-client-created')){ ?>
-                <div class="checkbox checkbox-primary">
-                    <input type="checkbox" name="donotsendwelcomeemail" id="donotsendwelcomeemail">
+                <div class="checkbox checkbox-primary hidden">
+                    <input type="checkbox" name="donotsendwelcomeemail" id="donotsendwelcomeemail" checked>
                     <label for="donotsendwelcomeemail">
                         <?php echo _l( 'client_do_not_send_welcome_email'); ?>
                     </label>
                 </div>
                 <?php } ?>
                 <?php if(is_email_template_active('contact-set-password')){ ?>
-                <div class="checkbox checkbox-primary">
+                <div class="checkbox checkbox-primary hidden">
                     <input type="checkbox" name="send_set_password_email" id="send_set_password_email">
                     <label for="send_set_password_email">
                         <?php echo _l( 'client_send_set_password_email'); ?>

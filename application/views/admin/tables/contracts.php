@@ -100,7 +100,7 @@ if (count($filter) > 0) {
 }
 
 if ($clientid != '') {
-    array_push($where, 'AND client=' . $this->ci->db->escape_str($clientid));
+    array_push($where, 'AND rel_type="customer" AND rel_id=' . $this->ci->db->escape_str($clientid));
 }
 
 if (!has_permission('contracts', '', 'view')) {

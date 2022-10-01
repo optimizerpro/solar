@@ -20,7 +20,7 @@
                                     echo '</div>';
                                 }
                             $selected = array();
-                            $contacts = $this->clients_model->get_contacts(($contract->rel_id)?$contract->rel_id:$contract->client,array('active'=>1,'contract_emails'=>1));
+                            $contacts = $this->clients_model->get_contacts(($contract->rel_id)?$contract->rel_id:$contract->client,array('active'=>1,'contract_emails'=>1, 'email !='=>''));
                             foreach($contacts as $contact){
                                 array_push($selected,$contact['id']);
                             }
