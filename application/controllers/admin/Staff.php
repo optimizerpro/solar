@@ -21,9 +21,9 @@ class Staff extends AdminController
     /* Add new staff member or edit existing */
     public function member($id = '')
     {
-        if (!has_permission('staff', '', 'view')) {
+        /*if (!has_permission('staff', '', 'view')) {
             access_denied('staff');
-        }
+        }*/
         hooks()->do_action('staff_member_edit_view_profile', $id);
 
         $this->load->model('departments_model');

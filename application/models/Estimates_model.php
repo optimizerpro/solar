@@ -467,6 +467,9 @@ class Estimates_model extends App_Model
      */
     public function add($data)
     {
+        if(isset($data['rel_type']) && $data['rel_type'] == 'customer'){
+            $data['clientid'] = $data['rel_id'];
+        }
         $data['datecreated'] = date('Y-m-d H:i:s');
 
         $data['addedfrom'] = get_staff_user_id();
@@ -827,11 +830,24 @@ class Estimates_model extends App_Model
                     }
 
                     // Send thank you email to all contacts with permission estimates
-                    $contacts = $this->clients_model->get_contacts($estimate->clientid, ['active' => 1, 'estimate_emails' => 1]);
-
-                    foreach ($contacts as $contact) {
-                        send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
+                    if($estimate->rel_type == 'customer'){
+                        $contacts = $this->clients_model->get_contacts($estimate->clientid, ['active' => 1, 'estimate_emails' => 1]);
+                        foreach ($contacts as $contact) {
+                            send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
+                        }
+                    } else {
+                        $this->db->where('id', $estimate->rel_id);
+                        $leadRow = $this->db->get(db_prefix().'leads')->row();
+                        if($leadRow){
+                            $contact = ['id'=>1, 'email'=>$leadRow->email,'contact_firstname'=>$leadRow->name,'contact_lastname'=>$leadRow->leadlastname];
+                            if($contact['email'] == '' || $contact['email'] == null){
+                                $isInfoExist = get_acceptance_info_array();
+                                $contact['email'] = $isInfoExist['acceptance_email'];
+                            }
+                            send_mail_template('estimate_accepted_to_customer', $estimate, $contact);
+                        }
                     }
+
 
                     foreach ($staff_estimate as $member) {
                         $notified = add_notification([
@@ -847,13 +863,16 @@ class Estimates_model extends App_Model
                         if ($notified) {
                             array_push($notifiedUsers, $member['staffid']);
                         }
-
+                        //$member['email'] = 'mahendra.developer007@gmail.com';
                         send_mail_template('estimate_accepted_to_staff', $estimate, $member['email'], $contact_id);
                     }
 
                     pusher_trigger_notification($notifiedUsers);
                     hooks()->do_action('estimate_accepted', $id);
-
+                    if($estimate->rel_type == 'lead'){
+                        $this->load->model('contracts_model');
+                        $this->contracts_model->convertToCustomer($estimate->rel_id);
+                    }
                     return [
                         'invoiced'  => $invoiced,
                         'invoiceid' => $invoiceid,
@@ -1198,13 +1217,17 @@ class Estimates_model extends App_Model
         } elseif (isset($GLOBALS['scheduled_email_contacts'])) {
             $send_to = $GLOBALS['scheduled_email_contacts'];
         } else {
-            $contacts = $this->clients_model->get_contacts(
-                $estimate->clientid,
-                ['active' => 1, 'estimate_emails' => 1]
-            );
+            if($estimate->rel_type == 'customer'){
+                $contacts = $this->clients_model->get_contacts(
+                    $estimate->clientid,
+                    ['active' => 1, 'estimate_emails' => 1]
+                );
 
-            foreach ($contacts as $contact) {
-                array_push($send_to, $contact['id']);
+                foreach ($contacts as $contact) {
+                    array_push($send_to, $contact['id']);
+                }
+            } else {
+                $send_to = $this->input->post('sent_to');
             }
         }
 
@@ -1237,8 +1260,16 @@ class Estimates_model extends App_Model
                     if (!empty($cc) && $i > 0) {
                         $cc = '';
                     }
-
-                    $contact = $this->clients_model->get_contact($contact_id);
+                    if($estimate->rel_type == 'customer'){
+                        $contact = $this->clients_model->get_contact($contact_id);
+                    } else {
+                        $this->load->model('leads_model');
+                        $leads = $this->leads_model->get($estimate->rel_id);
+                        if($leads){
+                            //$contact_id = 'mahendra.developer007@gmail.com';
+                            $contact = (object)['id'=>1, 'email'=>$contact_id,'contact_firstname'=>$leads->name,'contact_lastname'=>$leads->leadlastname];
+                        }
+                    }
 
                     if (!$contact) {
                         continue;
@@ -1351,7 +1382,7 @@ class Estimates_model extends App_Model
 
     private function map_shipping_columns($data)
     {
-        if (!isset($data['include_shipping'])) {
+        /*if (!isset($data['include_shipping'])) {
             foreach ($this->shipping_fields as $_s_field) {
                 if (isset($data[$_s_field])) {
                     $data[$_s_field] = null;
@@ -1367,7 +1398,9 @@ class Estimates_model extends App_Model
             } else {
                 $data['show_shipping_on_estimate'] = 0;
             }
-        }
+        }*/
+        $data['include_shipping'] = 1;
+        $data['show_shipping_on_estimate'] = 1;
 
         return $data;
     }
@@ -1386,5 +1419,20 @@ class Estimates_model extends App_Model
         }
 
         return $kanBan->get();
+    }
+    public function update_lead_to_prospect($id)
+    {
+        $estimate = $this->get($id);
+        if($estimate){
+            if($estimate->rel_type == 'lead'){
+                $lead_id = $estimate->rel_id;
+                $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+                if($leadStRow){
+                    $this->db->where('id', $lead_id);
+                    $status = $leadStRow->id;
+                    $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+                }
+            }
+        }
     }
 }

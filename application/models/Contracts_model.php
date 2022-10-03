@@ -19,10 +19,11 @@ class Contracts_model extends App_Model
      */
     public function get($id = '', $where = [], $for_editor = false)
     {
+       
         $this->db->select('*,' . db_prefix() . 'contracts_types.name as type_name,' . db_prefix() . 'contracts.id as id, ' . db_prefix() . 'contracts.addedfrom');
         $this->db->where($where);
         $this->db->join(db_prefix() . 'contracts_types', '' . db_prefix() . 'contracts_types.id = ' . db_prefix() . 'contracts.contract_type', 'left');
-        $this->db->join(db_prefix() . 'clients', '' . db_prefix() . 'clients.userid = ' . db_prefix() . 'contracts.client');
+        $this->db->join(db_prefix() . 'clients', '' . db_prefix() . 'clients.userid = ' . db_prefix() . 'contracts.client','left');
         if (is_numeric($id)) {
             $this->db->where(db_prefix() . 'contracts.id', $id);
             $contract = $this->db->get(db_prefix() . 'contracts')->row();
@@ -46,7 +47,7 @@ class Contracts_model extends App_Model
                     }
                 }
             }
-
+            
             return $contract;
         }
         $contracts = $this->db->get(db_prefix() . 'contracts')->result_array();
@@ -148,12 +149,27 @@ class Contracts_model extends App_Model
      */
     public function add($data)
     {
+        $this->load->model('templates_model');
+        $contentt = '';
+        if($data['contract_type'] == 2){
+            $templates = $this->templates_model->get(2, ['type'=>'contracts']);
+            if($templates){
+                $contentt = $templates->content;
+            }
+        } else {
+            $templates = $this->templates_model->get(1, ['type'=>'contracts']);
+            if($templates){
+                $contentt = $templates->content;
+            }
+        }
+        $data['content'] = $contentt;
         $data['dateadded'] = date('Y-m-d H:i:s');
+        $data['created_ip'] = $this->input->ip_address();
         $data['addedfrom'] = get_staff_user_id();
 
         $data['datestart'] = to_sql_date($data['datestart']);
         unset($data['attachment']);
-        if ($data['dateend'] == '') {
+        if (@$data['dateend'] == '') {
             unset($data['dateend']);
         } else {
             $data['dateend'] = to_sql_date($data['dateend']);
@@ -178,7 +194,7 @@ class Contracts_model extends App_Model
         $data['hash'] = app_generate_hash();
 
         $data = hooks()->apply_filters('before_contract_added', $data);
-
+        
         $this->db->insert(db_prefix() . 'contracts', $data);
         $insert_id = $this->db->insert_id();
 
@@ -566,7 +582,13 @@ class Contracts_model extends App_Model
             $i = 0;
             foreach ($sent_to as $contact_id) {
                 if ($contact_id != '') {
-                    $contact = $this->clients_model->get_contact($contact_id);
+                    if($contract->rel_type == 'customer'){
+                        $contact =$this->clients_model->get_contact($contact_id);
+                    } else {
+                        $this->load->model('leads_model');
+                        $leads = $this->leads_model->get($contract->rel_id);
+                        $contact = (object)['id'=>1, 'email'=>$contact_id,'contact_firstname'=>$leads->name,'contact_lastname'=>$leads->leadlastname];
+                    }
 
                     // Send cc only for the first contact
                     if (!empty($cc) && $i > 0) {
@@ -574,7 +596,7 @@ class Contracts_model extends App_Model
                     }
 
                     $template = mail_template('contract_send_to_customer', $contract, $contact, $cc);
-
+                    
                     if ($attachpdf) {
                         $template->add_attachment([
                             'attachment' => $attach,
@@ -842,5 +864,95 @@ class Contracts_model extends App_Model
     public function get_contracts_types_values_chart_data()
     {
         return $this->contract_types_model->get_values_chart_data();
+    }
+
+    public function update_lead_or_convert_to_customer($id)
+    {
+        $contract = $this->get($id);
+        if($contract){
+            if($contract->rel_type == 'lead'){
+                $lead_id = $contract->rel_id;
+                $this->convertToCustomer($lead_id);
+                /*if($contract->contract_type == 1){ //aggrement
+                    $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+                    if($leadStRow){
+                        $this->db->where('id', $lead_id);
+                        $status = $leadStRow->id;
+                        $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+                    }
+                } else if($contract->contract_type == 2){ //work order*/
+                    
+                /*} */ /* } else if($contract->contract_type == 2){ */
+            }
+        }
+    }
+    /* 25-09-2022 */
+    public function convertToCustomer($lead_id){
+        $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+        if($leadStRow){
+            $this->db->where('id', $lead_id);
+            $status = $leadStRow->id;
+            $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+        }
+        $this->load->model('leads_model');
+        $leadRow = $this->leads_model->get($lead_id);
+        if(!$leadRow){
+            return false;
+        }
+        
+        if($leadRow->email == '' || $leadRow->email == null){
+            $isInfoExist = get_acceptance_info_array();
+            $leadRow->email = $isInfoExist['acceptance_email'];
+        }
+        $this->load->model('clients_model');
+        $wh2 = [db_prefix() . 'contacts.email'=>$leadRow->email];
+        $isExist = $this->clients_model->get('', $wh2);
+        if($isExist && count($isExist) > 0){
+            return false;
+        }
+        $custAddData = [
+            'leadid' => $lead_id, 'default_language' => '',
+            'firstname' => $leadRow->name, 'lastname' => $leadRow->leadlastname,
+            'title' => $leadRow->title, 'email' => $leadRow->email,
+            'phonenumber' => $leadRow->phonenumber, 'website' => $leadRow->website,
+            'address' => $leadRow->address, 'city' => $leadRow->city,
+            'state' => $leadRow->state, 'country' => $leadRow->country,
+            'zip' => $leadRow->zip,
+            'fakeusernameremembered' => '', 'fakepasswordremembered' => '',
+            'password' => '', 'send_set_password_email' => 'on'];
+        
+        $custAddData['billing_street'] = $custAddData['address'];
+        $custAddData['billing_city'] = $custAddData['city'];
+        $custAddData['billing_state'] = $custAddData['state'];
+        $custAddData['billing_zip'] = $custAddData['zip'];
+        $custAddData['billing_country'] = $custAddData['country'];
+        $custAddData['company'] = $custAddData['firstname']." ".$custAddData['lastname'];
+        $custAddData['is_primary'] = 1;
+        
+        $id = $this->clients_model->add($custAddData, true);
+        if ($id) {
+            $this->db->insert(db_prefix() . 'customer_admins', [
+                'date_assigned' => date('Y-m-d H:i:s'),
+                'customer_id'   => $id,
+                'staff_id'      => $leadRow->assigned,
+            ]);
+        
+            /*$this->leads_model->log_lead_activity($custAddData['leadid'], 'not_lead_activity_converted', false, serialize([
+                get_staff_full_name(),
+            ]));*/
+            $default_status = $this->leads_model->get_status('', [
+                'isdefault' => 1,
+            ]);
+            $this->db->where('id', $custAddData['leadid']);
+            $this->db->update(db_prefix() . 'leads', [
+                'date_converted' => date('Y-m-d H:i:s'),
+                'status'         => $default_status[0]['id'],
+                'junk'           => 0,
+                'lost'           => 0,
+            ]);
+            
+            log_activity('Created Lead Client Profile [LeadID: ' . $custAddData['leadid'] . ', ClientID: ' . $id . ']');
+            hooks()->do_action('lead_converted_to_customer', ['lead_id' => $custAddData['leadid'], 'customer_id' => $id]);
+        }
     }
 }

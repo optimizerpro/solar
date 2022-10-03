@@ -67,7 +67,7 @@ $lang['client_lowercase']                        = 'customer';
 $lang['client_firstname']                        = 'First Name';
 $lang['client_lastname']                         = 'Last Name';
 $lang['client_email']                            = 'Email';
-$lang['client_company']                          = 'Company';
+$lang['client_company']                          = 'Name';
 $lang['client_vat_number']                       = 'VAT Number';
 $lang['client_address']                          = 'Address';
 $lang['client_city']                             = 'City';
@@ -471,6 +471,7 @@ $lang['lead_category'] = 'Job Category';
 $lang['lead_work_type'] = 'Work Type';
 $lang['lead_trade_type'] = 'Trade Type';
 $lang['lead_location_photo'] = 'Location Photo';
+$lang['lead_location_photo_choose'] = 'Location Photo (Select multiple to add more photos)';
 
 # Misc
 $lang['access_denied'] = 'Access denied';
@@ -1119,6 +1120,7 @@ $lang['client_add_edit_profile']                = 'Profile';
 $lang['custom_field']                          = 'Custom field';
 $lang['custom_field_lowercase']                = 'custom field';
 $lang['custom_fields']                         = 'Custom Fields';
+$lang['additional_fields']                     = 'Additional Fields';
 $lang['new_custom_field']                      = 'New Custom Field';
 $lang['custom_field_name']                     = 'Field Name';
 $lang['custom_field_add_edit_type']            = 'Type';
@@ -1960,7 +1962,7 @@ $lang['zip_invoices']         = 'Zip Invoices';
 $lang['zip_estimates']        = 'Zip Estimates';
 $lang['zip_payments']         = 'Zip Payments';
 $lang['setup_help']           = 'Help';
-$lang['clients_list_company'] = 'Company';
+$lang['clients_list_company'] = 'Name';
 $lang['dt_button_export']     = 'Export';
 $lang['dt_entries']           = 'entries';
 $lang['invoice_total_paid']   = 'Total Paid';
@@ -3866,3 +3868,12 @@ $lang['staff_related_ticket_notification_to_assignee_only_help'] = 'If this opti
 $lang['import_expenses'] = 'Import Expenses';
 $lang['show_pdf_signature_proposal'] = 'Show PDF Signature on Proposal';
 $lang['enable_honeypot_spam_validation'] = 'Enable Honeypot spam validation';
+
+
+$lang['global_tasks']           	= 'Global Tasks';
+$lang['global_tasks_dt_name']       = 'Global Task Name';
+$lang['global_tasks_add_edit_name'] = 'Task Name';
+$lang['global_tasks_edit'] 			= 'Edit Task';
+$lang['global_tasks_add']  			= 'Add Task';
+$lang['new_global_tasks']           = 'New Task';
+$lang['global_tasks_added_to_tasks']= 'Global tasks that will be added to tasks';

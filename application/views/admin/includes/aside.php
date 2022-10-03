@@ -25,7 +25,7 @@
                   foreach($quickActions as $key => $item){
                    $url = '';
                    if(isset($item['permission'])){
-                     if(!has_permission($item['permission'],'','create')){
+                     if(!has_permission($item['permission'],'','create') && $item['name'] != 'Lead'){
                       continue;
                     }
                   }

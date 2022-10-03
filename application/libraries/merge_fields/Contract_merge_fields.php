@@ -88,7 +88,7 @@ class Contract_merge_fields extends App_merge_fields
     public function format($contract_id)
     {
         $fields = [];
-        $this->ci->db->select(db_prefix() . 'contracts.id as id, subject, description, datestart, dateend, contract_value, hash, project_id, ' . db_prefix() . 'contracts_types.name as type_name,'.db_prefix().'contracts.dateadded as created_at');
+        $this->ci->db->select(db_prefix() . 'contracts.id as id, subject, description, datestart, dateend, contract_value, hash, project_id, rel_id, rel_type, ' . db_prefix() . 'contracts_types.name as type_name,'.db_prefix().'contracts.dateadded as created_at');
         $this->ci->db->where('contracts.id', $contract_id);
         $this->ci->db->join(db_prefix() . 'contracts_types', '' . db_prefix() . 'contracts_types.id = ' . db_prefix() . 'contracts.contract_type', 'left');
         $contract = $this->ci->db->get(db_prefix() . 'contracts')->row();
@@ -111,6 +111,16 @@ class Contract_merge_fields extends App_merge_fields
         $fields['{project_name}']        = get_project_name_by_id($contract->project_id);
         $fields['{contract_short_url}']  = get_contract_shortlink($contract);
         $fields['{contract_created_at}'] = _dt($contract->created_at);
+
+        if($contract->rel_type == 'lead'){
+            $this->ci->db->where('id', $contract->rel_id);
+            $leadRow = $this->ci->db->get(db_prefix().'leads')->row();
+            if($leadRow){
+                $fields['{contact_firstname}'] = $leadRow->name;
+                $fields['{contact_lastname}'] = $leadRow->leadlastname;
+                $fields['{client_company}'] = $leadRow->name.' '.$leadRow->leadlastname;
+            }
+        }
 
         $custom_fields = get_custom_fields('contracts');
         foreach ($custom_fields as $field) {

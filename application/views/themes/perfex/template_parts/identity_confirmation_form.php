@@ -161,14 +161,15 @@ $this->app_scripts->theme('signature-pad','assets/plugins/signature-pad/signatur
        }
 
        $('#signatureInput-error').remove();
-       var partBase64 = signaturePad.toDataURLAndRemoveBlanks();
+       //var partBase64 = signaturePad.toDataURLAndRemoveBlanks();
+       var partBase64 = signaturePad.toDataURL();
        partBase64 = partBase64.split(',')[1];
        input.value = partBase64;
      }
 
      var canvas = document.getElementById("signature");
-     var clearButton = wrapper.querySelector("[data-action=clear]");
-     var undoButton = wrapper.querySelector("[data-action=undo]");
+     var clearButton = document.querySelector("[data-action='clear']");
+     var undoButton = document.querySelector("[data-action='undo']");
      var identityFormSubmit = document.getElementById('identityConfirmationForm');
 
      var signaturePad = new SignaturePad(canvas, {

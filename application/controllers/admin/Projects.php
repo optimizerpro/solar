@@ -18,6 +18,9 @@ class Projects extends AdminController
 
     public function index()
     {
+        if(!has_permission('projects','','view_own') && !has_permission('projects','','view')){
+            redirect(admin_url());
+        }
         close_setup_menu();
         $data['statuses'] = $this->projects_model->get_project_statuses();
         $data['title']    = _l('projects');
@@ -107,7 +110,6 @@ class Projects extends AdminController
         } else {
             $data['project']                               = $this->projects_model->get($id);
             $data['project']->settings->available_features = unserialize($data['project']->settings->available_features);
-
             $data['project_members'] = $this->projects_model->get_project_members($id);
             $title                   = _l('edit', _l('project_lowercase'));
         }
@@ -284,6 +286,8 @@ class Projects extends AdminController
                     $id,
                     ($this->input->get('overview_chart') ? $this->input->get('overview_chart') : 'this_week')
                 ))->get();
+                $this->load->model('invoices_model');
+                $data['invoice_no'] = $this->invoices_model->get_invoices_total(['project_id'=>$id]);
             } elseif ($group == 'project_invoices') {
                 $this->load->model('invoices_model');
 

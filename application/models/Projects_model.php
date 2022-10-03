@@ -748,13 +748,26 @@ class Projects_model extends App_Model
 
 
         $items_to_convert = false;
+
         if (isset($data['items'])) {
             $items_to_convert = $data['items'];
             $estimate_id      = $data['estimate_id'];
             $items_assignees  = $data['items_assignee'];
             unset($data['items'], $data['estimate_id'], $data['items_assignee']);
         }
-
+        if (isset($data['estimate_id'])) {
+            unset($data['estimate_id']);
+        }
+        if (isset($data['items_assignee'])) {
+            unset($data['items_assignee']);
+        }
+        $global_tasks = false;
+        if (isset($data['global_tasks'])) {
+            $global_tasks = $data['global_tasks'];
+            $global_tasks_assignees  = $data['global_tasks_assignees'];
+            unset($data['global_tasks'], $data['global_tasks_assignees']);
+        }
+        
         $data = hooks()->apply_filters('before_add_project', $data);
 
         $tags = '';
@@ -836,6 +849,10 @@ class Projects_model extends App_Model
                 $this->db->where('id', $estimate_id);
                 $this->db->set('project_id', $insert_id);
                 $this->db->update(db_prefix() . 'estimates');
+            }
+            /* global tasks 27-09-2022 */
+            if ($global_tasks && is_array($global_tasks) && count($global_tasks) > 0) {
+                $this->convert_global_added_to_tasks($insert_id, $global_tasks, $global_tasks_assignees, $data, $project_settings);
             }
 
             $this->log_activity($insert_id, 'project_activity_created');
@@ -2633,5 +2650,54 @@ class Projects_model extends App_Model
         return (new Gantt($project_id, $type))->forTaskStatus($taskStatus)
             ->excludeMilestonesFromCustomer(isset($type_where['hide_from_customer']) && $type_where['hide_from_customer'] == 1)
             ->get();
+    }
+
+    /** 28-09-2022
+     * Convert Global Added Task To Tasks
+     *
+     * @return array
+     */
+    public function convert_global_added_to_tasks($project_id, $items, $assignees, $project_data, $project_settings)
+    {
+        $this->load->model('tasks_model');
+        foreach ($items as $index => $itemId) {
+            $this->db->where('id', $itemId);
+            $_item = $this->db->get(db_prefix() . 'global_tasks')->row();
+
+            $data = [
+                'billable'            => 'on',
+                'name'                => $_item->name,
+                'description'         => '',
+                'startdate'           => _d($project_data['start_date']),
+                'duedate'             => '',
+                'rel_type'            => 'project',
+                'rel_id'              => $project_id,
+                'hourly_rate'         => $project_data['billing_type'] == 3 ? $_item->rate : 0,
+                'priority'            => get_option('default_task_priority'),
+                'withDefaultAssignee' => false,
+            ];
+
+            if (isset($project_settings->view_tasks)) {
+                $data['visible_to_client'] = 'on';
+            }
+
+            $task_id = $this->tasks_model->add($data);
+
+            if ($task_id) {
+                $staff_id = $assignees[$index];
+
+                $this->tasks_model->add_task_assignees([
+                    'taskid'   => $task_id,
+                    'assignee' => intval($staff_id),
+                ]);
+
+                if (!$this->is_member($project_id, $staff_id)) {
+                    $this->db->insert(db_prefix() . 'project_members', [
+                        'project_id' => $project_id,
+                        'staff_id'   => $staff_id,
+                    ]);
+                }
+            }
+        }
     }
 }

@@ -16,7 +16,6 @@ class Contract extends ClientsController
         if (!is_client_logged_in()) {
             load_client_language($contract->client);
         }
-
         if ($this->input->post()) {
             $action = $this->input->post('action');
 
@@ -32,9 +31,16 @@ class Contract extends ClientsController
                     $this->db->update(db_prefix().'contracts', array_merge(get_acceptance_info_array(), [
                         'signed' => 1,
                     ]));
+                    /* Update Lead To Prospect 11-09-2022 */
+                    $this->load->model('contracts_model');
+                    $this->contracts_model->update_lead_or_convert_to_customer($id);
+                    /* Update Lead To Prospect End */
 
                     // Notify contract creator that customer signed the contract
                     send_contract_signed_notification_to_staff($id);
+                    
+                    // Send thank you mail to customer
+                    send_contract_signed_notification_to_customer($id);
 
                     set_alert('success', _l('document_signed_successfully'));
                     redirect($_SERVER['HTTP_REFERER']);
@@ -60,6 +66,8 @@ class Contract extends ClientsController
         $data['title']     = $contract->subject;
         $data['contract']  = hooks()->apply_filters('contract_html_pdf_data', $contract);
         $data['bodyclass'] = 'contract contract-view';
+        $contractObj = contract_pdf($data['contract']);
+        $data['contract']->content =$contractObj->fix_editor_html($data['contract']->content);
 
         $data['identity_confirmation_enabled'] = true;
         $data['bodyclass'] .= ' identity-confirmation';

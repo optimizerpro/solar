@@ -22,6 +22,9 @@ class Tasks extends AdminController
     /* List all tasks */
     public function list_tasks($id = '')
     {
+        if(!has_permission('tasks','','view_own') && !has_permission('tasks','','view')){
+            redirect(admin_url());
+        }
         close_setup_menu();
         // If passed from url
         $data['custom_view'] = $this->input->get('custom_view') ? $this->input->get('custom_view') : '';

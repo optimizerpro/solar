@@ -12,17 +12,17 @@
             </div>
          <?php } ?>
          <?php
-            $rel_type = '';
+            /*$rel_type = '';
             $rel_id = '';
             if(isset($contract) || ($this->input->get('rel_id') && $this->input->get('rel_type'))){
              if($this->input->get('rel_id')){
                $rel_id = $this->input->get('rel_id');
                $rel_type = $this->input->get('rel_type');
              } else {
-               $rel_id = $contract->clientid;
+               $rel_id = $contract->client_id;
                $rel_type = $contract->rel_type;
              }
-            }
+            }*/
             $description=$manufacturer_warranty=$roll_yard=$shingle_color=$ventilation=$install_decking=$fastners='';
             if(isset($contract)){if($contract->manufacturer_warranty !=''){$manufacturer_warranty= $contract->manufacturer_warranty;}}; 
             if(isset($contract)){if($contract->roll_yard !=''){$roll_yard= $contract->roll_yard;}}; 
@@ -32,13 +32,60 @@
             if(isset($contract)){if($contract->fastners !=''){$fastners= $contract->fastners;}}; 
             if(isset($contract)){if($contract->description !=''){$description= addslashes($contract->description);}}; 
             $agreement_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Agreement Details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="manufacturer_warranty">Manufacturer Warranty (yrs)</label>';
-            $agreement_fields.='<input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="'.$manufacturer_warranty.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="roll_yard">Roll yard with magnetic roller</label><input type="text" id="roll_yard" name="roll_yard" value="'.$roll_yard.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle_color">Shingle Color</label><input type="text" id="shingle_color" name="shingle_color" value="'.$shingle_color.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="install_decking">Install Decking</label><input type="text" id="install_decking" name="install_decking" value="'.$install_decking.'"></div></div>';
-            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'"></div></div></div>';
-            $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
+            $agreement_fields.='<input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="'.$manufacturer_warranty.'" class="form-control"></div></div>';
+            //$agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="roll_yard">Roll yard with magnetic roller</label><input type="text" id="roll_yard" name="roll_yard" value="'.$roll_yard.'" class="form-control"></div></div>';
+            $rollyard = '';
+            if(isset($contract)){
+               if($contract->roll_yard !=''){
+                  $rollyard= $contract->roll_yard;
+               }
+            }
+            $rollyardyes_checked = $rollyardno_checked='';
+            if($rollyard=='Yes' || $rollyard==''){
+               $rollyardyes_checked=' checked';
+            } else {
+               $rollyardno_checked=' checked';
+            }
+
+            $agreement_fields.='<div class="col-md-6"><label>Roll yard with magnetic roller</label><div class="form-group"><label for="rollyardyes"><input type="radio" id="rollyardyes" name="roll_yard" value="Yes" '.$rollyardyes_checked.'>&nbsp;&nbsp;Yes</label>&nbsp;&nbsp;<label for="rollyardno"><input type="radio" id="rollyardno" name="roll_yard" value="No" '.$rollyardno_checked.'>&nbsp;&nbsp;No</label></div></div>';
+            $agreement_fields.='<div class="clearfix"></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle_color">Shingle Color</label><input type="text" id="shingle_color" name="shingle_color" value="'.$shingle_color.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="install_decking">Install Decking</label><input type="text" id="install_decking" name="install_decking" value="'.$install_decking.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'" class="form-control"></div></div>';
+
+            /* 10-09-2022 */
+            $policy_number = $acv_rcv = $adj_appoint_date = $adj_appoint_time = '';
+            if(isset($contract)){
+               if($contract->policy_number !=''){
+                  $policy_number= $contract->policy_number;
+               }
+               if($contract->acv_rcv_aggre !=''){
+                  $acv_rcv= $contract->acv_rcv_aggre;
+               }
+               if($contract->adj_appoint_date !=''){
+                  $adj_appoint_date= $contract->adj_appoint_date;
+               }
+               if($contract->adj_appoint_time !=''){
+                  $adj_appoint_time= $contract->adj_appoint_time;
+               }
+            }
+            $acv_checked=$rcv_checked='';
+            if($acv_rcv=='acv' || $acv_rcv==''){
+               $acv_checked=' checked';
+            }
+            else{
+               $rcv_checked=' checked';
+            }
+            //$agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><label>RCV/ACV</label><div class="form-group"><label for="acv_aggre"><input type="radio" id="acv_aggre" name="acv_rcv_aggre" value="acv" '.$acv_checked.'>&nbsp;&nbsp;ACV</label>&nbsp;&nbsp;<label for="rcv_aggre"><input type="radio" id="rcv_aggre" name="acv_rcv_aggre" value="rcv" '.$rcv_checked.'>&nbsp;&nbsp;RCV</label></div></div>';
+            $agreement_fields.='<div class="clearfix"></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_date">Adjusment Appointment Date</label><input type="date" id="adj_appoint_date" name="adj_appoint_date" value="'.$adj_appoint_date.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="adj_appoint_time">Adjusment Appointment Time</label><input type="time" id="adj_appoint_time" name="adj_appoint_time" value="'.$adj_appoint_time.'" class="form-control"></div></div>';
+
+            $agreement_fields.= '</div>';
+
+            $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false" class="form-control">'.$description.'</textarea></div></div>';
          $description=$roof_type=$layers=$pitch=$acv_rcv=$acv_rcv_plus_tax=$ad_allowance=$first_check=$second_check=$deductible='';
          $soffit=$fascia=$sidewall=$driveway=$shingle=$color=$dripedge=$material_drop=$ventilation='';
          if(isset($contract)){if($contract->roof_type !=''){$roof_type= $contract->roof_type;}}; 
@@ -67,24 +114,24 @@
          else{
             $rcv_checked=' checked';
          }
-         $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="layers">Layers</label><input type="text" id="layers" name="layers" value="'.$layers.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="pitch">Pitch</label><input type="text" id="pitch" name="pitch" value="'.$pitch.'"></div></div></div>';
+         $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="layers">Layers</label><input type="text" id="layers" name="layers" value="'.$layers.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="pitch">Pitch</label><input type="text" id="pitch" name="pitch" value="'.$pitch.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="row"><div class="col-md-12" id="adjuster_label"><h4>Adjuster Estimate</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="acv"><input type="radio" id="acv" name="acv_rcv" value="acv" '.$acv_checked.'>&nbsp;&nbsp;ACV</label>&nbsp;&nbsp;<label for="rcv"><input type="radio" id="rcv" name="acv_rcv" value="rcv" '.$rcv_checked.'>&nbsp;&nbsp;RCV</label></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="acv_rcv_plus_tax">ACV/RCV + Tax</label><input type="text" id="acv_rcv_plus_tax" name="acv_rcv_plus_tax" value="'.$acv_rcv_plus_tax.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ad_allowance">Advertising Allowance</label><input type="text" id="ad_allowance" name="ad_allowance" value="'.$ad_allowance.'"></div></div></div>';
-         $work_order_fields.='<div class="row"><div class="col-md-12" id="payment_schedule"><h4>Payment Schedule</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="first_check">First Check</label><input type="text" id="first_check" name="first_check" value="'.$first_check.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="second_check">Second Check</label><input type="text" id="second_check" name="second_check" value="'.$second_check.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="deductible">Deductible</label><input type="text" id="deductible" name="deductible" value="'.$deductible.'"></div></div></div>';
-         $work_order_fields.='<div class="row"><div class="col-md-12" id="pre_existing_structural_defects"><h4>Pre-existing Structural Defects</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="soffit">Soffit</label><input type="text" id="soffit" name="soffit" value="'.$soffit.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="fascia">Fascia</label><input type="text" id="fascia" name="fascia" value="'.$fascia.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="sidewall">Sidewall</label><input type="text" id="sidewall" name="sidewall" value="'.$sidewall.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="driveway">Driveway</label><input type="text" id="driveway" name="driveway" value="'.$driveway.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle">Shingle</label><input type="text" id="shingle" name="shingle" value="'.$shingle.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="color">Color</label><input type="text" id="color" name="color" value="'.$color.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="dripedge">Drip Edge</label><input type="text" id="dripedge" name="dripedge" value="'.$dripedge.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'"></div></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="acv_rcv_plus_tax">ACV/RCV + Tax</label><input type="text" id="acv_rcv_plus_tax" name="acv_rcv_plus_tax" value="'.$acv_rcv_plus_tax.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ad_allowance">Advertising Allowance</label><input type="text" id="ad_allowance" name="ad_allowance" value="'.$ad_allowance.'" class="form-control"></div></div></div>';
+         $work_order_fields.='<div class="row"><div class="col-md-12" id="payment_schedule"><h4>Payment Schedule</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="first_check">First Check</label><input type="text" id="first_check" name="first_check" value="'.$first_check.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="second_check">Second Check</label><input type="text" id="second_check" name="second_check" value="'.$second_check.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="deductible">Deductible</label><input type="text" id="deductible" name="deductible" value="'.$deductible.'" class="form-control"></div></div></div>';
+         $work_order_fields.='<div class="row"><div class="col-md-12" id="pre_existing_structural_defects"><h4>Pre-existing Structural Defects</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="soffit">Soffit</label><input type="text" id="soffit" name="soffit" value="'.$soffit.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="fascia">Fascia</label><input type="text" id="fascia" name="fascia" value="'.$fascia.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="sidewall">Sidewall</label><input type="text" id="sidewall" name="sidewall" value="'.$sidewall.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="driveway">Driveway</label><input type="text" id="driveway" name="driveway" value="'.$driveway.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="shingle">Shingle</label><input type="text" id="shingle" name="shingle" value="'.$shingle.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="color">Color</label><input type="text" id="color" name="color" value="'.$color.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="dripedge">Drip Edge</label><input type="text" id="dripedge" name="dripedge" value="'.$dripedge.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Special Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
          ?>
          <div class="col-md-5 left-column">
@@ -101,7 +148,7 @@
                         <label for="not_visible_to_client">Disable Customer Side</label>
                      </div>
                   </div>
-                  <div class="form-group select-placeholder">
+                  <!-- <div class="form-group select-placeholder">
                      <label for="rel_type" class="control-label"><?php echo _l('proposal_related'); ?></label>
                      <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                         <option value=""></option>
@@ -124,7 +171,49 @@
                            } ?>
                         </select>
                      </div>
+                  </div> -->
+
+                  <!-- 04-09-2022 -->
+                  <?php
+                  $rel_type = '';
+                  $rel_id = '';
+                  if(isset($contract) || ($this->input->get('rel_id') && $this->input->get('rel_type'))){
+                   if($this->input->get('rel_id')){
+                     $rel_id = $this->input->get('rel_id');
+                     $rel_type = $this->input->get('rel_type');
+                   } else {
+                     $rel_id = $contract->rel_id;
+                     $rel_type = $contract->rel_type;
+                   }
+                  }
+                  if(!isset($contract) && isset($_GET['customer_id']) && $_GET['customer_id'] != ''){
+                     $rel_id = $_GET['customer_id'];
+                     $rel_type = 'customer';
+                  }
+                  ?>
+                  <div class="form-group select-placeholder">
+                     <label for="rel_type" class="control-label"><?php echo _l('proposal_related'); ?></label>
+                     <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                        <option value=""></option>
+                        <option value="lead" <?php if((isset($contract) && $contract->rel_type == 'lead') || $this->input->get('rel_type')){if($rel_type == 'lead'){echo 'selected';}} ?>><?php echo _l('proposal_for_lead'); ?></option>
+                        <option value="customer" <?php if((isset($contract) &&  $contract->rel_type == 'customer') || $rel_type != ''){if($rel_type == 'customer'){echo 'selected';}} ?>><?php echo _l('proposal_for_customer'); ?></option>
+                     </select>
                   </div>
+
+                  <div class="form-group select-placeholder<?php if($rel_id == ''){echo ' hide';} ?> " id="rel_id_wrapper">
+                     <label for="rel_id"><span class="rel_id_label"></span></label>
+                     <div id="rel_id_select">
+                        <select name="rel_id" id="rel_id" class="ajax-search" data-width="100%" data-live-search="true" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                        <?php if($rel_id != '' && $rel_type != ''){
+                           $rel_data = get_relation_data($rel_type,$rel_id);
+                           $rel_val = get_relation_values($rel_data,$rel_type);
+                              echo '<option value="'.$rel_val['id'].'" selected>'.$rel_val['name'].'</option>';
+                           } ?>
+                        </select>
+                     </div>
+                  </div>
+                  <!-- 04-09-2022 End -->
+
                <div class="form-group select-placeholder projects-wrapper<?php if((!isset($contract)) || (isset($contract) && !customer_has_projects($contract->client))){ echo ' hide';} ?>">
                   <label for="project_id"><?php echo _l('project'); ?></label>
                   <div id="project_ajax_search_wrapper">
@@ -203,7 +292,7 @@
                   isset($contract) && $contract->signed == 1 ? ['disabled'=>true] : []
                ); ?>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                <?php $value = (isset($contract) ? _d($contract->dateend) : _d(date('Y-m-d'))); ?>
                <?php echo render_date_input(
                   'dateend',
@@ -211,7 +300,7 @@
                   $value,
                   isset($contract) && $contract->signed == 1 ? ['disabled'=>true] : []
                ); ?>
-            </div>
+            </div> -->
          </div>
          <div class="row" id='dynamic_variables'>
             <?php
@@ -274,14 +363,14 @@
                         <span class="badge comments-indicator<?php echo $totalComments == 0 ? ' hide' : ''; ?>"><?php echo $totalComments; ?></span>
                      </a>
                   </li>
-                  <li role="presentation" class="<?php if($this->input->get('tab') == 'renewals'){echo 'active';} ?>">
+                  <!-- <li role="presentation" class="<?php if($this->input->get('tab') == 'renewals'){echo 'active';} ?>">
                      <a href="#renewals" aria-controls="renewals" role="tab" data-toggle="tab">
                         <?php echo _l('no_contract_renewals_history_heading'); ?>
                         <?php if($totalRenewals = count($contract_renewal_history)) { ?>
                            <span class="badge"><?php echo $totalRenewals; ?></span>
                         <?php } ?>
                      </a>
-                  </li>
+                  </li> -->
                   <li role="presentation" class="tab-separator">
                      <a href="#tab_tasks" aria-controls="tab_tasks" role="tab" data-toggle="tab" onclick="init_rel_tasks_table(<?php echo $contract->id; ?>,'contract'); return false;">
                         <?php echo _l('tasks'); ?>
@@ -297,7 +386,7 @@
                         </span>
                      </a>
                   </li>
-                  <li role="presentation" class="tab-separator">
+                  <!-- <li role="presentation" class="tab-separator">
                      <a href="#tab_templates" onclick="get_templates('contracts', <?php echo $contract->id ?>); return false" aria-controls="tab_templates" role="tab" data-toggle="tab">
                         <?php echo _l('templates');
                         $total_templates = total_rows(db_prefix() . 'templates', [
@@ -307,7 +396,7 @@
                         ?>
                          <span class="badge total_templates <?php echo $total_templates === 0 ? 'hide' : ''; ?>"><?php echo $total_templates ?></span>
                      </a>
-                  </li>
+                  </li> -->
                   <li role="presentation" data-toggle="tooltip" title="<?php echo _l('emails_tracking'); ?>" class="tab-separator">
                      <a href="#tab_emails_tracking" aria-controls="tab_emails_tracking" role="tab" data-toggle="tab">
                         <?php if(!is_mobile()){ ?>
@@ -343,8 +432,16 @@
                               <?php echo _l('contract_marked_as_signed_info'); ?>
                            </div>
                         </div>
-                     <?php } ?>
+                     <?php } ?> 
                      <div class="col-md-12 text-right _buttons">
+                        <?php if($contract->signed == 0 && $contract->marked_as_signed == 0) { ?>
+                           <div class="btn-group">
+                              <button type="submit" id="accept_action" class="btn btn-success pull-right action-button"><?php echo _l('e_signature_sign'); ?></button>
+                           </div>
+                        <?php } ?>
+                        <!-- <div class="btn-group">
+                           <a href="<?php echo admin_url('contracts/pdf/'.$contract->id); ?>" class="btn btn-default action-button mright5 contract-html-pdf"><i class="fa fa-file-pdf-o"></i> <?php echo _l('clients_invoice_html_btn_download'); ?></a>
+                        </div> -->
                         <div class="btn-group">
                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file-pdf-o"></i><?php if(is_mobile()){echo ' PDF';} ?> <span class="caret"></span></a>
                            <ul class="dropdown-menu dropdown-menu-right">
@@ -428,6 +525,15 @@
                          </div>
                       <?php } ?>
                    </div>-->
+                   <style>
+                     .contract-html-content .table-responsive:nth-child(2) table, .contract-html-content .table-responsive:nth-child(3) table,
+                     .contract-html-content table:nth-child(2), .contract-html-content table:nth-child(3) {
+                        width: 100%;
+                     }
+                     </style>
+                   <div class="col-md-12 contract-html-content" style="overflow: auto;">
+                      <?php echo $contract->content; ?>
+                   </div>
                 </div>
                 <hr class="hr-panel-heading" />
                 <?php if(!staff_can('edit','contracts')) { ?>
@@ -529,7 +635,7 @@
          ?>
       </div>
    </div>
-   <div role="tabpanel" class="tab-pane<?php if($this->input->get('tab') == 'renewals'){echo ' active';} ?>" id="renewals">
+   <!-- <div role="tabpanel" class="tab-pane<?php if($this->input->get('tab') == 'renewals'){echo ' active';} ?>" id="renewals">
      <div class="mtop15">
       <?php if(has_permission('contracts', '', 'edit')){ ?>
          <div class="_buttons">
@@ -590,33 +696,32 @@
 </div>
 <?php } ?>
 </div>
-</div>
+</div> -->
 <div role="tabpanel" class="tab-pane" id="tab_emails_tracking">
- <div class="mtop15">
-   <?php
-   $this->load->view('admin/includes/emails_tracking',array(
-     'tracked_emails'=>
-     get_tracked_emails($contract->id, 'contract'))
-);
-?>
-</div>
-</div>
-<div role="tabpanel" class="tab-pane" id="tab_tasks">
- <div class="mtop15">
-   <?php init_relation_tasks_table(array('data-new-rel-id'=>$contract->id,'data-new-rel-type'=>'contract')); ?>
-</div>
-</div>
-<div role="tabpanel" class="tab-pane" id="tab_templates">
-   <div class="row contract-templates mtop15">
-      <div class="col-md-12">
-         <button type="button" class="btn btn-info" onclick="add_template('contracts', <?php echo $contract->id ?>);"><?php echo _l('add_template'); ?></button>
-         <hr>
-      </div>
-      <div class="col-md-12">
-         <div id="contract-templates" class="contract-templates-wrapper"></div>
-      </div>
+   <div class="mtop15">
+      <?php
+         $this->load->view('admin/includes/emails_tracking',array(
+           'tracked_emails'=>
+           get_tracked_emails($contract->id, 'contract'))
+      ); ?>
    </div>
 </div>
+<div role="tabpanel" class="tab-pane" id="tab_tasks">
+   <div class="mtop15">
+      <?php init_relation_tasks_table(array('data-new-rel-id'=>$contract->id,'data-new-rel-type'=>'contract')); ?>
+   </div>
+</div>
+   <!-- <div role="tabpanel" class="tab-pane" id="tab_templates">
+      <div class="row contract-templates mtop15">
+         <div class="col-md-12">
+            <button type="button" class="btn btn-info" onclick="add_template('contracts', <?php echo $contract->id ?>);"><?php echo _l('add_template'); ?></button>
+            <hr>
+         </div>
+         <div class="col-md-12">
+            <div id="contract-templates" class="contract-templates-wrapper"></div>
+         </div>
+      </div>
+   </div> -->
 </div>
 </div>
 </div>
@@ -627,15 +732,32 @@
 </div>
 <div id="modal-wrapper"></div>
 <?php init_tail(); ?>
+
 <?php if(isset($contract)){ ?>
    <!-- init table tasks -->
    <script>
       var contract_id = '<?php echo $contract->id; ?>';
+      $("body").addClass("identity-confirmation");
    </script>
    <?php $this->load->view('admin/contracts/send_to_client'); ?>
    <?php $this->load->view('admin/contracts/renew_contract'); ?>
 <?php } ?>
 <?php $this->load->view('admin/contracts/contract_type'); ?>
+
+<?php if(isset($contract) && $contract->signed == 0 && $contract->marked_as_signed == 0) { ?>
+<script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/themes/perfex/js/global.min.js?v='.time()); ?>"></script>
+<script type="text/javascript" id="signature-pad" src="<?php echo site_url('assets/plugins/signature-pad/signature_pad.min.js?v=2.9.4'); ?>"></script>
+<?php
+   $dfltArr = array('formData' => form_hidden('action', 'sign_contract'));
+   /*if($this->session->staff_user_id && $this->session->staff_user_id != ''){
+      $staffDet = get_staff($this->session->staff_user_id);
+      if($staffDet){
+         $dfltArr['contact'] = (object)['firstname'=>$staffDet->firstname,'lastname'=>$staffDet->lastname,'email'=>$staffDet->email];
+      }
+   }*/
+   get_template_part('identity_confirmation_form', $dfltArr);
+}/*if 728*/
+?>
 <script>
    Dropzone.autoDiscover = false;
    $(function () {
@@ -924,7 +1046,7 @@ function contractTypeChanged(){
    var contract_type=$("#contract_type").val();
    if(contract_type=='' || contract_type=="1"){
       $("#dynamic_variables").html(agreement_fields);
-      requestGetJSON(admin_url + 'templates/index/1').done(function (response) {
+      /*requestGetJSON(admin_url + 'templates/index/1').done(function (response) {
          var data = response.data;
          tinymce.activeEditor.setMode('design'); 
          setTimeout(function(){
@@ -933,12 +1055,12 @@ function contractTypeChanged(){
                $('a[aria-controls="tab_content"]').click();
                setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
          },1000);       
-      });
+      });*/
    }
    else
    {
       $("#dynamic_variables").html(work_order_fields);
-      requestGetJSON(admin_url + 'templates/index/2').done(function (response) {
+      /*requestGetJSON(admin_url + 'templates/index/2').done(function (response) {
          var data = response.data;
          tinymce.activeEditor.setMode('design'); 
          setTimeout(function(){
@@ -947,14 +1069,14 @@ function contractTypeChanged(){
                $('a[aria-controls="tab_content"]').click();
                setTimeout(function(){tinymce.activeEditor.setMode('readonly');},2000);
          },1000);       
-      });
+      });*/
    }  
 }
 contractTypeChanged();
 //setTimeout(function(){},100);
 </script>
 <script>
-   var _rel_id = $('#clientid'),
+   /*var _rel_id = $('#clientid'),
    _rel_type = $('#rel_type'),
    _rel_id_wrapper = $('#rel_id_wrapper'),
    _project_wrapper = $('.projects-wrapper'),
@@ -969,7 +1091,75 @@ contractTypeChanged();
                 _project_wrapper.addClass('hide')
            }
        });
-   });
+   });*/
+var _rel_id = $('#rel_id'),
+   _rel_type = $('#rel_type'),
+   _rel_id_wrapper = $('#rel_id_wrapper'),
+   data = {};
+$('body').on('change','#rel_id', function() {
+  if($(this).val() != ''){
+   $.get(admin_url + 'proposals/get_relation_data_values/' + $(this).val() + '/' + _rel_type.val(), function(response) {
+     $('input[name="proposal_to"]').val(response.to);
+     $('textarea[name="address"]').val(response.address);
+     $('input[name="email"]').val(response.email);
+     $('input[name="phone"]').val(response.phone);
+     $('input[name="city"]').val(response.city);
+     $('input[name="state"]').val(response.state);
+     $('input[name="zip"]').val(response.zip);
+     $('select[name="country"]').selectpicker('val',response.country);
+     var currency_selector = $('#currency');
+     if(_rel_type.val() == 'customer'){
+       if(typeof(currency_selector.attr('multi-currency')) == 'undefined'){
+         currency_selector.attr('disabled',true);
+       }
+
+      } else {
+        currency_selector.attr('disabled',false);
+     }
+     var proposal_to_wrapper = $('[app-field-wrapper="proposal_to"]');
+     if(response.is_using_company == false && !empty(response.company)) {
+       proposal_to_wrapper.find('#use_company_name').remove();
+       proposal_to_wrapper.find('#use_company_help').remove();
+       proposal_to_wrapper.append('<div id="use_company_help" class="hide">'+response.company+'</div>');
+       proposal_to_wrapper.find('label')
+       .prepend("<a href=\"#\" id=\"use_company_name\" data-toggle=\"tooltip\" data-title=\"<?php echo _l('use_company_name_instead'); ?>\" onclick='document.getElementById(\"proposal_to\").value = document.getElementById(\"use_company_help\").innerHTML.trim(); this.remove();'><i class=\"fa fa-building-o\"></i></a> ");
+     } else {
+       proposal_to_wrapper.find('label #use_company_name').remove();
+       proposal_to_wrapper.find('label #use_company_help').remove();
+     }
+    /* Check if customer default currency is passed */
+    if(response.currency){
+      currency_selector.selectpicker('val',response.currency);
+    } else {
+     /* Revert back to base currency */
+     currency_selector.selectpicker('val',currency_selector.data('base'));
+   }
+   currency_selector.selectpicker('refresh');
+   currency_selector.change();
+ }, 'json');
+ }
+});
+proposal_rel_id_select();
+_rel_type.on('change', function() {
+   var clonedSelect = _rel_id.html('').clone();
+   _rel_id.selectpicker('destroy').remove();
+   _rel_id = clonedSelect;
+   $('#rel_id_select').append(clonedSelect);
+   proposal_rel_id_select();
+   if($(this).val() != ''){
+     _rel_id_wrapper.removeClass('hide');
+   } else {
+     _rel_id_wrapper.addClass('hide');
+   }
+   $('.rel_id_label').html(_rel_type.find('option:selected').text());
+ });
+ function proposal_rel_id_select(){
+   var serverData = {};
+   serverData.rel_id = _rel_id.val();
+   data.type = _rel_type.val();
+   init_ajax_search(_rel_type.val(),_rel_id,serverData);
+}
+$('.contract-html-content').css("height", $('#contract-form').height() - 200);
 </script>
 </body>
 </html>

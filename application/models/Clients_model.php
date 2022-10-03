@@ -574,21 +574,21 @@ class Clients_model extends App_Model
             }
 
             if ($send_welcome_email == true && !empty($data['email'])) {
-                send_mail_template(
+                /*send_mail_template(
                     'customer_created_welcome_mail',
                     $data['email'],
                     $data['userid'],
                     $contact_id,
                     $password_before_hash
-                );
+                );*/
             }
 
             if ($send_set_password_email) {
-                $this->authentication_model->set_password_email($data['email'], 0);
+                //$this->authentication_model->set_password_email($data['email'], 0);
             }
 
             if (defined('CONTACT_REGISTERING')) {
-                $this->send_verification_email($contact_id);
+                //$this->send_verification_email($contact_id);
             } else {
                 // User already verified because is added from admin area, try to transfer any tickets
                 $this->load->model('tickets_model');
@@ -1226,6 +1226,25 @@ class Clients_model extends App_Model
         $this->db->select('billing_street,billing_city,billing_state,billing_zip,billing_country,shipping_street,shipping_city,shipping_state,shipping_zip,shipping_country');
         $this->db->from(db_prefix() . 'clients');
         $this->db->where('userid', $id);
+
+        $result = $this->db->get()->result_array();
+        if (count($result) > 0) {
+            $result[0]['billing_street']  = clear_textarea_breaks($result[0]['billing_street']);
+            $result[0]['shipping_street'] = clear_textarea_breaks($result[0]['shipping_street']);
+        }
+
+        return $result;
+    }
+    /** 27-09-2022
+     *  Get lead billing details
+     * @param   mixed $id   lead id
+     * @return  array
+     */
+    public function get_lead_billing_and_shipping_details($id)
+    {
+        $this->db->select('bill_address as billing_street,bill_city as billing_city,bill_state as billing_state,bill_zip as billing_zip,bill_country as billing_country,address as shipping_street,city as shipping_city,state as shipping_state,zip as shipping_zip,country as shipping_country');
+        $this->db->from(db_prefix() . 'leads');
+        $this->db->where('id', $id);
 
         $result = $this->db->get()->result_array();
         if (count($result) > 0) {

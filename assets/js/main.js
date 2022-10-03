@@ -2052,14 +2052,34 @@ $(function () {
         proposal_pipeline_open(proposal_id);
     }
 
+    $("body").on('blur', '._transaction_form input[name="section_name[]"]', function () {
+        let cuVall = $(this).val();
+        let _thel = $(this).closest('.item_to_be_clone');
+        _thel.find('table.items').find('.sectionname').val(cuVall);
+    });
     $("body").on('submit', '._transaction_form', function () {
 
         // On submit re-calculate total and reorder the items for all cases.
         calculate_total();
 
         $('body').find('#items-warning').remove();
+
         var $itemsTable = $(this).find('table.items');
         var $previewItem = $itemsTable.find('.main');
+
+        if($(this).find('input[name="section_name[]"]').length > 0){
+            var thSecs = $(this).find('input[name="section_name[]"]');
+            let errCount = 0;
+            thSecs.each(function(index, el) {
+                if($(el).val() == ''){
+                    errCount++;
+                }
+            });
+            if(errCount > 0){
+                alert('Section name is required');
+                return false;
+            }
+        }
 
         if ($previewItem.find('[name="description"]').length && $previewItem.find('[name="description"]').val().trim().length > 0 &&
             $previewItem.find('[name="rate"]').val().trim().length > 0) {
@@ -2302,11 +2322,30 @@ $(function () {
     $("body").on('change', 'select[name="discount_type"]', function () {
         // if discount_type == ''
         if ($(this).val() === '') {
-            $('input[name="discount_percent"]').val(0);
+            $('input[name="profit_percent"]').val(0);
         }
         // Recalculate the total
         calculate_total();
     });
+
+    /* Profit 25-09-2022 */
+    $('body').on('click', '.profit-margin-total-type', function (e) {
+        e.preventDefault();
+        $('#profit-margin-total-type-dropdown').find('.profit-margin-total-type').removeClass('selected');
+        $(this).addClass('selected');
+        $('.profit-margin-total-type-selected').html($(this).text());
+        if ($(this).hasClass('profit-margin-type-percent')) {
+            $('.input-profit-margin-fixed').addClass('hide').val(0);
+            $('.input-profit-margin-percent').removeClass('hide');
+        } else {
+            $('.input-profit-margin-fixed').removeClass('hide');
+            $('.input-profit-margin-percent').addClass('hide').val(0);
+            $('#profit_percent-error').remove();
+        }
+        calculate_total();
+    });
+
+    /* Profit End */
 
     // In case user enter discount percent but there is no discount type set
     $("body").on('blur', 'input[name="discount_percent"],input[name="discount_total"]', function () {
@@ -2330,7 +2369,7 @@ $(function () {
     });
 
     // profit_percent
-    $("body").on('blur', 'input[name="profit_percent"], input[name="profit_margin_percent"], input[name="overhead_percent"]', function () {
+    $("body").on('blur', 'input[name="profit_percent"],input[name="profit_margin_total"], input[name="profit_margin_percent"], input[name="overhead_percent"]', function () {
         if ($(this).valid() === true) {
             calculate_total();
         }
@@ -4123,7 +4162,7 @@ function validate_lead_convert_to_client_form() {
     var rules_convert_lead = {
         firstname: 'required',
         lastname: 'required',
-        password: {
+        /*password: {
             required: {
                 depends: function (element) {
                     var sent_set_password = $('input[name="send_set_password_email"]');
@@ -4132,7 +4171,7 @@ function validate_lead_convert_to_client_form() {
                     }
                 }
             }
-        },
+        },*/
         email: {
             required: true,
             email: true,
@@ -5940,7 +5979,9 @@ function clear_billing_and_shipping_details() {
 function init_billing_and_shipping_details() {
     var _f;
     var include_shipping = $('input[name="include_shipping"]').prop('checked');
-
+    if($("#estimate-form").length > 0){
+        include_shipping = true;
+    }
     for (var f in billingAndShippingFields) {
         _f = '';
         if (billingAndShippingFields[f].indexOf('country') > -1) {
@@ -6015,9 +6056,9 @@ function add_item_to_preview(id,multiitem=false) {
             }
 
            $('#'+id_of_dom+' .main select.tax').selectpicker('val', taxSelectedArray);
-           console.log('response.unit 5978', response.unit);
+           //console.log('response.unit 5978', response.unit);
            let unitArr = response.unit.toString().split(",");
-           console.log(unitArr, unitArr.length);
+           //console.log(unitArr, unitArr.length);
            if(unitArr.length > 1){
                 let cltd = $('#'+id_of_dom+' .main input[name="unit"]').closest('td');
                 $('#'+id_of_dom+' .main input[name="unit"]').remove();
@@ -6030,7 +6071,7 @@ function add_item_to_preview(id,multiitem=false) {
                 cltd.append(selectHtml);
                 $('#'+id_of_dom+' .main').find('select[name="unit"]').val(fval);
            } else {
-                console.log(5992, $('#'+id_of_dom+' .main select[name="unit"]'));
+                //console.log(5992, $('#'+id_of_dom+' .main select[name="unit"]'));
                 if($('#'+id_of_dom+' .main select[name="unit"]').length > 0){
                     let cltd = $('#'+id_of_dom+' .main select[name="unit"]').closest('td');
                     $('#'+id_of_dom+' .main select[name="unit"]').remove();
@@ -6184,7 +6225,6 @@ function clear_item_preview_values(default_taxes) {
 
 // Append the added items to the preview to the table as items
 function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=false) {
-    console.log(data);
     // If not custom data passed get from the preview
     data = typeof (data) == 'undefined' || data == 'undefined' ? get_item_preview_values(table_id) : data;
     if (data.description === "" && data.long_description === "" && data.rate === "") {
@@ -6302,7 +6342,7 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense,table_id=fa
         }
 
         table_row += '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="newitems[' + item_key + '][qty]" value="' + data.qty + '" class="form-control">';
-        console.log('data.unit',data);
+        //console.log('data.unit',data);
         if (!data.unit || typeof (data.unit) == 'undefined') {
             data.unit = '';
         }
@@ -6668,7 +6708,12 @@ function calculate_total() {
         discount_percent = $('input[name="discount_percent"]').val(),
         discount_fixed = $('input[name="discount_total"]').val(),
         discount_total_type = $('.discount-total-type.selected'),
-        discount_type = $('select[name="discount_type"]').val();
+        discount_type = $('select[name="discount_type"]').val(),
+
+        profit_margin_percent = $('input[name="profit_margin_percent"]').val(),
+        profit_margin_fixed = $('input[name="profit_margin_total"]').val(),
+        profit_margin_total_type = $('.profit-margin-total-type.selected');
+
 
     $('.tax-area').remove();
 
@@ -6755,9 +6800,17 @@ function calculate_total() {
     //profit margin 19-07-2022
     var profitMarginAmount = 0;
     if(profit_margin_area.length > 0){
-        var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
+        var total_pro_mar_calculated = 0;
+        if ((profit_margin_percent !== '' && profit_margin_percent != 0) && profit_margin_total_type.hasClass('profit-margin-type-percent')) {
+            total_pro_mar_calculated = (subtotal2 * profit_margin_percent) / 100;
+        } else if ((profit_margin_fixed !== '' && profit_margin_fixed != 0) && profit_margin_total_type.hasClass('profit-margin-type-fixed')) {
+            total_pro_mar_calculated = parseFloat(profit_margin_fixed);
+        }
+        profitMarginAmount = total_pro_mar_calculated;
+
+        /*var proMarPer = profit_margin_area.find('input[name="profit_margin_percent"]').val();
         proMarPer = (isNaN(proMarPer))?0:parseFloat(proMarPer);
-        profitMarginAmount = (subtotal2 * proMarPer) / 100;
+        profitMarginAmount = (subtotal2 * proMarPer) / 100;*/
     }
     //profit margin 19-07-2022
     var overheadAmount = 0;

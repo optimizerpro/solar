@@ -82,9 +82,8 @@ class App_items_table extends App_items_table_template
                 if (!empty($item['long_description'])) {
                     $itemHTML .= '<span style="color:#424242;">' . $this->period_merge_field($item['long_description']) . '</span>';
                 }
-
-                $itemHTML .= '</td>';
             }
+            $itemHTML .= '</td>';
 
             /**
              * Item custom fields

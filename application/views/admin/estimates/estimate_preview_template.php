@@ -109,7 +109,7 @@
                         $_tooltip_already_send = _l('estimate_already_send_to_client_tooltip', time_ago($estimate->datesend));
                      }
                      ?>
-                  <?php if(!empty($estimate->clientid)){ ?>
+                  <?php if(!empty($estimate->rel_id)){ ?>
                   <a href="#" class="estimate-send-to-client btn btn-default btn-with-tooltip" data-toggle="tooltip" title="<?php echo $_tooltip; ?>" data-placement="bottom"><span data-toggle="tooltip" data-title="<?php echo $_tooltip_already_send; ?>"><i class="fa fa-envelope"></i></span></a>
                   <?php } ?>
                   <div class="btn-group">
@@ -258,14 +258,14 @@
                      <div class="col-sm-6 text-right">
                         <span class="bold"><?php echo _l('estimate_to'); ?>:</span>
                         <address>
-                           <?php echo format_customer_info($estimate, 'estimate', 'billing', true); ?>
+                           <?php echo format_customer_info($estimate, 'estimate', 'shipping', true); ?>
                         </address>
-                        <?php if($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1){ ?>
+                        <!-- <?php if($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1){ ?>
                         <span class="bold"><?php echo _l('ship_to'); ?>:</span>
                         <address>
                            <?php echo format_customer_info($estimate, 'estimate', 'shipping'); ?>
                         </address>
-                        <?php } ?>
+                        <?php } ?> -->
                         <p class="no-mbot">
                            <span class="bold">
                            <?php echo _l('estimate_data_date'); ?>:

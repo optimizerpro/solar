@@ -92,7 +92,7 @@ class Proposals_model extends App_Model
         if (isset($data['rel_id'], $data['rel_type']) && $data['rel_type'] !== 'customer') {
             $data['project_id'] = null;
         }
-
+        
         $hook = hooks()->apply_filters('before_create_proposal', [
             'data'  => $data,
             'items' => $items,
@@ -783,6 +783,16 @@ class Proposals_model extends App_Model
                     ]);
                 }
             }
+            /* Update Lead To Prospect 11-09-2022 */
+            if($original_proposal->rel_type == 'lead'){
+                $leadStRow = $this->db->where('LOWER(name)', 'prospect')->get(db_prefix().'leads_status')->row();
+                if($leadStRow){
+                    $this->db->where('id', $original_proposal->rel_id);
+                    $status = $leadStRow->id;
+                    $this->db->update(db_prefix().'leads', [ 'status' => $status ]);
+                }
+            }
+            /* Update Lead To Prospect end */
 
             log_activity('Proposal Status Changes [ProposalID:' . $id . ', Status:' . format_proposal_status($status, '', false) . ',Client Action: ' . (int) $client . ']');
 
@@ -910,6 +920,10 @@ class Proposals_model extends App_Model
             if ($default_currency != 0) {
                 $data->currency = $default_currency;
             }
+            if(isset($_REQUEST['get_bill_ship'])){
+                $this->load->model('clients_model');
+                $data->bill = $this->clients_model->get_customer_billing_and_shipping_details($rel_id);
+            }
         } elseif ($rel_type = 'lead') {
             $this->db->where('id', $rel_id);
             $_data       = $this->db->get(db_prefix() . 'leads')->row();
@@ -931,6 +945,10 @@ class Proposals_model extends App_Model
             $data->country = $_data->country;
             $data->state   = $_data->state;
             $data->city    = $_data->city;
+            if(isset($_REQUEST['get_bill_ship'])){
+                $this->load->model('clients_model');
+                $data->bill = $this->clients_model->get_lead_billing_and_shipping_details($rel_id);
+            }
         }
 
         return $data;

@@ -35,9 +35,9 @@
             <?php if(!empty($staff_p->skype)){ ?>
             <a href="skype:<?php echo html_escape($staff_p->skype); ?>" data-toggle="tooltip" title="<?php echo html_escape($staff_p->skype); ?>" target="_blank" class="btn btn-default btn-icon"><i class="fa fa-skype"></i></a>
             <?php } ?>
-            <?php if(has_permission('staff','','edit') && has_permission('staff','','view')){ ?>
+            <?php //if(has_permission('staff','','edit') && has_permission('staff','','view')){ ?>
             <a href="<?php echo admin_url('staff/member/'.$staff_p->staffid); ?>" class="btn btn-default btn-icon"><i class="fa fa-pencil-square"></i></a>
-            <?php } ?>
+            <?php //} ?>
           </div>
           <div class="clearfix"></div>
           <?php if(is_admin($staff_p->staffid)){ ?>

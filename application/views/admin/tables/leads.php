@@ -18,7 +18,8 @@ $aColumns = [
 if (is_gdpr() && $consentLeads == '1') {
     $aColumns[] = '1';
 }
-$aColumns = array_merge($aColumns, ['company',
+//'company',
+$aColumns = array_merge($aColumns, [
     db_prefix() . 'leads.email as email',
     db_prefix() . 'leads.phonenumber as phonenumber',
     'lead_value',
@@ -155,7 +156,7 @@ foreach ($rResult as $aRow) {
         }
         $row[] = $consentHTML;
     }
-    $row[] = $aRow['company'];
+    //$row[] = $aRow['company'];
 
     $row[] = ($aRow['email'] != '' ? '<a href="mailto:' . $aRow['email'] . '">' . $aRow['email'] . '</a>' : '');
 

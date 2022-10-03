@@ -4,7 +4,7 @@
     <div class="content">
         <div class="row">
             <?php echo form_open($this->uri->uri_string(),array('id'=>'project_form')); ?>
-            <div class="col-md-7">
+            <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
                         <h4 class="no-margin">
@@ -121,7 +121,7 @@
                     }
                     ?>
                     <div id="project_cost" class="<?php echo $input_field_hide_class_total_cost; ?>">
-                        <?php $value = (isset($project) ? $project->project_cost : ''); ?>
+                        <?php $value = (isset($project) ? $project->project_cost : ((isset($estimate))?$estimate->total:'')); ?>
                         <?php echo render_input('project_cost','project_total_cost',$value,'number'); ?>
                     </div>
                     <?php
@@ -185,7 +185,31 @@
                 <?php $contents = ''; if(isset($project)){$contents = $project->description;} ?>
                 <?php echo render_textarea('description','',$contents,array(),array(),'','tinymce'); ?>
 
-                <?php if (isset($estimate)) {?>
+                <?php $this->load->model('global_tasks_model');
+                $global_tasks = $this->global_tasks_model->get();
+                if(count($global_tasks) > 0){ ?>
+                    <hr class="hr-panel-heading" />
+                    <h5 class="font-medium"><?php echo _l('global_tasks_added_to_tasks') ?></h5>
+                    <div class="row">
+                        <?php foreach($global_tasks as $item) { ?>
+                        <div class="col-md-8 border-right">
+                            <div class="checkbox mbot15">
+                                <input type="checkbox" name="global_tasks[]" value="<?php echo $item['id'] ?>" checked id="item-glbl-<?php echo $item['id'] ?>">
+                                <label for="item-glbl-<?php echo $item['id'] ?>">
+                                    <h5 class="no-mbot no-mtop text-uppercase"><?php echo $item['name'] ?></h5>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div data-toggle="tooltip" title="<?php echo _l('task_single_assignees_select_title'); ?>">
+                                <?php echo render_select('global_tasks_assignees[]',$staff,array('staffid',array('firstname','lastname')),'', get_staff_user_id(),array('data-actions-box'=>true),array(),'','clean-select',false); ?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+
+                <?php if (isset($estimate)) { ?>
                 <hr class="hr-panel-heading" />
                 <h5 class="font-medium"><?php echo _l('estimate_items_convert_to_tasks') ?></h5>
                 <input type="hidden" name="estimate_id" value="<?php echo $estimate->id ?>">
@@ -222,7 +246,7 @@
          </div>
      </div>
  </div>
- <div class="col-md-5">
+ <div class="col-md-5 hidden">
     <div class="panel_s">
         <div class="panel-body" id="project-settings-area">
            <h4 class="no-margin">

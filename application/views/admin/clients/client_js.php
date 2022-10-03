@@ -257,7 +257,7 @@ function validate_contact_form() {
         firstname: 'required',
         lastname: 'required',
         password: {
-            required: {
+            /*required: {
                 depends: function(element) {
 
                     var $sentSetPassword = $('input[name="send_set_password_email"]');
@@ -266,11 +266,11 @@ function validate_contact_form() {
                         return true;
                     }
                 }
-            }
+            }*/
         },
         email: {
             <?php if(hooks()->apply_filters('contact_email_required', "true") === "true"){ ?>
-            required: true,
+            // required: true,
             <?php } ?>
             email: true,
             // Use this hook only if the contacts are not logging into the customers area and you are not using support tickets piping.

@@ -371,7 +371,9 @@ if (!function_exists('format_customer_info')) {
         } elseif ($companyName != '') {
             $companyName = '<b>' . $companyName . '</b>';
         }
-
+        if(isset($data->rel_type) && isset($data->estimate_to) && $data->rel_type == 'lead'){
+            $companyName = $data->estimate_to;
+        }
         $format = _info_format_replace('company_name', $companyName, $format);
         $format = _info_format_replace('customer_id', $clientId, $format);
         $format = _info_format_replace('street', $street, $format);
@@ -794,6 +796,25 @@ function is_sale_discount($data, $is)
     }
 
     return $discount_type == $is;
+}
+
+function is_sale_profit_margin_applied($data)
+{
+    return $data->profit_margin_total > 0;
+}
+
+function is_sale_profit_margin($data, $is)
+{
+    if ($data->profit_margin_percent == 0 && $data->profit_margin_total == 0) {
+        return false;
+    }
+
+    $profit_margin_type = 'fixed';
+    if ($data->profit_margin_percent != 0) {
+        $profit_margin_type = 'percent';
+    }
+
+    return $profit_margin_type == $is;
 }
 
 /**

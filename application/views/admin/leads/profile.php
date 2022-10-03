@@ -233,9 +233,9 @@
 
             <p class="bold font-medium-xs lead-name"><?php echo (isset($lead) && $lead->name != '' ? $lead->name : '-'); echo (isset($lead) && $lead->leadlastname != '' ? ' '.$lead->leadlastname : '-') ?></p>
 
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_title'); ?></p>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_title'); ?></p>
 
-            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->title != '' ? $lead->title : '-') ?></p>
+            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->title != '' ? $lead->title : '-') ?></p> -->
 
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_email'); ?></p>
 
@@ -260,11 +260,11 @@
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->lead_value != 0 ? app_format_money($lead->lead_value , $base_currency->id) : '-') ?></p> -->
 
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_company'); ?></p>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_company'); ?></p>
 
-            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p>
+            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p> -->
 
-            <h4><?php echo _l('Billing Address'); ?></h4>
+            <h4><?php echo _l('lead_address'); ?></h4>
             <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
 
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->address != '' ? $lead->address : '-') ?></p>
@@ -286,7 +286,7 @@
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->zip != '' ? $lead->zip : '-') ?></p>
 
             <?php if(isset($lead) && $lead->same_as_mailing == 0){ ?>
-               <h4><?php echo _l('lead_mailing_address'); ?></h4>
+               <!-- <h4><?php echo _l('lead_mailing_address'); ?></h4>
                <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
 
                <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_address != '' ? $lead->bill_address : '-') ?></p>
@@ -305,7 +305,7 @@
 
                <p class="text-muted lead-field-heading"><?php echo _l('lead_zip'); ?></p>
 
-               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_zip != '' ? $lead->bill_zip : '-') ?></p>
+               <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->bill_zip != '' ? $lead->bill_zip : '-') ?></p> -->
             <?php } ?>
          </div>
 
@@ -348,12 +348,17 @@
             <p class="bold font-medium-xs mbot15">
                <?php
                if(isset($lead) && $lead->location_photo != ''){
-                  $locationPath = 'uploads/leads/location/'. $lead->location_photo;
-                 if (file_exists($locationPath)) {
-                  echo '<img src="'.site_url($locationPath).'" style="height:75px;width:75px;" />';
-                 } else {
-                  echo '-';
-                 }
+                  $locimgArr = explode("|", $lead->location_photo);
+                  $locationPath = 'uploads/leads/location/';
+                  if(count($locimgArr) > 0){
+                     for ($ijk=0; $ijk < count($locimgArr); $ijk++) {
+                        if (file_exists($locationPath.$locimgArr[$ijk])) {
+                           echo '<img src="'.site_url($locationPath.$locimgArr[$ijk]).'" style="height:75px;width:75px;'.($ijk != 0?"margin-left: 5px;":"").'" />';
+                        }
+                     }
+                  } else {
+                     echo '-';
+                  }
                } else {
                   echo '-';
                }
@@ -607,7 +612,7 @@
 
             <?php $value = (isset($lead) ? $lead->title : ''); ?>
 
-            <?php echo render_input('title','lead_title',$value); ?>
+            <?php echo '';//render_input('title','lead_title',$value); ?>
 
             <?php $value = (isset($lead) ? $lead->email : ''); ?>
             <div class="mul_email">
@@ -686,8 +691,8 @@
 
          <div class="col-md-6">
             <div class="form-group">
-               <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo'); ?></label>
-               <input type="file" name="location_photo" class="form-control" id="location_photo">
+               <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo_choose'); ?></label>
+               <input type="file" name="location_photo[]" class="form-control" id="location_photo" multiple>
             </div>
             <?php if(!is_language_disabled()){ ?>
                <div class="form-group">
@@ -740,12 +745,10 @@
             
 
          </div>
-         <div class="clearfix"></div>
+         <!-- <div class="clearfix"></div>
          <?php $isSameChecked = (isset($lead) && $lead->same_as_mailing == 0 ? '' : 'checked'); ?>
          <div class="col-md-3">
             <h4>Billing Address</h4>
-         </div>
-         <div class="col-md-6">
             <input type="checkbox" name="same_as_mailing" value="1" <?php echo $isSameChecked; ?> id="same_as_mailing"/> <label for="same_as_mailing">Same as mailing</label>
          </div>
          <div class="clearfix"></div>
@@ -778,7 +781,7 @@
 
                <?php echo render_input('bill_zip','lead_zip',$value); ?>
             </div>
-         </div>
+         </div> -->
          <div class="clearfix"></div>
          <div class="col-md-12">
 
@@ -910,12 +913,12 @@
       <script>
          function initAutoCompvvv(){
             initAutocomplete();
-            initAutocompleteBill();
+            //initAutocompleteBill();
          }
          function initAutoComp(){
             $("#lead-modal").on('shown.bs.modal',function(){
                initAutocomplete();
-               initAutocompleteBill();
+               //initAutocompleteBill();
             });
          }
 var autocomplete;
@@ -1003,7 +1006,7 @@ window.initAutocomplete = initAutocomplete;
 
 
 ////////////////////////////////////
-var autocompletebill;
+/*var autocompletebill;
 var address1FieldBill;
 var address2FieldBill;
 var postalFieldBill;
@@ -1084,7 +1087,7 @@ function fillInAddressBill() {
   address2FieldBill.focus();
 }
 
-window.initAutocompleteBill = initAutocompleteBill;
+window.initAutocompleteBill = initAutocompleteBill;*/
 
 $(document).ready(function() {
    let ijk = 1;

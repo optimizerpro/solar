@@ -1,4 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<style>
+.contract-html-content .table-responsive:nth-child(2) table, .contract-html-content .table-responsive:nth-child(3) table,
+.contract-html-content table:nth-child(2), .contract-html-content table:nth-child(3) {
+   width: 100%;
+}
+</style>
 <div class="mtop15 preview-top-wrapper">
    <div class="row">
       <div class="col-md-3">
@@ -41,16 +47,21 @@
    </div>
 </div>
 <div class="row">
-   <div class="col-md-8 contract-left">
-      <div class="panel_s mtop20">
+   <div class="col-md-8">
+      <div class="panel_s mtop20 contra-cont">
          <div class="panel-body tc-content padding-30 contract-html-content">
-            <?php echo $contract->content; ?>
+            <?php
+            echo $contract->content;
+            /*$contractObj = contract_pdf($contract);
+            $contractContent =$contractObj->fix_editor_html($contract->content);
+            echo $contractContent;*/
+            ?>
          </div>
       </div>
    </div>
    <div class="col-md-4 contract-right">
       <div class="inner mtop20 contract-html-tabs">
-         <ul class="nav nav-tabs nav-tabs-flat mbot15" role="tablist">
+         <ul class="nav nav-tabs nav-tabs-flat mbot15" role="tablist" style="padding-left: 10px;">
             <li role="presentation" class="<?php if(!$this->input->get('tab') || $this->input->get('tab') === 'summary'){echo 'active';} ?>">
                <a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">
                <i class="fa fa-file-text-o" aria-hidden="true"></i> <?php echo _l('summary'); ?></a>

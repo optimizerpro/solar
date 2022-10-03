@@ -97,7 +97,7 @@ $pdf->writeHTML($tblhtml, true, false, false, false, '');
 $pdf->Ln(8);
 
 $tbltotal = '';
-$tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
+$tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px"><tbody>';
 $tbltotal .= '
 <tr>
     <td align="right" width="85%"><strong>' . _l('invoice_subtotal') . '</strong></td>
@@ -165,7 +165,7 @@ if (get_option('show_amount_due_on_invoice') == 1 && $invoice->status != Invoice
    </tr>';
 }
 
-$tbltotal .= '</table>';
+$tbltotal .= '</tbody></table>';
 $pdf->writeHTML($tbltotal, true, false, false, false, '');
 
 if (get_option('total_to_words_enabled') == 1) {
@@ -184,13 +184,13 @@ if (count($invoice->payments) > 0 && get_option('show_transactions_on_invoice_pd
     $pdf->Cell(0, 0, _l('invoice_received_payments') . ':', 0, 1, 'L', 0, '', 0);
     $pdf->SetFont($font_name, '', $font_size);
     $pdf->Ln(4);
-    $tblhtml = '<table width="100%" bgcolor="#fff" cellspacing="0" cellpadding="5" border="0">
+    $tblhtml = '<table width="100%" bgcolor="#fff" cellspacing="0" cellpadding="5" border="0"><thead>
         <tr height="20"  style="color:#000;border:1px solid #000;">
         <th width="25%;" style="' . $border . '">' . _l('invoice_payments_table_number_heading') . '</th>
         <th width="25%;" style="' . $border . '">' . _l('invoice_payments_table_mode_heading') . '</th>
         <th width="25%;" style="' . $border . '">' . _l('invoice_payments_table_date_heading') . '</th>
         <th width="25%;" style="' . $border . '">' . _l('invoice_payments_table_amount_heading') . '</th>
-    </tr>';
+    </tr></thead>';
     $tblhtml .= '<tbody>';
     foreach ($invoice->payments as $payment) {
         $payment_name = $payment['name'];

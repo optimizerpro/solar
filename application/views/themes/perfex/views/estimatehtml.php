@@ -153,15 +153,15 @@
             <div class="col-md-6 col-md-offset-6">
                <table class="table text-right">
                   <tbody>
-                     <tr id="subtotal">
+                     <!-- <tr id="subtotal">
                         <td><span class="bold"><?php echo _l('estimate_subtotal'); ?></span>
                         </td>
                         <td class="subtotal">
                            <?php echo app_format_money($estimate->subtotal, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php if(is_sale_discount_applied($estimate)){ ?>
-                     <tr>
+                     <!-- <tr>
                         <td>
                            <span class="bold"><?php echo _l('estimate_discount'); ?>
                            <?php if(is_sale_discount($estimate,'percent')){ ?>
@@ -171,59 +171,59 @@
                         <td class="discount">
                            <?php echo '-' . app_format_money($estimate->discount_total, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php } ?>
                      <?php
-                        foreach($items->taxes() as $tax){
+                        /*foreach($items->taxes() as $tax){
                          echo '<tr class="tax-area"><td class="bold">'.$tax['taxname'].' ('.app_format_number($tax['taxrate']).'%)</td><td>'.app_format_money($tax['total_tax'], $estimate->currency_name).'</td></tr>';
-                        }
+                        }*/
                      ?>
                      <?php if($estimate->profit_percent > 0){ ?>
-                     <tr>
+                     <!-- <tr>
                         <td>
                            <span class="bold"><?php echo _l('estimate_profit'); ?>(<?php echo app_format_number($estimate->profit_percent, true); ?>%)</span>
                         </td>
                         <td class="discount">
                            <?php echo '+' . app_format_money($estimate->profit_total, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php } ?>
-                     <tr id="subtotal">
+                     <!-- <tr id="subtotal">
                         <td><span class="bold"><?php echo _l('estimate_subtotal2'); ?></span>
                         </td>
                         <td class="subtotal">
                            <?php echo app_format_money($estimate->subtotal2, $estimate->currency_name); ?>
                         </td>
-                     </tr>
-                     <?php if($estimate->profit_margin_percent > 0){ ?>
-                     <tr>
+                     </tr> -->
+                     <?php if($estimate->profit_margin_percent > 0 || $estimate->profit_margin_total > 0){ ?>
+                     <!-- <tr>
                         <td>
-                           <span class="bold"><?php echo _l('estimate_profit_margin'); ?>(<?php echo app_format_number($estimate->profit_margin_percent, true); ?>%)</span>
+                           <span class="bold"><?php echo _l('estimate_profit_margin'); ?><?php echo ($estimate->profit_margin_percent > 0)?'('.app_format_number($estimate->profit_margin_percent, true).'%)':''; ?></span>
                         </td>
                         <td class="discount">
                            <?php echo '+' . app_format_money($estimate->profit_margin_total, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php } ?>
                      <?php if($estimate->overhead_percent > 0){ ?>
-                     <tr>
+                     <!-- <tr>
                         <td>
                            <span class="bold"><?php echo _l('estimate_overhead'); ?>(<?php echo app_format_number($estimate->overhead_percent, true); ?>%)</span>
                         </td>
                         <td class="discount">
                            <?php echo '+' . app_format_money($estimate->overhead_total, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php } ?>
                      <?php if((int)$estimate->adjustment != 0){ ?>
-                     <tr>
+                     <!-- <tr>
                         <td>
                            <span class="bold"><?php echo _l('estimate_adjustment'); ?></span>
                         </td>
                         <td class="adjustment">
                            <?php echo app_format_money($estimate->adjustment, $estimate->currency_name); ?>
                         </td>
-                     </tr>
+                     </tr> -->
                      <?php } ?>
                      <tr>
                         <td><span class="bold"><?php echo _l('estimate_total'); ?></span>

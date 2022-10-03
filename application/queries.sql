@@ -87,3 +87,39 @@ ALTER TABLE `tblcontracts`  ADD `manufacturer_warranty` VARCHAR(50) NOT NULL  AF
 ALTER TABLE `tblcontracts` CHANGE `manufacturer_warranty` `manufacturer_warranty` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `roll_yard` `roll_yard` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `shingle_color` `shingle_color` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `ventilation` `ventilation` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `install_decking` `install_decking` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fastners` `fastners` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 --31-08-2022
 ALTER TABLE `tblcontracts` ADD `roof_type` VARCHAR(500) NULL DEFAULT NULL AFTER `fastners`, ADD `layers` VARCHAR(500) NULL DEFAULT NULL AFTER `roof_type`, ADD `pitch` VARCHAR(500) NULL DEFAULT NULL AFTER `layers`, ADD `acv_rcv` VARCHAR(500) NULL DEFAULT NULL AFTER `pitch`, ADD `acv_rcv_plus_tax` VARCHAR(500) NULL DEFAULT NULL AFTER `acv_rcv`, ADD `ad_allowance` VARCHAR(500) NULL DEFAULT NULL AFTER `acv_rcv_plus_tax`, ADD `first_check` VARCHAR(500) NULL DEFAULT NULL AFTER `ad_allowance`, ADD `second_check` VARCHAR(500) NULL DEFAULT NULL AFTER `first_check`, ADD `deductible` VARCHAR(500) NULL DEFAULT NULL AFTER `second_check`, ADD `soffit` VARCHAR(500) NULL DEFAULT NULL AFTER `deductible`, ADD `fascia` VARCHAR(500) NULL DEFAULT NULL AFTER `soffit`, ADD `sidewall` VARCHAR(500) NULL DEFAULT NULL AFTER `fascia`, ADD `driveway` VARCHAR(500) NULL DEFAULT NULL AFTER `sidewall`, ADD `shingle` VARCHAR(500) NULL DEFAULT NULL AFTER `driveway`, ADD `color` VARCHAR(500) NULL DEFAULT NULL AFTER `shingle`, ADD `dripedge` VARCHAR(500) NULL DEFAULT NULL AFTER `color`, ADD `material_drop` VARCHAR(500) NULL DEFAULT NULL AFTER `dripedge`;
+
+--03-09-2022
+
+ALTER TABLE `tblcontracts` ADD `policy_number` VARCHAR(255) NULL AFTER `fastners`, ADD `acv_rcv_aggre` VARCHAR(20) NULL AFTER `policy_number`, ADD `adj_appoint_date` VARCHAR(50) NULL AFTER `acv_rcv_aggre`, ADD `adj_appoint_time` VARCHAR(50) NULL AFTER `adj_appoint_date`; 
+--04-09-2022
+ALTER TABLE `tblcontracts` ADD `rel_id` INT(11) NULL AFTER `material_drop`, ADD `rel_type` VARCHAR(40) NULL COMMENT 'lead or customer' AFTER `rel_id`; 
+
+--12-09-2022
+ALTER TABLE `tblestimates` ADD `rel_id` INT(11) NULL AFTER `deleted_customer_name`, ADD `rel_type` VARCHAR(40) NULL COMMENT 'lead or customer' AFTER `rel_id`, ADD `estimate_to` VARCHAR(191) NULL AFTER `rel_type`; 
+
+ALTER TABLE `tblleads` CHANGE `location_photo` `location_photo` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+--17-09-2022
+ALTER TABLE `tblcontracts` ADD `created_ip` VARCHAR(40) NULL AFTER `acceptance_ip`; 
+
+--24-09-2022
+INSERT INTO `tblcustomfields` (`id`, `fieldto`, `name`, `slug`, `required`, `type`, `options`, `display_inline`, `field_order`, `active`, `show_on_pdf`, `show_on_ticket_form`, `only_admin`, `show_on_table`, `show_on_client_portal`, `disalow_client_to_edit`, `bs_column`, `default_value`) VALUES
+(29, 'leads', 'Policy Number', 'leads_policy_number', 0, 'input', '', 0, 7, 1, 0, 0, 0, 0, 0, 0, 6, '');
+UPDATE `tblcustomfields` SET `field_order` = '8' WHERE `tblcustomfields`.`id` = 7;
+
+--27-09-2022
+CREATE TABLE `tblglobal_tasks` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `tblglobal_tasks` (`id`, `name`) VALUES
+(1, 'Task 1'),
+(2, 'Task 2'),
+(3, 'Task 3');
+
+ALTER TABLE `tblglobal_tasks`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `tblglobal_tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

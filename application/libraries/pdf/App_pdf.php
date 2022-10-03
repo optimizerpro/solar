@@ -262,7 +262,7 @@ abstract class App_pdf extends TCPDF
                     $imageData = base64_encode(file_get_contents($path));
                     $src = 'data: image/png;base64,'.$imageData;
                     $instance = $this->getSignatureableInstance();
-                    $signature .= '<br /><img src="uploads/contracts/'.$instance->id.'/'.$instance->signature.'" data-imgsrc="'.$src.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
+                    $signature .= '<br /><img src="'.site_url().'uploads/contracts/'.$instance->id.'/'.$instance->signature.'" data-imgsrc="'.$src.'" style="width:200px;height:75px;"><br /><span style="font-weight:bold;text-align: left;">';
                     //$signature .= _l('contract_signed_by') . ": {$record->acceptance_firstname} {$record->acceptance_lastname}<br />";
                     $signature .= 'Date : ' . _dt($record->acceptance_date) . '&nbsp;&nbsp;';
                     $signature .= "&nbsp;&nbsp;IP: {$record->acceptance_ip}";
@@ -272,16 +272,37 @@ abstract class App_pdf extends TCPDF
                     $content = str_replace('{{CUSTOMER_SIGNATURE}}', $signature, $content);
                 }
             }
-            $staff=get_staff(get_staff_user_id());
-
-            $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
-            $CONTRACTOR__SIGNATURE='';
-            if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
-                $CONTRACTOR__SIGNATURE .= '<br /><img src="uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/><br/>';
-                $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
-                $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+            if ($this->type() == 'contract') {
+                $_staff_user_id = $this->contract->addedfrom;
+                $staff = get_staff($_staff_user_id);
+                $CONTRACTOR__SIGNATURE_IMAGE = $staff->signature;
+                $CONTRACTOR__SIGNATURE='';
+                if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.$_staff_user_id.'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
+                    $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.$_staff_user_id.'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/>';
+                
+                    $record = $this->getSignatureableInstance();
+                    if(isset($record->created_ip)){
+                        $CONTRACTOR__SIGNATURE .='<span style="font-weight:bold;text-align: left;">';
+                        $CONTRACTOR__SIGNATURE .= 'Date : ' . _dt($record->dateadded) . '&nbsp;&nbsp;';
+                        $CONTRACTOR__SIGNATURE .= "&nbsp;&nbsp;IP: {$record->created_ip}";
+                        $CONTRACTOR__SIGNATURE .= '</span><br />';
+                    }
+                    
+                    $CONTRACTOR__SIGNATURE .= '<br/>';
+                    $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                    $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                }
+            } else {
+                $staff = get_staff(get_staff_user_id());
+                $CONTRACTOR__SIGNATURE_IMAGE=$staff->signature;
+                $CONTRACTOR__SIGNATURE='';
+                if($CONTRACTOR__SIGNATURE_IMAGE!="" && file_exists(STAFF_UPLOADS_FOLDER.'/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE)){
+                    $CONTRACTOR__SIGNATURE .= '<br /><img src="'.site_url().'uploads/staff/'.get_staff_user_id().'/'.$CONTRACTOR__SIGNATURE_IMAGE.'" data-imgsrc="'.$CONTRACTOR__SIGNATURE_IMAGE.'" style="width:200px;height:75px;"><br/>';
+                    $CONTRACTOR__SIGNATURE .= '<br/>';
+                    $content = str_replace('{{CONTRACTOR__SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                    $content = str_replace('{{CONTRACTOR_SIGNATURE}}', $CONTRACTOR__SIGNATURE, $content);
+                }
             }
-            
         }
         
         //$content = str_replace('{{LOGO_IMAGE}}', "https://www.hashevo.com/elightsolar/elite.png", $content);
@@ -296,10 +317,33 @@ abstract class App_pdf extends TCPDF
 
             /*Replace workorder variables*/
             $staff=get_staff(get_staff_user_id());
-            $client_detail=$this->contract->client_detail;
-            $content = str_replace('{{CUSTOMER_NAME}}', $client_detail->company, $content);
-            $content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
-            $content = str_replace('{{CUSTOMER_ADDRESS}}', ucwords($client_detail->billing_street.', '.$client_detail->billing_city.', '.$client_detail->billing_zip.', '.$client_detail->billing_state), $content);
+            
+            $custName = $custEmail = $custAdd = $custAddOnly = $custAddCSZ = '';
+            if($this->contract->rel_type == 'customer'){
+                $clientDet = $this->contract->client_detail;
+                $custName = $clientDet->company;
+                $this->ci->load->model('clients_model');
+                $hasContact = $this->ci->clients_model->get_contacts($this->contract->rel_id,array('active'=>1));
+                if($hasContact && count($hasContact) > 0){
+                    $custEmail = $hasContact[0]['email'];
+                }
+                $custAdd = ucwords($clientDet->billing_street.', '.$clientDet->billing_city.', '.$clientDet->billing_zip.', '.$clientDet->billing_state);
+                $custAddOnly = ucwords($clientDet->billing_street);
+                $custAddCSZ = ucwords($clientDet->billing_city.'/'.$clientDet->billing_state.'/'.$clientDet->billing_zip);
+            } else {
+                $leadDet = $this->contract->leadDetail;
+                if($leadDet){
+                    $custName = (isset($leadDet->name))?$leadDet->name.' '.$leadDet->leadlastname:'';
+                    $custEmail = $leadDet->email;
+                    $custAdd = ucwords($leadDet->address.', '.$leadDet->city.', '.$leadDet->zip.', '.$leadDet->state);
+                    $custAddOnly = ucwords($leadDet->address);
+                    $custAddCSZ = ucwords($leadDet->city.'/'.$leadDet->state.'/'.$leadDet->zip);
+                }
+            }
+            $content = str_replace('{{CUSTOMER_NAME}}', $custName, $content);
+            //$content = str_replace('{{CUSTOMER_PHONE}}', $client_detail->phonenumber, $content);
+            $content = str_replace('{{CUSTOMER_ADDRESS}}', $custAdd, $content);
+
             $content = str_replace('{{REPRESENTATIVE_NAME}}', $staff->firstname.' '.$staff->lastname, $content);
             $content = str_replace('{{REPRESENTATIVE_PHONE}}', $staff->phonenumber, $content);
 
@@ -328,9 +372,52 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{VENTILATION}}', $this->contract->ventilation, $content);
 
             $content = str_replace('{{DESCRIPTION}}', $this->contract->description, $content); 
-            $content = str_replace('{{CUSTOMER_ADDRESS_ONLY}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->address:'-', $content); 
-            $content = str_replace('{{CUSTOMER_CITY_STATE_ZIP}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->city.'/'.$this->contract->leadDetail->state.'/'.$this->contract->leadDetail->zip:'-', $content); 
-            $content = str_replace('{{CUSTOMER_EMAIL}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->email:'-', $content); 
+
+            /* Replace Agreement Variable variables */
+            $content = str_replace('{{CUSTOMER_ADDRESS_ONLY}}', $custAddOnly, $content);
+            $content = str_replace('{{CUSTOMER_CITY_STATE_ZIP}}', $custAddCSZ, $content);
+            $content = str_replace('{{CUSTOMER_EMAIL}}', $custEmail, $content);
+            $content = str_replace('{{INSURANCE_COMPANY_PHONE}}', $this->contract->phonenumber, $content);
+            $aggreDate = ($this->contract->dateadded)?date('d M y, h:i A', strtotime($this->contract->dateadded)):'-';
+            $content = str_replace('{{AGREEMENT_DATE}}', $aggreDate, $content);
+            $content = str_replace('{{CUSTOMER_PHONE}}', (isset($this->contract->leadDetail))?$this->contract->leadDetail->phonenumber:'-', $content);
+            $ic_value = $dol_value = $cn_value = $an_value = $ap_value = $pn_value = '-';
+            if(isset($this->contract->leadDetail)){
+                $ic_value = get_custom_field_value($this->contract->leadDetail->id, 1, 'leads');              
+                $ic_value = ($ic_value?$ic_value:'-');
+                
+                $dol_value = get_custom_field_value($this->contract->leadDetail->id, 3, 'leads');     
+                $dol_value = ($dol_value?$dol_value:'-');
+                
+                $cn_value = get_custom_field_value($this->contract->leadDetail->id, 5, 'leads');
+                $cn_value = ($cn_value?$cn_value:'-'); 
+
+                $an_value = get_custom_field_value($this->contract->leadDetail->id, 7, 'leads');
+                $an_value = ($an_value?$an_value:'-');
+
+                $ap_value = get_custom_field_value($this->contract->leadDetail->id, 8, 'leads');
+                $ap_value = ($ap_value?$ap_value:'-');
+
+                $pn_value = get_custom_field_value($this->contract->leadDetail->id, 29, 'leads');
+                $pn_value = ($pn_value?$pn_value:'-');
+            }
+            $content = str_replace('{{INSURANCE_COMPANY}}', $ic_value, $content);
+            $content = str_replace('{{DATE_OF_LOSS}}', $dol_value, $content);
+            $content = str_replace('{{CLAIM_NUMBER}}', $cn_value, $content);
+            $content = str_replace('{{ADJUSTER_NAME}}', $an_value, $content);
+            $content = str_replace('{{ADJUSTER_PHONE}}', $ap_value, $content);
+
+            //$pn_value = ($this->contract->policy_number != '')?$this->contract->policy_number:'-';
+            $content = str_replace('{{POLICY_NUMBER}}', $pn_value, $content);
+
+            $adjd_value = ($this->contract->adj_appoint_date != '')?$this->contract->adj_appoint_date:'-';
+            $content = str_replace('{{ADJ_DATE} }', $adjd_value.' ', $content);
+
+            $adjt_value = ($this->contract->adj_appoint_time != '')?$this->contract->adj_appoint_time:'-';
+            $content = str_replace('{{ADJ_TIME}}', $adjt_value, $content);
+
+            $racv_value = ($this->contract->acv_rcv_aggre != '')?strtoupper($this->contract->acv_rcv_aggre):'-';
+            $content = str_replace('RCV / ACV', ' '.$racv_value, $content);      
         }
         //$content = str_replace('{{CONTRACTOR__SIGNATURE}}', '<img src="{{CONTRACTOR_SIGNATURE}}">', $content);
         //$content = str_replace('{{CUSTOMER__SIGNATURE}}', '<img src="{{CUSTOMER_SIGNATURE}}">', $content);

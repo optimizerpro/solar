@@ -86,6 +86,26 @@ class Contracts extends AdminController
     public function contract($id = '')
     {
         if ($this->input->post()) {
+            /* Action code added 24-09-2022 */
+            if(isset($_POST['action']) && $_POST['action']=='sign_contract'){
+                process_digital_signature_image($this->input->post('signature', false), CONTRACTS_UPLOADS_FOLDER . $id);
+                $this->db->where('id', $id);
+                $this->db->update(db_prefix().'contracts', array_merge(get_acceptance_info_array(), [
+                    'signed' => 1,
+                ]));
+                /* Update Lead To Prospect 11-09-2022 */
+                $this->contracts_model->update_lead_or_convert_to_customer($id);
+                /* Update Lead To Prospect End */
+
+                // Notify contract creator that customer signed the contract
+                send_contract_signed_notification_to_staff($id);
+                
+                // Send thank you mail to customer
+                send_contract_signed_notification_to_customer($id);
+                set_alert('success', _l('document_signed_successfully'));
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+
             if ($id == '') {
                 if (!has_permission('contracts', '', 'create')) {
                     access_denied('contracts');
@@ -117,6 +137,7 @@ class Contracts extends AdminController
             $title = _l('add_new', _l('contract_lowercase'));
         } else {
             $data['contract']                 = $this->contracts_model->get($id, [], true);
+            
             $data['contract_renewal_history'] = $this->contracts_model->get_contract_renewal_history($id);
             $data['totalNotes']               = total_rows(db_prefix() . 'notes', ['rel_id' => $id, 'rel_type' => 'contract']);
             if (!$data['contract'] || (!has_permission('contracts', '', 'view') && $data['contract']->addedfrom != get_staff_user_id())) {
@@ -139,6 +160,11 @@ class Contracts extends AdminController
         $data['types']         = $this->contracts_model->get_contract_types();
         $data['title']         = $title;
         $data['bodyclass']     = 'contract';
+        if(isset($data['contract'])){
+            $contractObj = contract_pdf($data['contract']);
+            $data['contract']->content =$contractObj->fix_editor_html($data['contract']->content);
+        }
+        
         $this->load->view('admin/contracts/contract', $data);
     }
 
@@ -181,9 +207,12 @@ class Contracts extends AdminController
         }
 
         $contract = $this->contracts_model->get($id);
+         
+        
 
         try {
             $pdf = contract_pdf($contract);
+        
         } catch (Exception $e) {
             echo $e->getMessage();
             die;

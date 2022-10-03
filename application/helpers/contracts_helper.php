@@ -136,11 +136,41 @@ function send_contract_signed_notification_to_staff($contract_id)
         if ($notified) {
             array_push($notifiedUsers, $member['staffid']);
         }
-
         send_mail_template('contract_signed_to_staff', $contract, $member);
     }
 
     pusher_trigger_notification($notifiedUsers);
+}
+
+/** 19-09-2022
+ * Send contract signed notification to customer
+ *
+ * @param  int $contract_id
+ *
+ * @return void
+ */
+function send_contract_signed_notification_to_customer($contract_id)
+{
+    $CI = &get_instance();
+    $CI->db->where('id', $contract_id);
+    $contract = $CI->db->get(db_prefix() . 'contracts')->row();
+
+    if (!$contract) {
+        return false;
+    }
+    if($contract->rel_type == 'customer'){
+        $CI->load->model('clients_model');
+        $contact = $CI->clients_model->get_contact($contract->rel_id);
+    } else {
+        $CI->load->model('leads_model');
+        $leads = $CI->leads_model->get($contract->rel_id);
+        $contact = (object)['id'=>1, 'email'=>$leads->email,'contact_firstname'=>$leads->name,'contact_lastname'=>$leads->leadlastname];
+    }
+    if (!$contact) {
+        return false;
+    }
+
+    send_mail_template('contract_signed_to_customer', $contract, $contact);
 }
 
 /**

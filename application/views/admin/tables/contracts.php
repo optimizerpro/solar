@@ -14,6 +14,8 @@ $aColumns = [
     'dateend',
     db_prefix() . 'projects.name as project_name',
     'signature',
+    'rel_type',
+    'rel_id',
     ];
 
 $sIndexColumn = 'id';
@@ -98,7 +100,7 @@ if (count($filter) > 0) {
 }
 
 if ($clientid != '') {
-    array_push($where, 'AND client=' . $this->ci->db->escape_str($clientid));
+    array_push($where, 'AND rel_type="customer" AND rel_id=' . $this->ci->db->escape_str($clientid));
 }
 
 if (!has_permission('contracts', '', 'view')) {
@@ -116,7 +118,7 @@ $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [db
 
 $output  = $result['output'];
 $rResult = $result['rResult'];
-
+$this->ci->load->model('leads_model');
 foreach ($rResult as $aRow) {
     $row = [];
 
@@ -141,12 +143,17 @@ foreach ($rResult as $aRow) {
 
     $subjectOutput .= '</div>';
     $row[] = $subjectOutput;
-
-    $row[] = '<a href="' . admin_url('clients/client/' . $aRow['client']) . '">' . $aRow['company'] . '</a>';
+    if($aRow['rel_type'] == 'customer'){
+        $row[] = '<a href="' . admin_url('clients/client/' . $aRow['client']) . '">' . $aRow['company'] . '</a>';
+    } else {
+        $leadRow = $this->ci->leads_model->get($aRow['rel_id']);
+        $showName = $leadRow && isset($leadRow->name) ? $leadRow->name.' '.$leadRow->leadlastname:'-';
+        $row[] = $showName;
+    }
 
     $row[] = $aRow['type_name'];
 
-    $row[] = app_format_money($aRow['contract_value'], $base_currency);
+    //$row[] = app_format_money($aRow['contract_value'], $base_currency);
 
     $row[] = _d($aRow['datestart']);
 

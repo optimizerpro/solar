@@ -14,6 +14,14 @@
                   </a>
                </li>
                <?php if(isset($proposal)){ ?>
+               <li role="presentation" class="<?php if($this->input->get('tab') == 'attachments'){echo 'active';} ?>">
+                     <a href="#attachments" aria-controls="attachments" role="tab" data-toggle="tab">
+                        <?php echo _l('contract_attachments'); ?>
+                        <?php if($totalAttachments = count($proposal->attachments)) { ?>
+                         <span class="badge attachments-indicator"><?php echo $totalAttachments; ?></span>
+                      <?php } ?>
+                   </a>
+                </li>
                <li role="presentation">
                   <a href="#tab_comments" onclick="get_proposal_comments(); return false;" aria-controls="tab_comments" role="tab" data-toggle="tab">
                   <?php
@@ -133,9 +141,9 @@
                      <a href="<?php echo admin_url('proposals/send_expiry_reminder/'.$proposal->id); ?>"><?php echo _l('send_expiry_reminder'); ?></a>
                   </li>
                   <?php } ?>
-                  <li>
+                  <!-- <li>
                      <a href="#" data-toggle="modal" data-target="#sales_attach_file"><?php echo _l('invoice_attach_file'); ?></a>
-                  </li>
+                  </li> -->
                   <?php if(has_permission('proposals','','create')){ ?>
                   <li>
                      <a href="<?php echo admin_url() . 'proposals/copy/'.$proposal->id; ?>"><?php echo _l('proposal_copy'); ?></a>
@@ -259,39 +267,7 @@
                      </div>
                   </div>
                   <hr class="hr-panel-heading" />
-                  <?php
-                     if(count($proposal->attachments) > 0){ ?>
-                  <p class="bold"><?php echo _l('proposal_files'); ?></p>
-                  <?php foreach($proposal->attachments as $attachment){
-                     $attachment_url = site_url('download/file/sales_attachment/'.$attachment['attachment_key']);
-                     if(!empty($attachment['external'])){
-                        $attachment_url = $attachment['external_link'];
-                     }
-                     ?>
-                  <div class="mbot15 row" data-attachment-id="<?php echo $attachment['id']; ?>">
-                     <div class="col-md-8">
-                        <div class="pull-left"><i class="<?php echo get_mime_class($attachment['filetype']); ?>"></i></div>
-                        <a href="<?php echo $attachment_url; ?>" target="_blank"><?php echo $attachment['file_name']; ?></a>
-                        <br />
-                        <small class="text-muted"> <?php echo $attachment['filetype']; ?></small>
-                     </div>
-                     <div class="col-md-4 text-right">
-                        <?php if($attachment['visible_to_customer'] == 0){
-                           $icon = 'fa-toggle-off';
-                           $tooltip = _l('show_to_customer');
-                           } else {
-                           $icon = 'fa-toggle-on';
-                           $tooltip = _l('hide_from_customer');
-                           }
-                           ?>
-                        <a href="#" data-toggle="tooltip" onclick="toggle_file_visibility(<?php echo $attachment['id']; ?>,<?php echo $proposal->id; ?>,this); return false;" data-title="<?php echo $tooltip; ?>"><i class="fa <?php echo $icon; ?>" aria-hidden="true"></i></a>
-                        <?php if($attachment['staffid'] == get_staff_user_id() || is_admin()){ ?>
-                        <a href="#" class="text-danger" onclick="delete_proposal_attachment(<?php echo $attachment['id']; ?>); return false;"><i class="fa fa-times"></i></a>
-                        <?php } ?>
-                     </div>
-                  </div>
-                  <?php } ?>
-                  <?php } ?>
+                  
                   <div class="clearfix"></div>
                   <?php if(isset($proposal_merge_fields)){ ?>
                   <p class="bold text-right"><a href="#" onclick="slideToggle('.avilable_merge_fields'); return false;"><?php echo _l('available_merge_fields'); ?></a></p>
@@ -342,6 +318,48 @@
                         </div>
                         <?php } ?>
                </div>
+               <div role="tabpanel" class="tab-pane" id="attachments">
+                  <div class="row mtop15">
+                     <div class="col-md-12">
+                        <button type="button" data-toggle="modal" data-target="#sales_attach_file" class="btn btn-info mtop10 pull-right"><?php echo _l('invoice_attach_file'); ?></button>
+                        <div class="clearfix"></div>
+                        <?php
+                           if(count($proposal->attachments) > 0){ ?>
+                        <p class="bold"><?php echo _l('proposal_files'); ?></p>
+                        <?php foreach($proposal->attachments as $attachment){
+                           $attachment_url = site_url('download/file/sales_attachment/'.$attachment['attachment_key']);
+                           if(!empty($attachment['external'])){
+                              $attachment_url = $attachment['external_link'];
+                           }
+                           ?>
+                        <div class="mbot15 row" data-attachment-id="<?php echo $attachment['id']; ?>">
+                           <div class="col-md-8">
+                              <div class="pull-left"><i class="<?php echo get_mime_class($attachment['filetype']); ?>"></i></div>
+                              <a href="<?php echo $attachment_url; ?>" target="_blank"><?php echo $attachment['file_name']; ?></a>
+                              <br />
+                              <small class="text-muted"> <?php echo $attachment['filetype']; ?></small>
+                           </div>
+                           <div class="col-md-4 text-right">
+                              <?php if($attachment['visible_to_customer'] == 0){
+                                 $icon = 'fa-toggle-off';
+                                 $tooltip = _l('show_to_customer');
+                                 } else {
+                                 $icon = 'fa-toggle-on';
+                                 $tooltip = _l('hide_from_customer');
+                                 }
+                                 ?>
+                              <a href="#" data-toggle="tooltip" onclick="toggle_file_visibility(<?php echo $attachment['id']; ?>,<?php echo $proposal->id; ?>,this); return false;" data-title="<?php echo $tooltip; ?>"><i class="fa <?php echo $icon; ?>" aria-hidden="true"></i></a>
+                              <?php if($attachment['staffid'] == get_staff_user_id() || is_admin()){ ?>
+                              <a href="#" class="text-danger" onclick="delete_proposal_attachment(<?php echo $attachment['id']; ?>); return false;"><i class="fa fa-times"></i></a>
+                              <?php } ?>
+                           </div>
+                        </div>
+                        <?php } ?>
+                        <?php } ?>
+                     </div>
+                  </div>
+               </div>
+
                <div role="tabpanel" class="tab-pane" id="tab_comments">
                   <div class="row proposal-comments mtop15">
                      <div class="col-md-12">

@@ -1,2 +1,5 @@
 /application/logs
 /uploads
+/media
+error_log
+/index.php
