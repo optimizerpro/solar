@@ -384,7 +384,7 @@ class Projects extends AdminController
             $data['title']          = $data['project']->name;
             $data['bodyclass'] .= 'project invoices-total-manual estimates-total-manual';
             $data['project_status'] = get_project_status_by_id($project->status);
-
+            $data['project_id']=$id;
             $this->load->view('admin/projects/view', $data);
         } else {
             access_denied('Project View');

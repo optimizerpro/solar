@@ -390,6 +390,29 @@
       var settings = $.extend({}, defaults, options);
     $(selector).comments(settings);
    }
+   if($('.mydatatable').length>0){
+      //var tables = $.fn.dataTable.fnTables(true);
+
+      //$(tables).each(function () {
+         //$(this).dataTable().fnDestroy();
+      //});
+      $('.mydatatable').dataTable({searching: false, paging: false, info: false,ordering:false});
+      $(".table-loading").removeClass('table-loading');
+   }
+   $("#gross_profit_range").change(function(){
+      var gross_profit_range=$("#gross_profit_range").val();
+      var gross_profit=$("#gross_profit").val();
+      if(gross_profit_range==0){
+         var commission=0;
+         $("#commission_span").html("$0.00");
+         $("#commission").val(commission.toFixed(2));
+      }
+      else{
+         var commission=(gross_profit*gross_profit_range)/100;
+         $("#commission_span").html("$"+commission.toFixed(2));
+         $("#commission").val(commission.toFixed(2));
+      }
+   });
 </script>
 </body>
 </html>
