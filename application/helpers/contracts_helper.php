@@ -251,3 +251,14 @@ function count_trash_contracts($staffId = null)
 
     return total_rows(db_prefix() . 'contracts', array_merge(['trash' => 1], $where_own));
 }
+
+/* 07-10-2022 */
+function formatAmount($amount = 0, $isReplace = false)
+{
+    $amount = str_replace(",", "", $amount);
+    if($isReplace){
+        return $amount;
+    }
+    $amount = number_format((float)$amount, 2,'.',',');
+    return $amount;
+}
