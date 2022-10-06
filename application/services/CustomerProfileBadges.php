@@ -141,12 +141,21 @@ class CustomerProfileBadges
     }
 
     public function contracts()
-    {
+    {   
+        $clientRow = $this->CI->db->select('leadid')->where('userid',$this->customerId)->from(db_prefix().'clients')->get();
+        $where = 'rel_type="customer" AND rel_id='.$this->customerId;
+        if($clientRow->num_rows() > 0 && $clientRow->row()->leadid){
+            $where = '((rel_type="customer" AND rel_id=' . $this->customerId.') OR (rel_type="lead" AND rel_id=' . $this->CI->db->escape_str($clientRow->row()->leadid).'))';
+        }
+
         if (!staff_can('view', 'contracts')) {
             $this->CI->db->where('(' . db_prefix() . 'contracts.addedfrom=' . $this->staffId . ' AND ' . db_prefix() . 'contracts.addedfrom IN (SELECT staff_id FROM ' . db_prefix() . 'staff_permissions WHERE feature = "contracts" AND capability="view_own"))');
         }
-
-        $this->CI->db->where('client', $this->customerId);
+        
+        if($where != ''){
+            $this->CI->db->where($where);
+        }
+        //$this->CI->db->where('client', $this->customerId);
         $this->CI->db->where('signed', 0);
 
         return $this->CI->db->count_all_results('contracts');

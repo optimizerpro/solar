@@ -100,7 +100,12 @@ if (count($filter) > 0) {
 }
 
 if ($clientid != '') {
-    array_push($where, 'AND rel_type="customer" AND rel_id=' . $this->ci->db->escape_str($clientid));
+    $clientRow = $this->ci->db->select('leadid')->where('userid',$clientid)->from(db_prefix().'clients')->get();
+    if($clientRow->num_rows() > 0 && $clientRow->row()->leadid){
+        array_push($where, 'AND ((rel_type="customer" AND rel_id=' . $this->ci->db->escape_str($clientid).') OR (rel_type="lead" AND rel_id=' . $this->ci->db->escape_str($clientRow->row()->leadid).'))');
+    } else {
+        array_push($where, 'AND rel_type="customer" AND rel_id=' . $this->ci->db->escape_str($clientid));
+    }
 }
 
 if (!has_permission('contracts', '', 'view')) {
