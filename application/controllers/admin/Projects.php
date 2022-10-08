@@ -352,7 +352,7 @@ class Projects extends AdminController
                 $data['tasks']                = $this->projects_model->get_tasks($id, 'status != ' . Tasks_model::STATUS_COMPLETE . ' AND billed=0');
                 $data['timesheets_staff_ids'] = $this->projects_model->get_distinct_tasks_timesheets_staff($id);
             } elseif ($group == 'project_commission') {
-                $data['staff'] = $this->staff_model->get('', ['active' => 1]);
+                $data['staff'] = $this->staff_model->get('', ['active' => 1, 'role !='=>2]);
             }
 
             // Discussions
