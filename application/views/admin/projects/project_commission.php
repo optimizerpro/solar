@@ -128,61 +128,122 @@
                     <!--</div>-->
             </div>
         </div>
-        
-        <h4>Job commissions calculated based on gross profit range</h4>
-        <div class="row">
-            <div class="col-md-6"><h5>Gross Profit : $<?php echo number_format(($gross_profit=$total_payment_received-$total_expense_made),2); ?></h5></div>
-            <div class="col-md-6"><h5>Gross Profit Percentage : 
-                <?php
-                    if($total_payment_received==0){
-                        echo '--';
-                    }
-                    else{
-                        $percentage=($gross_profit*100)/$total_payment_received;
-                        echo number_format($percentage,2).'%';
-                    }
-                    $commission=0;
-                ?></h5>
-            </div>
-            <div class="col-md-6">
-                <input type="hidden" name="gross_profit" id="gross_profit" value="<?php echo $gross_profit; ?>">
-                <input type="hidden" name="commission" id="commission" value="<?php echo $commission; ?>">
-                <input type="hidden" name="total_payment_received" id="total_payment_received" value="<?php echo $total_payment_received; ?>">
-                <input type="hidden" name="total_expense_made" id="total_expense_made" value="<?php echo $total_expense_made; ?>">
-                <div class="form-group">
-                    <label for="gross_profit_range">Rate</label>
-                    <select id="gross_profit_range" name="gross_profit_range" class="form-control">
-                        <option value="0" selected>0</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="25">25</option>
-                        <option value="30">30</option>
-                        <option value="35">35</option>
-                        <option value="40">40</option>
-                        <option value="45">45</option>
-                        <option value="50">50</option>
-                        <option value="55">55</option>
-                        <option value="60">60</option>
-                        <option value="65">65</option>
-                        <option value="70">70</option>
-                        <option value="75">75</option>
-                        <option value="80">80</option>
-                        <option value="85">85</option>
-                        <option value="90">90</option>
-                        <option value="95">95</option>
-                        <option value="100">100</option>
-
-                    </select>
-                </div>
-                <div class="form-group">
-                    <h5>Commission <span id="commission_span">$0.00</span></h5>
-                </div>
-            </div>
-        </div>
     </div>
+    <?php
+    $perDropDown = '';
+    for ($i=5; $i <= 100; $i++) { 
+        if(($i % 5) == 0){
+            $perDropDown .= '<option value="'.$i.'">'.$i.'</option>';
+        }
+    }
+    ?>
     <div class="col-md-6">
-
+        <?php
+         echo form_open(base_url('admin/projects/save_sales_commision'),array('id'=>'salescommision-form','class'=>'salescommision-form'));
+         ?>
+         <input type="hidden" name="project_id" value="<?php echo $project->id; ?>">
+            <h4>Job commissions calculated based on gross profit range</h4>
+            <div class="row">
+                <div class="col-md-6"><h5>Gross Profit : $<?php echo number_format(($gross_profit=$total_payment_received-$total_expense_made),2); ?></h5></div>
+                <div class="col-md-6"><h5>Gross Profit Percentage : 
+                    <?php
+                        if($total_payment_received==0){
+                            echo '--';
+                        }
+                        else{
+                            $percentage=($gross_profit*100)/$total_payment_received;
+                            echo number_format($percentage,2).'%';
+                        }
+                        $commission=0;
+                    ?></h5>
+                </div>
+                <div class="col-md-6">
+                    <input type="hidden" name="gross_profit" id="gross_profit" value="<?php echo $gross_profit; ?>">
+                    <input type="hidden" name="commission" id="commission" value="<?php echo $commission; ?>">
+                    <input type="hidden" name="total_payment_received" id="total_payment_received" value="<?php echo $total_payment_received; ?>">
+                    <input type="hidden" name="total_expense_made" id="total_expense_made" value="<?php echo $total_expense_made; ?>">                
+                    <div class="hidden" id="perDropDown"><?php echo $perDropDown; ?></div>
+                    <div class="form-group">
+                        <label for="gross_profit_range">Rate</label>
+                        <select id="gross_profit_range" name="gross_profit_range" class="form-control">
+                            <option value="0" selected>0</option>
+                            <?php echo $perDropDown; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <h5>Commission <span id="commission_span">$0.00</span></h5>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            <h4>Commissions calculate per salesperson</h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive s_table" style="border-bottom:2px solid gray;margin-bottom:10px;">
+                        <table class="table commision-sales-table items table-main-estimate-edit">
+                           <thead>
+                              <tr>
+                                 <th align="left">Name</th>
+                                 <th align="left">Portion</th>
+                                 <th>Amount</th>
+                                 <th align="center"><i class="fa fa-cog"></i></th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr class="main">
+                                 <td>
+                                    <?php
+                                     $i = 0;
+                                     $selected = '';
+                                     foreach($staff as $member){
+                                      if(isset($proposal)){
+                                        if($proposal->assigned == $member['staffid']) {
+                                          $selected = $member['staffid'];
+                                        }
+                                      }
+                                      $i++;
+                                     }
+                                     echo render_select('assigned_main',$staff,array('staffid',array('firstname','lastname')),'',$selected);
+                                    ?>
+                                 </td>
+                                 <td>
+                                    <select name="sales_portion_main" class="form-control">
+                                        <option value="0" selected>0</option>
+                                        <?php echo $perDropDown; ?>
+                                    </select>
+                                 </td>
+                                 <td>
+                                    <input type="hidden" name="sales_portion_amount_main" value="">
+                                    <span class="sales_portion_amount_main">0.00</span>
+                                 </td>
+                                 <td>
+                                    <button type="button" class="btn pull-right btn-info add_item_to_sales"><i class="fa fa-check"></i></button>
+                                 </td>
+                              </tr>
+                              <?php
+                              if(isset($project) && isset($project->sales_commision) && count($project->sales_commision) > 0){
+                                $trHtml = '';
+                                foreach ($project->sales_commision as $k1 => $v1) {
+                                  $trHtml .= '<tr class="used">';
+                                  $trHtml .= '<td><input type="hidden" name="sales_staff[]" value="'.$v1['staff_id'].'">'.$v1['full_name'].'</td>';
+                                  $trHtml .= '<td><input type="hidden" name="sales_portion[]" value="'.$v1['percent'].'">'.$v1['percent'].'%</td>';
+                                  $trHtml .= '<td><input type="hidden" name="sales_portion_amount[]" value="'.$v1['amount'].'">$'.$v1['amount'].'</td>';
+                                  $trHtml .= '<td><a href="javascript:;" class="btn btn-danger pull-left delete_sales_item"><i class="fa fa-times"></i></a></td>';
+                                  $trHtml .= '</tr>';
+                                }
+                                echo $trHtml;
+                              } ?>
+                           </tbody>
+                        </table>
+                     </div>
+                </div>
+            </div>
+            <!--  -->
+            <div class="text-right">
+                <button class="btn btn-info mleft5" type="submit">
+                  <?php echo _l('submit'); ?>
+                </button>
+           </div>
+       <?php echo form_close(); ?>
     </div>
 </div>

@@ -267,6 +267,7 @@ class Projects_model extends App_Model
 
                 $project->client_data = new StdClass();
                 $project->client_data = $this->clients_model->get($project->clientid);
+                $project->sales_commision = $this->get_all_sales_commision($project->id);
 
                 $project            = hooks()->apply_filters('project_get', $project);
                 $GLOBALS['project'] = $project;
@@ -2697,6 +2698,33 @@ class Projects_model extends App_Model
                         'staff_id'   => $staff_id,
                     ]);
                 }
+            }
+        }
+    }
+
+    public function get_all_sales_commision($project_id){
+        $this->db->select(db_prefix() .'project_sales_commision.*, CONCAT('.db_prefix() .'staff.firstname,\' \','.db_prefix() .'staff.lastname) as full_name');
+        $this->db->join(db_prefix() . 'staff', db_prefix() . 'staff.staffid=' . db_prefix() . 'project_sales_commision.staff_id');
+        $this->db->where(db_prefix().'project_sales_commision.project_id', $project_id);
+        $this->db->order_by('id', 'asc');
+
+        return $this->db->get(db_prefix() . 'project_sales_commision')->result_array();
+    }
+    /* update commission row */
+    public function save_sales_commision($project_id, $data){
+        $updatePro = ['profit_percent'=>$data['gross_profit_range']];
+        $this->db->where('id', $project_id);
+        $this->db->update(db_prefix() . 'projects', $updatePro);
+        
+        if((isset($data['sales_staff']) && count($data['sales_staff']) > 0) && isset($data['sales_portion']) && count($data['sales_portion']) > 0 && isset($data['sales_portion_amount']) && count($data['sales_portion_amount']) > 0){
+            for ($ij=0; $ij < count($data['sales_staff']); $ij++) { 
+                $insArr = [
+                    'project_id' => $project_id,
+                    'staff_id'   => $data['sales_staff'][$ij],
+                    'percent'    => $data['sales_portion'][$ij],
+                    'amount'     => $data['sales_portion_amount'][$ij],
+                ];
+                $this->db->insert(db_prefix() . 'project_sales_commision', $insArr);
             }
         }
     }

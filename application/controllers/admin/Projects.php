@@ -351,6 +351,8 @@ class Projects extends AdminController
                 // Completed tasks are excluded from this list because you can't add timesheet on completed task.
                 $data['tasks']                = $this->projects_model->get_tasks($id, 'status != ' . Tasks_model::STATUS_COMPLETE . ' AND billed=0');
                 $data['timesheets_staff_ids'] = $this->projects_model->get_distinct_tasks_timesheets_staff($id);
+            } elseif ($group == 'project_commission') {
+                $data['staff'] = $this->staff_model->get('', ['active' => 1]);
             }
 
             // Discussions
@@ -1183,6 +1185,17 @@ class Projects extends AdminController
             }, $members);
 
             echo json_encode($members);
+        }
+    }
+
+    /* 08-10-2022 */
+    public function save_sales_commision()
+    {
+        if ($this->input->post()) {
+            $project_id = $this->input->post('project_id');
+            $this->projects_model->save_sales_commision($project_id, $this->input->post());
+            set_alert('success', "Commision updated successfully");
+            redirect(admin_url('projects/view/' . $project_id.'?group=project_commission'));
         }
     }
 }

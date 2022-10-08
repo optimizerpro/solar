@@ -123,3 +123,23 @@ ALTER TABLE `tblglobal_tasks`
 
 ALTER TABLE `tblglobal_tasks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--08-10-2022
+ALTER TABLE `tblprojects` ADD `profit_percent` DECIMAL(15,2) NOT NULL DEFAULT '0' AFTER `notify_contacts`;
+ALTER TABLE `tblprojects` CHANGE `profit_percent` `profit_percent` VARCHAR(10) NOT NULL DEFAULT '0';
+
+CREATE TABLE `tblproject_sales_commision` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `staff_id` int(11) NOT NULL,
+  `percent` varchar(10) NOT NULL DEFAULT '0',
+  `amount` decimal(15,2) DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tblproject_sales_commision`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `staff_id` (`staff_id`);
+
+ALTER TABLE `tblproject_sales_commision`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

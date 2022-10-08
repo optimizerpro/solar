@@ -399,6 +399,16 @@
       $('.mydatatable').dataTable({searching: false, paging: false, info: false,ordering:false});
       $(".table-loading").removeClass('table-loading');
    }
+
+   <?php
+   if(isset($project) && $project->profit_percent > 0){ ?>
+      let profit_percent = "<?php echo $project->profit_percent; ?>";
+      $("#gross_profit_range").val(profit_percent);
+      setTimeout(function(){
+         $("#gross_profit_range").change();
+      }, 250);
+   <?php } ?>
+
    $("#gross_profit_range").change(function(){
       var gross_profit_range=$("#gross_profit_range").val();
       var gross_profit=$("#gross_profit").val();
@@ -413,6 +423,68 @@
          $("#commission").val(commission.toFixed(2));
       }
    });
+   /* Sales Person Commision 08-10-2022 Start */
+   var totalPer = 100;
+   $("body").on("change","select[name='sales_portion_main']", function(e){
+      _this = $(this);
+      let mainComm = parseFloat($("#commission").val());
+      if(!isNaN(mainComm) && mainComm > 0){
+         let portionAmt = parseFloat(_this.val());
+         let salesPAmt = (mainComm * portionAmt)/100;
+         salesPAmt = salesPAmt.toFixed(2);
+         _this.closest('tr').find('input[name="sales_portion_amount_main"]').val(salesPAmt);
+         _this.closest('tr').find('span.sales_portion_amount_main').html('$'+salesPAmt);
+      }
+   });
+   $("body").on("click",".delete_sales_item", function(e){
+      $(this).closest('tr').remove();
+      set_used_percentage();
+   });
+   $("body").on("click","button.add_item_to_sales", function(e){
+      let tr = $(this).closest('tr');
+      let sel_staff = tr.find('select[name="assigned_main"]').val();
+      if(sel_staff == ''){
+         return false;
+      }
+      let sel_staff_name = tr.find('select[name="assigned_main"]').find('option:selected').text();
+      let sel_portion = tr.find('select[name="sales_portion_main"]').val();
+      
+      if(totalPer < parseInt(sel_portion)){
+         alert('Not Allow To Assign % More Then Available');
+         return false;
+      }
+      let sel_portion_amount = tr.find('input[name="sales_portion_amount_main"]').val();
+      let trHtml = '<tr class="used">';
+      trHtml += '<td><input type="hidden" name="sales_staff[]" value="'+sel_staff+'">'+sel_staff_name+'</td>';
+      trHtml += '<td><input type="hidden" name="sales_portion[]" value="'+sel_portion+'">'+sel_portion+'%</td>';
+      trHtml += '<td><input type="hidden" name="sales_portion_amount[]" value="'+sel_portion_amount+'">$'+sel_portion_amount+'</td>';
+      trHtml += '<td><a href="javascript:;" class="btn btn-danger pull-left delete_sales_item"><i class="fa fa-times"></i></a></td>';
+      trHtml += '</tr>';
+      $('.commision-sales-table tbody').append(trHtml);
+      reset_main_item_values();
+      set_used_percentage();
+   });
+   function set_used_percentage() {
+      let usedTr = $('.commision-sales-table').find('tr.used');
+      if(usedTr.length > 0){
+         let usedPer = 0;
+         usedTr.each(function(ind, elm) {
+            let percentage = parseInt($(elm).find('input[name="sales_portion[]"]').val());
+            usedPer += percentage;
+         });
+         totalPer = 100 - usedPer;
+         console.log('totalPer 476', totalPer);
+      }
+   }
+   function reset_main_item_values() {
+       var previewArea = $('.commision-sales-table').find('tr.main');
+
+       previewArea.find('.sales_portion_amount_main').text('0.00');
+       previewArea.find('select[name="sales_portion_main"]').val('0');
+       previewArea.find('select[name="assigned_main"]').selectpicker('val','');
+       // init_selectpicker();
+   }
+   /* Sales Person Commision 08-10-2022 End */
 </script>
 </body>
 </html>
