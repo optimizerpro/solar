@@ -133,7 +133,7 @@ CREATE TABLE `tblproject_sales_commision` (
   `project_id` int(11) NOT NULL,
   `staff_id` int(11) NOT NULL,
   `percent` varchar(10) NOT NULL DEFAULT '0',
-  `amount` decimal(15,2) DEFAULT NULL,
+  `amount` decimal(15,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `tblproject_sales_commision`
