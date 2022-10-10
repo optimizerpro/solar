@@ -196,11 +196,6 @@
                                      $i = 0;
                                      $selected = '';
                                      foreach($staff as $member){
-                                      if(isset($proposal)){
-                                        if($proposal->assigned == $member['staffid']) {
-                                          $selected = $member['staffid'];
-                                        }
-                                      }
                                       $i++;
                                      }
                                      echo render_select('assigned_main',$staff,array('staffid',array('firstname','lastname')),'',$selected);
@@ -221,14 +216,70 @@
                                  </td>
                               </tr>
                               <?php
+                              $salesCommAmt = 0;
                               if(isset($project) && isset($project->sales_commision) && count($project->sales_commision) > 0){
                                 $trHtml = '';
                                 foreach ($project->sales_commision as $k1 => $v1) {
+                                $salesCommAmt = $salesCommAmt + $v1['amount'];
                                   $trHtml .= '<tr class="used">';
                                   $trHtml .= '<td><input type="hidden" name="sales_staff[]" value="'.$v1['staff_id'].'">'.$v1['full_name'].'</td>';
                                   $trHtml .= '<td><input type="hidden" name="sales_portion[]" value="'.$v1['percent'].'">'.$v1['percent'].'%</td>';
                                   $trHtml .= '<td><input type="hidden" name="sales_portion_amount[]" value="'.$v1['amount'].'">$'.$v1['amount'].'</td>';
                                   $trHtml .= '<td><a href="javascript:;" class="btn btn-danger pull-left delete_sales_item"><i class="fa fa-times"></i></a></td>';
+                                  $trHtml .= '</tr>';
+                                }
+                                echo $trHtml;
+                              } ?>
+                           </tbody>
+                        </table>
+                     </div>
+                </div>
+            </div>
+            <!--  -->
+            <h3>Pre-net profit : <span id="pre_net_profit">$<?php echo ($gross_profit > 0)?($gross_profit - $salesCommAmt):"0.00"; ?></span></h3>
+            <input type="hidden" name="pre_net_profit" value="<?php echo ($gross_profit > 0)?($gross_profit - $salesCommAmt):"0.00"; ?>">
+            <!--  -->
+            <h4>Additional commission based on gross profit</h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive s_table" style="border-bottom:2px solid gray;margin-bottom:10px;">
+                        <table class="table addi-commision-gross-profit-table items table-main-estimate-edit">
+                           <thead>
+                              <tr>
+                                 <th align="left">Name</th>
+                                 <th align="left">Portion</th>
+                                 <th>Amount</th>
+                                 <th align="center"><i class="fa fa-cog"></i></th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr class="main">
+                                 <td>
+                                    <?php echo render_input('gp_name_main'); ?>
+                                 </td>
+                                 <td>
+                                    <select name="gp_sales_portion_main" class="form-control">
+                                        <option value="0" selected>0</option>
+                                        <?php echo $perDropDown; ?>
+                                    </select>
+                                 </td>
+                                 <td>
+                                    <input type="hidden" name="gp_sales_portion_amount_main" value="">
+                                    <span class="gp_sales_portion_amount_main">0.00</span>
+                                 </td>
+                                 <td>
+                                    <button type="button" class="btn pull-right btn-info add_item_to_gp_sales"><i class="fa fa-check"></i></button>
+                                 </td>
+                              </tr>
+                              <?php
+                              if(isset($project) && isset($project->gp_sales_commision) && count($project->gp_sales_commision) > 0){
+                                $trHtml = '';
+                                foreach ($project->gp_sales_commision as $k1 => $v1) {
+                                  $trHtml .= '<tr class="used">';
+                                  $trHtml .= '<td><input type="hidden" name="gp_sales_name[]" value="'.$v1['gp_name'].'">'.$v1['gp_name'].'</td>';
+                                  $trHtml .= '<td><input type="hidden" name="gp_sales_portion[]" value="'.$v1['percent'].'">'.$v1['percent'].'%</td>';
+                                  $trHtml .= '<td><input type="hidden" name="gp_sales_portion_amount[]" value="'.$v1['amount'].'">$'.$v1['amount'].'</td>';
+                                  $trHtml .= '<td><a href="javascript:;" class="btn btn-danger pull-left gp_delete_sales_item"><i class="fa fa-times"></i></a></td>';
                                   $trHtml .= '</tr>';
                                 }
                                 echo $trHtml;

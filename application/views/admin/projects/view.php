@@ -408,18 +408,22 @@
          $("#gross_profit_range").change();
       }, 250);
    <?php } ?>
-
+   var preNetProfitAmt = 0;
+   var pendingCommAmt = 0;
+   var pendingCommPer = 0;
    $("#gross_profit_range").change(function(){
       var gross_profit_range=$("#gross_profit_range").val();
       var gross_profit=$("#gross_profit").val();
+      preNetProfitAmt = gross_profit;
       if(gross_profit_range==0){
          var commission=0;
          $("#commission_span").html("$0.00");
          $("#commission").val(commission.toFixed(2));
-      }
-      else{
+      } else {
          var commission=(gross_profit*gross_profit_range)/100;
          $("#commission_span").html("$"+commission.toFixed(2));
+         pendingCommAmt = gross_profit - commission;
+         pendingCommPer = 100 - gross_profit_range;
          $("#commission").val(commission.toFixed(2));
       }
    });
@@ -467,13 +471,19 @@
    function set_used_percentage() {
       let usedTr = $('.commision-sales-table').find('tr.used');
       if(usedTr.length > 0){
-         let usedPer = 0;
+         let usedPer = 0; let preAmtUsed = 0;
          usedTr.each(function(ind, elm) {
             let percentage = parseInt($(elm).find('input[name="sales_portion[]"]').val());
+            let rowPreAmtUsed = parseInt($(elm).find('input[name="sales_portion_amount[]"]').val());
             usedPer += percentage;
+            preAmtUsed += rowPreAmtUsed;
          });
+         pendingCommAmt += preAmtUsed;
+         let mainProfit = parseFloat($("#gross_profit").val());
+         preNetProfitAmt = mainProfit - preAmtUsed;
+         $("#pre_net_profit").text("$"+preNetProfitAmt);
+         $("input[name='pre_net_profit']").val(preNetProfitAmt);
          totalPer = 100 - usedPer;
-         console.log('totalPer 476', totalPer);
       }
    }
    function reset_main_item_values() {
@@ -485,6 +495,68 @@
        // init_selectpicker();
    }
    /* Sales Person Commision 08-10-2022 End */
+
+   /* Gross Profit Commision 10-10-2022 Start */
+   $("body").on("change","select[name='gp_sales_portion_main']", function(e){
+      _this = $(this);
+      let penProfit = parseFloat($("input[name='pre_net_profit']").val());
+      if(!isNaN(penProfit) && penProfit > 0){
+         let portionAmt = parseFloat(_this.val());
+         let salesPAmt = (penProfit * portionAmt)/100;
+         salesPAmt = salesPAmt.toFixed(2);
+         _this.closest('tr').find('input[name="gp_sales_portion_amount_main"]').val(salesPAmt);
+         _this.closest('tr').find('span.gp_sales_portion_amount_main').html('$'+salesPAmt);
+      }
+   });
+   $("body").on("click",".gp_delete_sales_item", function(e){
+      $(this).closest('tr').remove();
+      set_used_gp_percent();
+   });
+   $("body").on("click","button.add_item_to_gp_sales", function(e){
+      let tr = $(this).closest('tr');
+      
+      let sel_staff_name = tr.find('input[name="gp_name_main"]').val();
+      if(sel_staff_name == ''){
+         return false;
+      }
+      let sel_portion = tr.find('select[name="gp_sales_portion_main"]').val();
+      let penProfit = parseFloat($("input[name='pre_net_profit']").val());
+      let sel_portion_amount = tr.find('input[name="gp_sales_portion_amount_main"]').val();
+      if(penProfit < parseFloat(sel_portion_amount)){
+         alert('Not Allow To Assign More Amount Then Available');
+         return false;
+      }
+      let trHtml = '<tr class="used">';
+      trHtml += '<td><input type="hidden" name="gp_sales_name[]" value="'+sel_staff_name+'">'+sel_staff_name+'</td>';
+      trHtml += '<td><input type="hidden" name="gp_sales_portion[]" value="'+sel_portion+'">'+sel_portion+'%</td>';
+      trHtml += '<td><input type="hidden" name="gp_sales_portion_amount[]" value="'+sel_portion_amount+'">$'+sel_portion_amount+'</td>';
+      trHtml += '<td><a href="javascript:;" class="btn btn-danger pull-left gp_delete_sales_item"><i class="fa fa-times"></i></a></td>';
+      trHtml += '</tr>';
+      $('.addi-commision-gross-profit-table tbody').append(trHtml);
+      reset_gp_main_item_values();
+      set_used_gp_amount();
+   });
+   function set_used_gp_amount() {
+      let usedTr = $('.addi-commision-gross-profit-table').find('tr.used');
+      if(usedTr.length > 0){
+         let gpAmtRow = 0;
+         usedTr.each(function(ind, elm) {
+            let gpAmt = parseFloat($(elm).find('input[name="gp_sales_portion_amount[]"]').val());
+            gpAmtRow += gpAmt;
+         });
+         let penProfit = parseFloat($("input[name='pre_net_profit']").val());
+         penProfit = penProfit - gpAmtRow;
+         $("input[name='pre_net_profit']").val(penProfit);
+         $("#pre_net_profit").text("$"+penProfit);
+      }
+   }
+   function reset_gp_main_item_values() {
+       var previewArea = $('.addi-commision-gross-profit-table').find('tr.main');
+       previewArea.find('.gp_sales_portion_amount_main').text('0.00');
+       previewArea.find('input[name="gp_name_main"]').val('');
+       previewArea.find('select[name="gp_sales_portion_main"]').val('');
+   }
+   /* Gross Profit Commision 10-10-2022 End */
 </script>
 </body>
 </html>
