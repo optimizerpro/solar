@@ -268,6 +268,8 @@ class Projects_model extends App_Model
                 $project->client_data = new StdClass();
                 $project->client_data = $this->clients_model->get($project->clientid);
                 $project->sales_commision = $this->get_all_sales_commision($project->id);
+                $project->gp_sales_commision = $this->get_gross_net_commision($project->id, 0);
+                $project->np_sales_commision = $this->get_gross_net_commision($project->id, 1);
 
                 $project            = hooks()->apply_filters('project_get', $project);
                 $GLOBALS['project'] = $project;
@@ -2710,12 +2712,23 @@ class Projects_model extends App_Model
 
         return $this->db->get(db_prefix() . 'project_sales_commision')->result_array();
     }
+    public function get_gross_net_commision($project_id, $type = 0){
+        $this->db->select('*');
+        $this->db->where('project_id', $project_id);
+        $this->db->where('type', $type);
+        $this->db->order_by('id', 'asc');
+
+        return $this->db->get(db_prefix() . 'project_gross_net_commision')->result_array();
+    }
     /* update commission row */
     public function save_sales_commision($project_id, $data){
         $updatePro = ['profit_percent'=>$data['gross_profit_range']];
         $this->db->where('id', $project_id);
         $this->db->update(db_prefix() . 'projects', $updatePro);
-        
+
+        $this->db->where('project_id', $project_id);
+        $this->db->delete(db_prefix() . 'project_sales_commision');
+
         if((isset($data['sales_staff']) && count($data['sales_staff']) > 0) && isset($data['sales_portion']) && count($data['sales_portion']) > 0 && isset($data['sales_portion_amount']) && count($data['sales_portion_amount']) > 0){
             for ($ij=0; $ij < count($data['sales_staff']); $ij++) { 
                 $insArr = [
@@ -2725,6 +2738,35 @@ class Projects_model extends App_Model
                     'amount'     => $data['sales_portion_amount'][$ij],
                 ];
                 $this->db->insert(db_prefix() . 'project_sales_commision', $insArr);
+            }
+        }
+
+        $this->db->where('project_id', $project_id);
+        $this->db->delete(db_prefix() . 'project_gross_net_commision');
+        
+        if((isset($data['gp_sales_name']) && count($data['gp_sales_name']) > 0) && isset($data['gp_sales_portion']) && count($data['gp_sales_portion']) > 0 && isset($data['gp_sales_portion_amount']) && count($data['gp_sales_portion_amount']) > 0){
+            for ($ij=0; $ij < count($data['gp_sales_name']); $ij++) { 
+                $insArr = [
+                    'project_id' => $project_id,
+                    'name'       => $data['gp_sales_name'][$ij],
+                    'type'       => 0,
+                    'percent'    => $data['gp_sales_portion'][$ij],
+                    'amount'     => $data['gp_sales_portion_amount'][$ij],
+                ];
+                $this->db->insert(db_prefix() . 'project_gross_net_commision', $insArr);
+            }
+        }
+
+        if((isset($data['np_sales_name']) && count($data['np_sales_name']) > 0) && isset($data['np_sales_portion']) && count($data['np_sales_portion']) > 0 && isset($data['np_sales_portion_amount']) && count($data['np_sales_portion_amount']) > 0){
+            for ($ij=0; $ij < count($data['np_sales_name']); $ij++) { 
+                $insArr = [
+                    'project_id' => $project_id,
+                    'name'       => $data['np_sales_name'][$ij],
+                    'type'       => 1,
+                    'percent'    => $data['np_sales_portion'][$ij],
+                    'amount'     => $data['np_sales_portion_amount'][$ij],
+                ];
+                $this->db->insert(db_prefix() . 'project_gross_net_commision', $insArr);
             }
         }
     }

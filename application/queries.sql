@@ -143,3 +143,20 @@ ALTER TABLE `tblproject_sales_commision`
 
 ALTER TABLE `tblproject_sales_commision`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--11-10-2022
+CREATE TABLE `tblproject_gross_net_commision` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `type` TINYINT(2) NULL DEFAULT '0' COMMENT '0=gross profit,1=net profit',
+  `percent` varchar(10) NOT NULL DEFAULT '0',
+  `amount` decimal(15,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tblproject_gross_net_commision`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`);
+
+ALTER TABLE `tblproject_gross_net_commision`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

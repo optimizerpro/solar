@@ -409,8 +409,8 @@
       }, 250);
    <?php } ?>
    var preNetProfitAmt = 0;
-   var pendingCommAmt = 0;
-   var pendingCommPer = 0;
+   var pendingCommAmt = parseFloat($("#pendingCommAmt").val());
+   var pendingCommPer = parseFloat($("#pendingCommPer").val());
    $("#gross_profit_range").change(function(){
       var gross_profit_range=$("#gross_profit_range").val();
       var gross_profit=$("#gross_profit").val();
@@ -424,6 +424,8 @@
          $("#commission_span").html("$"+commission.toFixed(2));
          pendingCommAmt = gross_profit - commission;
          pendingCommPer = 100 - gross_profit_range;
+         $("#pendingCommAmt").val(pendingCommAmt);
+         $("#pendingCommPer").val(pendingCommPer);
          $("#commission").val(commission.toFixed(2));
       }
    });
@@ -478,7 +480,7 @@
             usedPer += percentage;
             preAmtUsed += rowPreAmtUsed;
          });
-         pendingCommAmt += preAmtUsed;
+         
          let mainProfit = parseFloat($("#gross_profit").val());
          preNetProfitAmt = mainProfit - preAmtUsed;
          $("#pre_net_profit").text("$"+preNetProfitAmt);
@@ -499,8 +501,9 @@
    /* Gross Profit Commision 10-10-2022 Start */
    $("body").on("change","select[name='gp_sales_portion_main']", function(e){
       _this = $(this);
-      let penProfit = parseFloat($("input[name='pre_net_profit']").val());
+      let penProfit = getPenDistAmt();
       if(!isNaN(penProfit) && penProfit > 0){
+         penProfit = parseFloat($("#pendingCommAmt").val());
          let portionAmt = parseFloat(_this.val());
          let salesPAmt = (penProfit * portionAmt)/100;
          salesPAmt = salesPAmt.toFixed(2);
@@ -508,9 +511,19 @@
          _this.closest('tr').find('span.gp_sales_portion_amount_main').html('$'+salesPAmt);
       }
    });
+   function getPenDistAmt(mode = 'gross') {
+      let penProfit = parseFloat($("#pendingCommAmt").val());
+      if(mode == 'gross'){
+         let gross_used = parseFloat($("#gross_used").val());
+         return penProfit - gross_used;
+      } else {
+         let net_used = parseFloat($("#net_used").val());
+         return penProfit - net_used;
+      }
+   }
    $("body").on("click",".gp_delete_sales_item", function(e){
       $(this).closest('tr').remove();
-      set_used_gp_percent();
+      set_used_gp_amount();
    });
    $("body").on("click","button.add_item_to_gp_sales", function(e){
       let tr = $(this).closest('tr');
@@ -520,9 +533,9 @@
          return false;
       }
       let sel_portion = tr.find('select[name="gp_sales_portion_main"]').val();
-      let penProfit = parseFloat($("input[name='pre_net_profit']").val());
+      let penDistAmt = getPenDistAmt();
       let sel_portion_amount = tr.find('input[name="gp_sales_portion_amount_main"]').val();
-      if(penProfit < parseFloat(sel_portion_amount)){
+      if(penDistAmt < parseFloat(sel_portion_amount)){
          alert('Not Allow To Assign More Amount Then Available');
          return false;
       }
@@ -538,17 +551,15 @@
    });
    function set_used_gp_amount() {
       let usedTr = $('.addi-commision-gross-profit-table').find('tr.used');
+      let gpAmtRow = 0;
       if(usedTr.length > 0){
-         let gpAmtRow = 0;
          usedTr.each(function(ind, elm) {
             let gpAmt = parseFloat($(elm).find('input[name="gp_sales_portion_amount[]"]').val());
             gpAmtRow += gpAmt;
          });
-         let penProfit = parseFloat($("input[name='pre_net_profit']").val());
-         penProfit = penProfit - gpAmtRow;
-         $("input[name='pre_net_profit']").val(penProfit);
-         $("#pre_net_profit").text("$"+penProfit);
       }
+      $("#gross_used").val(gpAmtRow.toFixed(2));
+      $(".gross_used").text("$"+gpAmtRow.toFixed(2));
    }
    function reset_gp_main_item_values() {
        var previewArea = $('.addi-commision-gross-profit-table').find('tr.main');
@@ -557,6 +568,69 @@
        previewArea.find('select[name="gp_sales_portion_main"]').val('');
    }
    /* Gross Profit Commision 10-10-2022 End */
+
+
+   /* Net Profit Commision 11-10-2022 Start */
+   $("body").on("change","select[name='np_sales_portion_main']", function(e){
+      _this = $(this);
+      let penProfit = getPenDistAmt('net');
+      if(!isNaN(penProfit) && penProfit > 0){
+         penProfit = parseFloat($("#pendingCommAmt").val());
+         let portionAmt = parseFloat(_this.val());
+         let salesPAmt = (penProfit * portionAmt)/100;
+         salesPAmt = salesPAmt.toFixed(2);
+         _this.closest('tr').find('input[name="np_sales_portion_amount_main"]').val(salesPAmt);
+         _this.closest('tr').find('span.np_sales_portion_amount_main').html('$'+salesPAmt);
+      }
+   });
+   
+   $("body").on("click",".np_delete_sales_item", function(e){
+      $(this).closest('tr').remove();
+      set_used_np_amount();
+   });
+   $("body").on("click","button.add_item_to_np_sales", function(e){
+      let tr = $(this).closest('tr');
+      
+      let sel_staff_name = tr.find('input[name="np_name_main"]').val();
+      if(sel_staff_name == ''){
+         return false;
+      }
+      let sel_portion = tr.find('select[name="np_sales_portion_main"]').val();
+      let penDistAmt = getPenDistAmt('net');
+      let sel_portion_amount = tr.find('input[name="np_sales_portion_amount_main"]').val();
+      if(penDistAmt < parseFloat(sel_portion_amount)){
+         alert('Not Allow To Assign More Amount Then Available');
+         return false;
+      }
+      let trHtml = '<tr class="used">';
+      trHtml += '<td><input type="hidden" name="np_sales_name[]" value="'+sel_staff_name+'">'+sel_staff_name+'</td>';
+      trHtml += '<td><input type="hidden" name="np_sales_portion[]" value="'+sel_portion+'">'+sel_portion+'%</td>';
+      trHtml += '<td><input type="hidden" name="np_sales_portion_amount[]" value="'+sel_portion_amount+'">$'+sel_portion_amount+'</td>';
+      trHtml += '<td><a href="javascript:;" class="btn btn-danger pull-left np_delete_sales_item"><i class="fa fa-times"></i></a></td>';
+      trHtml += '</tr>';
+      $('.addi-commision-net-profit-table tbody').append(trHtml);
+      reset_np_main_item_values();
+      set_used_np_amount();
+   });
+   function set_used_np_amount() {
+      let usedTr = $('.addi-commision-net-profit-table').find('tr.used');
+      let gpAmtRow = 0;
+      if(usedTr.length > 0){
+         usedTr.each(function(ind, elm) {
+            let gpAmt = parseFloat($(elm).find('input[name="np_sales_portion_amount[]"]').val());
+            gpAmtRow += gpAmt;
+         });
+      }
+      $("#net_used").val(gpAmtRow.toFixed(2));
+      $(".net_used").text("$"+gpAmtRow.toFixed(2));
+   }
+   function reset_np_main_item_values() {
+       var previewArea = $('.addi-commision-net-profit-table').find('tr.main');
+       previewArea.find('.np_sales_portion_amount_main').text('0.00');
+       previewArea.find('input[name="np_name_main"]').val('');
+       previewArea.find('select[name="np_sales_portion_main"]').val('');
+   }
+   /* Net Profit Commision 11-10-2022 End */
 </script>
 </body>
 </html>
