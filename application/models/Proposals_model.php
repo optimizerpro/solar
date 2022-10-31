@@ -945,6 +945,8 @@ class Proposals_model extends App_Model
             $data->country = $_data->country;
             $data->state   = $_data->state;
             $data->city    = $_data->city;
+            $data->policy_number    = $_data->policy_number;
+            $data->claim_number    = $_data->claim_number;
             if(isset($_REQUEST['get_bill_ship'])){
                 $this->load->model('clients_model');
                 $data->bill = $this->clients_model->get_lead_billing_and_shipping_details($rel_id);

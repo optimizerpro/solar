@@ -160,3 +160,8 @@ ALTER TABLE `tblproject_gross_net_commision`
 
 ALTER TABLE `tblproject_gross_net_commision`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- 31-10-2022
+
+ALTER TABLE `tblleads` ADD `policy_number` VARCHAR(255) NULL AFTER `ano_phone`, ADD `claim_number` VARCHAR(255) NULL AFTER `policy_number`;
+ALTER TABLE `tblcontracts` ADD `claim_number` VARCHAR(255) NULL AFTER `policy_number`;

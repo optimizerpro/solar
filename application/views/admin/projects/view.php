@@ -503,7 +503,11 @@
       _this = $(this);
       let penProfit = getPenDistAmt();
       if(!isNaN(penProfit) && penProfit > 0){
-         penProfit = parseFloat($("#pendingCommAmt").val());
+         //penProfit = parseFloat($("#pendingCommAmt").val());
+         let guUsed = parseFloat($("#gross_used").val());
+         guUsed = isNaN(guUsed)?0:guUsed;
+         penProfit = (parseFloat($("input[name='pre_net_profit']").val()) - guUsed);
+         //penProfit = parseFloat($("input[name='pre_net_profit']").val());
          let portionAmt = parseFloat(_this.val());
          let salesPAmt = (penProfit * portionAmt)/100;
          salesPAmt = salesPAmt.toFixed(2);
@@ -560,6 +564,9 @@
       }
       $("#gross_used").val(gpAmtRow.toFixed(2));
       $(".gross_used").text("$"+gpAmtRow.toFixed(2));
+      const preNet = getPenDistAmt('gross');
+      $("input[name='net_profit']").val(preNet.toFixed(2));
+      $(".net_profit").text("$"+preNet.toFixed(2));
    }
    function reset_gp_main_item_values() {
        var previewArea = $('.addi-commision-gross-profit-table').find('tr.main');
@@ -575,7 +582,10 @@
       _this = $(this);
       let penProfit = getPenDistAmt('net');
       if(!isNaN(penProfit) && penProfit > 0){
-         penProfit = parseFloat($("#pendingCommAmt").val());
+         //penProfit = parseFloat($("#pendingCommAmt").val());
+         let npUsed = parseFloat($("#net_used").val());
+         npUsed = isNaN(npUsed)?0:npUsed;
+         penProfit = (parseFloat($("input[name='net_profit']").val()) - npUsed);
          let portionAmt = parseFloat(_this.val());
          let salesPAmt = (penProfit * portionAmt)/100;
          salesPAmt = salesPAmt.toFixed(2);
@@ -623,6 +633,9 @@
       }
       $("#net_used").val(gpAmtRow.toFixed(2));
       $(".net_used").text("$"+gpAmtRow.toFixed(2));
+      const fnlNet = getPenDistAmt('net');
+      $("input[name='final_net_profit']").val(fnlNet.toFixed(2));
+      $(".final_net_profit").text("$"+fnlNet.toFixed(2));
    }
    function reset_np_main_item_values() {
        var previewArea = $('.addi-commision-net-profit-table').find('tr.main');

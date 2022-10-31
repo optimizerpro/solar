@@ -375,6 +375,15 @@
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_assigned'); ?></p>
 
             <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->assigned != 0 ? get_staff_full_name($lead->assigned) : '-') ?></p>
+            <!-- 31-10-2022 -->
+            <p class="text-muted lead-field-heading"><?php echo _l('Policy Number'); ?></p>
+
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead)? $lead->policy_number : '-') ?></p>
+
+            <p class="text-muted lead-field-heading"><?php echo _l('Claim Number'); ?></p>
+
+            <p class="bold font-medium-xs mbot15"><?php echo (isset($lead)? $lead->claim_number : '-') ?></p>
+            <!-- 31-10-2022 -->
 
             <p class="text-muted lead-field-heading"><?php echo _l('tags'); ?></p>
 
@@ -783,6 +792,19 @@
             </div>
          </div> -->
          <div class="clearfix"></div>
+         <div class="col-md-12 mtop15">
+            <div class="row">
+               <?php $value = (isset($lead) ? $lead->policy_number : ''); ?>
+                  <div class="col-md-6">
+                     <?php echo render_input('policy_number','Policy Number',$value); ?>
+                  </div>
+                  <?php $value = (isset($lead) ? $lead->claim_number : ''); ?>
+                  <div class="col-md-6">
+                     <?php echo render_input('claim_number','Claim Number',$value); ?>
+                  </div>
+               </div>
+         </div>
+         <div class="clearfix"></div>
          <div class="col-md-12">
 
             <?php $value = (isset($lead) ? $lead->description : ''); ?>
@@ -816,23 +838,14 @@
                </div>
 
                   <?php if(!isset($lead)){ ?>
-
                   <div class="checkbox-inline checkbox checkbox-primary">
-
                      <input type="checkbox" name="contacted_today" id="contacted_today" checked>
-
                      <label for="contacted_today"><?php echo _l('lead_add_edit_contacted_today'); ?></label>
-
                   </div>
-
                 <?php } ?>
-
                </div>
-
             </div>
-
          </div>
-
          <div class="col-md-12 mtop15">
 
             <?php $rel_id = (isset($lead) ? $lead->id : false); ?>

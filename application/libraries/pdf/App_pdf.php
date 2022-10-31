@@ -410,8 +410,8 @@ abstract class App_pdf extends TCPDF
                 $dol_value = get_custom_field_value($this->contract->leadDetail->id, 3, 'leads');     
                 $dol_value = ($dol_value?$dol_value:'-');
                 
-                $cn_value = get_custom_field_value($this->contract->leadDetail->id, 5, 'leads');
-                $cn_value = ($cn_value?$cn_value:'-'); 
+                /*$cn_value = get_custom_field_value($this->contract->leadDetail->id, 5, 'leads');
+                $cn_value = ($cn_value?$cn_value:'-'); */
 
                 $an_value = get_custom_field_value($this->contract->leadDetail->id, 7, 'leads');
                 $an_value = ($an_value?$an_value:'-');
@@ -419,9 +419,11 @@ abstract class App_pdf extends TCPDF
                 $ap_value = get_custom_field_value($this->contract->leadDetail->id, 8, 'leads');
                 $ap_value = ($ap_value?$ap_value:'-');
 
-                $pn_value = get_custom_field_value($this->contract->leadDetail->id, 29, 'leads');
-                $pn_value = ($pn_value?$pn_value:'-');
+                /*$pn_value = get_custom_field_value($this->contract->leadDetail->id, 29, 'leads');
+                $pn_value = ($pn_value?$pn_value:'-');*/
             }
+            $cn_value = ($this->contract->claim_number?$this->contract->claim_number:'-');
+            $pn_value = ($this->contract->policy_number?$this->contract->policy_number:'-');
             $content = str_replace('{{INSURANCE_COMPANY}}', $ic_value, $content);
             $content = str_replace('{{DATE_OF_LOSS}}', $dol_value, $content);
             $content = str_replace('{{CLAIM_NUMBER}}', $cn_value, $content);

@@ -23,13 +23,15 @@
                $rel_type = $contract->rel_type;
              }
             }*/
-            $description=$manufacturer_warranty=$roll_yard=$shingle_color=$ventilation=$install_decking=$fastners='';
+            $description=$manufacturer_warranty=$roll_yard=$shingle_color=$ventilation=$install_decking=$fastners=$policy_number=$claim_number='';
             if(isset($contract)){if($contract->manufacturer_warranty !=''){$manufacturer_warranty= $contract->manufacturer_warranty;}}; 
             if(isset($contract)){if($contract->roll_yard !=''){$roll_yard= $contract->roll_yard;}}; 
             if(isset($contract)){if($contract->shingle_color !=''){$shingle_color= $contract->shingle_color;}}; 
             if(isset($contract)){if($contract->ventilation !=''){$ventilation= $contract->ventilation;}}; 
             if(isset($contract)){if($contract->install_decking !=''){$install_decking= $contract->install_decking;}}; 
             if(isset($contract)){if($contract->fastners !=''){$fastners= $contract->fastners;}}; 
+            if(isset($contract)){if($contract->policy_number !=''){$policy_number= $contract->policy_number;}}; 
+            if(isset($contract)){if($contract->claim_number !=''){$claim_number= $contract->claim_number;}}; 
             if(isset($contract)){if($contract->description !=''){$description= addslashes($contract->description);}}; 
             $agreement_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Agreement Details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="manufacturer_warranty">Manufacturer Warranty (yrs)</label>';
             $agreement_fields.='<input type="text" id="manufacturer_warranty" name="manufacturer_warranty" value="'.$manufacturer_warranty.'" class="form-control"></div></div>';
@@ -53,6 +55,11 @@
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div>';
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="install_decking">Install Decking</label><input type="text" id="install_decking" name="install_decking" value="'.$install_decking.'" class="form-control"></div></div>';
             $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="fastners">Fasteners</label><input type="text" id="fastners" name="fastners" value="'.$fastners.'" class="form-control"></div></div>';
+
+            /* 31-10-2022 */
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'" class="form-control"></div></div>';
+            $agreement_fields.='<div class="col-md-6"><div class="form-group"><label for="claim_number">Claim Number</label><input type="text" id="claim_number" name="claim_number" value="'.$claim_number.'" class="form-control"></div></div>';
+            /* 31-10-2022 */
 
             /* 10-09-2022 */
             $policy_number = $acv_rcv = $adj_appoint_date = $adj_appoint_time = '';
@@ -197,6 +204,9 @@
                         <option value=""></option>
                         <option value="lead" <?php if((isset($contract) && $contract->rel_type == 'lead') || $this->input->get('rel_type')){if($rel_type == 'lead'){echo 'selected';}} ?>><?php echo _l('proposal_for_lead'); ?></option>
                         <option value="customer" <?php if((isset($contract) &&  $contract->rel_type == 'customer') || $rel_type != ''){if($rel_type == 'customer'){echo 'selected';}} ?>><?php echo _l('proposal_for_customer'); ?></option>
+                        <?php if(!isset($contract)){ ?>
+                        <option value="new_lead"><?php echo _l('new_lead'); ?></option>
+                     <?php } ?>
                      </select>
                   </div>
 
@@ -1115,6 +1125,8 @@ $('body').on('change','#rel_id', function() {
 
       } else {
         currency_selector.attr('disabled',false);
+        $('input[name="policy_number"]').val(response.policy_number);
+        $('input[name="claim_number"]').val(response.claim_number);
      }
      var proposal_to_wrapper = $('[app-field-wrapper="proposal_to"]');
      if(response.is_using_company == false && !empty(response.company)) {
@@ -1141,17 +1153,22 @@ $('body').on('change','#rel_id', function() {
 });
 proposal_rel_id_select();
 _rel_type.on('change', function() {
-   var clonedSelect = _rel_id.html('').clone();
-   _rel_id.selectpicker('destroy').remove();
-   _rel_id = clonedSelect;
-   $('#rel_id_select').append(clonedSelect);
-   proposal_rel_id_select();
-   if($(this).val() != ''){
-     _rel_id_wrapper.removeClass('hide');
+   if($(this).val() == "new_lead"){
+      init_lead();
+      $(this).val("");
    } else {
-     _rel_id_wrapper.addClass('hide');
+      var clonedSelect = _rel_id.html('').clone();
+      _rel_id.selectpicker('destroy').remove();
+      _rel_id = clonedSelect;
+      $('#rel_id_select').append(clonedSelect);
+      proposal_rel_id_select();
+      if($(this).val() != ''){
+        _rel_id_wrapper.removeClass('hide');
+      } else {
+        _rel_id_wrapper.addClass('hide');
+      }
+      $('.rel_id_label').html(_rel_type.find('option:selected').text());
    }
-   $('.rel_id_label').html(_rel_type.find('option:selected').text());
  });
  function proposal_rel_id_select(){
    var serverData = {};
