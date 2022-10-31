@@ -354,7 +354,9 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{ACV_RCV_TEXT}}', strtoupper($this->contract->acv_rcv), $content);
             
             $ad_allowance_plain = formatAmount($this->contract->ad_allowance, true);
+            $ad_allowance_plain = $ad_allowance_plain?$ad_allowance_plain:0;
             $acv_rcv_plus_tax_plain = formatAmount($this->contract->acv_rcv_plus_tax, true);
+            $acv_rcv_plus_tax_plain = $acv_rcv_plus_tax_plain?$acv_rcv_plus_tax_plain:0;
             $adv_cust_total = $ad_allowance_plain + $acv_rcv_plus_tax_plain;
             //$adv_cust_total = formatAmount($adv_cust_total);
 
@@ -365,10 +367,13 @@ abstract class App_pdf extends TCPDF
             $content = str_replace('{{CUSTOMER_TOTAL}}', $adv_cust_total, $content);
 
             $first_check_plain = formatAmount($this->contract->first_check, true);
+            $first_check_plain = $first_check_plain ? $first_check_plain : 0;
             $first_check = formatAmount($this->contract->first_check);
             $second_check_plain = formatAmount($this->contract->second_check, true);
+            $second_check_plain = $second_check_plain?$second_check_plain:0;
             $second_check = formatAmount($this->contract->second_check);
             $deductible_plain = formatAmount($this->contract->deductible, true);
+            $deductible_plain = $deductible_plain?$deductible_plain:0;
             $deductible = $this->contract->deductible;
             $content = str_replace('{{FIRST_CHECK}}', $this->contract->first_check, $content);
             $content = str_replace('{{SECOND_CHECK}}', $this->contract->second_check, $content);
