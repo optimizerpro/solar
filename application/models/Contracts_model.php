@@ -195,9 +195,10 @@ class Contracts_model extends App_Model
             $lead_id=$this->leads_model->add($_data);
             $data['rel_type']='lead';
             $data['rel_id']=$lead_id;
+
+            unset($_data['policy_number']);
+            unset($_data['claim_number']);
             $data=array_diff_key($data,$_data);
-            $data['policy_number']=$_data['policy_number'];
-            $data['claim_number']=$_data['claim_number'];
         }
         if(isset($data['description_agreement'])){
             $data['description']=$data['description_agreement'];
