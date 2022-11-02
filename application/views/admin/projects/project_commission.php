@@ -240,6 +240,7 @@
                 </div>
             </div>
             <!--  -->
+            <input type="hidden" id="commission_used" value="<?php echo ($salesCommAmt > 0)?$salesCommAmt:"0"; ?>">
             <h5>Pre-net profit : <span id="pre_net_profit">$<?php echo ($gross_profit > 0)?($gross_profit - $salesCommAmt):"0.00"; ?></span></h5>
             <input type="hidden" name="pre_net_profit" value="<?php echo ($gross_profit > 0)?($gross_profit - $salesCommAmt):"0"; ?>">
             

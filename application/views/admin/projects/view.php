@@ -483,11 +483,8 @@
             usedPer += percentage;
             preAmtUsed += rowPreAmtUsed;
          });
-         
-         let mainProfit = parseFloat($("#gross_profit").val());
-         preNetProfitAmt = mainProfit - preAmtUsed;
-         $("#pre_net_profit").text("$"+preNetProfitAmt);
-         $("input[name='pre_net_profit']").val(preNetProfitAmt);
+         $("#commission_used").val(preAmtUsed);
+         cal_net_final_net();
          totalPer = 100 - usedPer;
       }
    }
@@ -519,14 +516,14 @@
       }
    });
    function getPenDistAmt(mode = 'gross') {
-      let penProfit = parseFloat($("#pendingCommAmt").val());
+      let penProfit  = parseFloat($("#gross_profit").val());
+      let preAmtUsed = parseFloat($("#commission_used").val());
+      let gross_used = parseFloat($("#gross_used").val());
+      let net_used   = parseFloat($("#net_used").val());
       if(mode == 'gross'){
-         let gross_used = parseFloat($("#gross_used").val());
-         return penProfit - gross_used;
+         return penProfit - preAmtUsed - gross_used;
       } else {
-         let gross_used = parseFloat($("#gross_used").val());
-         let net_used = parseFloat($("#net_used").val());
-         return penProfit - gross_used - net_used;
+         return penProfit - preAmtUsed - gross_used - net_used;
       }
    }
    $("body").on("click",".gp_delete_sales_item", function(e){
@@ -638,6 +635,11 @@
       cal_net_final_net();
    }
    function cal_net_final_net() {
+      let commUsed = parseFloat($("#commission_used").val());
+      let mainProfit = parseFloat($("#gross_profit").val());
+      preNetProfitAmt = mainProfit - commUsed;
+      $("#pre_net_profit").text("$"+parseFloat(preNetProfitAmt).toFixed(2));
+      $("input[name='pre_net_profit']").val(parseFloat(preNetProfitAmt).toFixed(2));
       const preNet = getPenDistAmt('gross');
       $("input[name='net_profit']").val(preNet.toFixed(2));
       $("#net_profit").text("$"+preNet.toFixed(2));
