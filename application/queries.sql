@@ -165,3 +165,6 @@ ALTER TABLE `tblproject_gross_net_commision`
 
 ALTER TABLE `tblleads` ADD `policy_number` VARCHAR(255) NULL AFTER `ano_phone`, ADD `claim_number` VARCHAR(255) NULL AFTER `policy_number`;
 ALTER TABLE `tblcontracts` ADD `claim_number` VARCHAR(255) NULL AFTER `policy_number`;
+
+-- 02-11-2022
+ALTER TABLE `tblclients` ADD `policy_number` VARCHAR(255) NULL AFTER `addedfrom`, ADD `claim_number` VARCHAR(255) NULL AFTER `policy_number`;

@@ -135,7 +135,14 @@ class Clients_model extends App_Model
             $contact_data['phonenumber'] = $data['contact_phonenumber'];
             unset($data['contact_phonenumber']);
         }
-
+        if(isset($data['leadid']) && $data['leadid'] != ''){
+            $this->load->model('leads_model');
+            $leadRow = $this->leads_model->get($data['leadid']);
+            if($leadRow){
+                $data['policy_number'] = $leadRow->policy_number;
+                $data['claim_number'] = $leadRow->claim_number;
+            }
+        }
         $this->db->insert(db_prefix() . 'clients', array_merge($data, [
             'datecreated' => date('Y-m-d H:i:s'),
             'addedfrom'   => is_staff_logged_in() ? get_staff_user_id() : 0,

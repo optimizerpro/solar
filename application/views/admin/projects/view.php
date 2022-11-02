@@ -406,6 +406,9 @@
       $("#gross_profit_range").val(profit_percent);
       setTimeout(function(){
          $("#gross_profit_range").change();
+         setTimeout(function(){
+            cal_net_final_net();
+         }, 250);
       }, 250);
    <?php } ?>
    var preNetProfitAmt = 0;
@@ -505,7 +508,7 @@
       if(!isNaN(penProfit) && penProfit > 0){
          //penProfit = parseFloat($("#pendingCommAmt").val());
          let guUsed = parseFloat($("#gross_used").val());
-         guUsed = isNaN(guUsed)?0:guUsed;
+         guUsed = 0;//isNaN(guUsed)?0:guUsed;
          penProfit = (parseFloat($("input[name='pre_net_profit']").val()) - guUsed);
          //penProfit = parseFloat($("input[name='pre_net_profit']").val());
          let portionAmt = parseFloat(_this.val());
@@ -521,8 +524,9 @@
          let gross_used = parseFloat($("#gross_used").val());
          return penProfit - gross_used;
       } else {
+         let gross_used = parseFloat($("#gross_used").val());
          let net_used = parseFloat($("#net_used").val());
-         return penProfit - net_used;
+         return penProfit - gross_used - net_used;
       }
    }
    $("body").on("click",".gp_delete_sales_item", function(e){
@@ -564,9 +568,7 @@
       }
       $("#gross_used").val(gpAmtRow.toFixed(2));
       $(".gross_used").text("$"+gpAmtRow.toFixed(2));
-      const preNet = getPenDistAmt('gross');
-      $("input[name='net_profit']").val(preNet.toFixed(2));
-      $(".net_profit").text("$"+preNet.toFixed(2));
+      cal_net_final_net();
    }
    function reset_gp_main_item_values() {
        var previewArea = $('.addi-commision-gross-profit-table').find('tr.main');
@@ -584,7 +586,7 @@
       if(!isNaN(penProfit) && penProfit > 0){
          //penProfit = parseFloat($("#pendingCommAmt").val());
          let npUsed = parseFloat($("#net_used").val());
-         npUsed = isNaN(npUsed)?0:npUsed;
+         npUsed = 0;//isNaN(npUsed)?0:npUsed;
          penProfit = (parseFloat($("input[name='net_profit']").val()) - npUsed);
          let portionAmt = parseFloat(_this.val());
          let salesPAmt = (penProfit * portionAmt)/100;
@@ -608,7 +610,7 @@
       let sel_portion = tr.find('select[name="np_sales_portion_main"]').val();
       let penDistAmt = getPenDistAmt('net');
       let sel_portion_amount = tr.find('input[name="np_sales_portion_amount_main"]').val();
-      if(penDistAmt < parseFloat(sel_portion_amount)){
+      if(parseFloat(penDistAmt).toFixed(2) < parseFloat(sel_portion_amount).toFixed(2)){
          alert('Not Allow To Assign More Amount Then Available');
          return false;
       }
@@ -633,9 +635,15 @@
       }
       $("#net_used").val(gpAmtRow.toFixed(2));
       $(".net_used").text("$"+gpAmtRow.toFixed(2));
+      cal_net_final_net();
+   }
+   function cal_net_final_net() {
+      const preNet = getPenDistAmt('gross');
+      $("input[name='net_profit']").val(preNet.toFixed(2));
+      $("#net_profit").text("$"+preNet.toFixed(2));
       const fnlNet = getPenDistAmt('net');
       $("input[name='final_net_profit']").val(fnlNet.toFixed(2));
-      $(".final_net_profit").text("$"+fnlNet.toFixed(2));
+      $("#final_net_profit").text("$"+fnlNet.toFixed(2));
    }
    function reset_np_main_item_values() {
        var previewArea = $('.addi-commision-net-profit-table').find('tr.main');
