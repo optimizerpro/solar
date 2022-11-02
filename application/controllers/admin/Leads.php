@@ -71,6 +71,12 @@ class Leads extends AdminController
     /* Add or update lead */
     public function lead($id = '')
     {
+        if($id=="agreement"){
+            echo json_encode([
+                'leadView' => $this->_get_lead_data_agreement(''),
+            ]);
+            die();
+        }
         if (!is_staff_member() || ($id != '' && !$this->leads_model->staff_can_access_lead($id))) {
             ajax_access_denied();
         }
@@ -116,7 +122,70 @@ class Leads extends AdminController
             'leadView' => $this->_get_lead_data($id),
         ]);
     }
+    private function _get_lead_data_agreement($id = '')
+    {
+        $reminder_data         = '';
+        $data['lead_locked']   = false;
+        $data['openEdit']      = $this->input->get('edit') ? true : false;
+        $data['members']       = $this->staff_model->get('', ['is_not_staff' => 0, 'active' => 1]);
+        $data['status_id']     = $this->input->get('status_id') ? $this->input->get('status_id') : get_option('leads_default_status');
+        $data['base_currency'] = get_base_currency();
 
+        if (is_numeric($id)) {
+            $leadWhere = (has_permission('leads', '', 'view') ? [] : '(assigned = ' . get_staff_user_id() . ' OR addedfrom=' . get_staff_user_id() . ' OR is_public=1)');
+
+            $lead = $this->leads_model->get($id, $leadWhere);
+
+            if (!$lead) {
+                header('HTTP/1.0 404 Not Found');
+                echo _l('lead_not_found');
+                die;
+            }
+
+            if (total_rows(db_prefix() . 'clients', ['leadid' => $id ]) > 0) {
+                $data['lead_locked'] = ((!is_admin() && get_option('lead_lock_after_convert_to_customer') == 1) ? true : false);
+            }
+
+            $reminder_data = $this->load->view('admin/includes/modals/reminder', [
+                    'id'             => $lead->id,
+                    'name'           => 'lead',
+                    'members'        => $data['members'],
+                    'reminder_title' => _l('lead_set_reminder_title'),
+                ], true);
+
+            $data['lead']          = $lead;
+            $data['mail_activity'] = $this->leads_model->get_mail_activity($id);
+            $data['notes']         = $this->misc_model->get_notes($id, 'lead');
+            $data['activity_log']  = $this->leads_model->get_lead_activity_log($id);
+
+            if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
+                $this->load->model('gdpr_model');
+                $data['purposes'] = $this->gdpr_model->get_consent_purposes($lead->id, 'lead');
+                $data['consents'] = $this->gdpr_model->get_consents(['lead_id' => $lead->id]);
+            }
+
+            $leadProfileBadges = new LeadProfileBadges($id);
+            $data['total_reminders'] = $leadProfileBadges->getCount('reminders');
+            $data['total_notes'] = $leadProfileBadges->getCount('notes');
+            $data['total_attachments'] = $leadProfileBadges->getCount('attachments');
+            $data['total_tasks'] = $leadProfileBadges->getCount('tasks');
+            $data['total_proposals'] = $leadProfileBadges->getCount('proposals');
+        }
+
+
+        $data['statuses'] = $this->leads_model->get_status();
+        $data['sources']  = $this->leads_model->get_source();
+        $data['categories']  = $this->leads_model->get_master_datas();
+        $data['trade_types']  = $this->leads_model->get_master_datas('trade_types');
+        $data['work_types']  = $this->leads_model->get_master_datas('work_types');
+
+        $data = hooks()->apply_filters('lead_view_data', $data);
+
+        return [
+            'data'          => $this->load->view('admin/leads/lead_agreement', $data, true),
+            'reminder_data' => $reminder_data,
+        ];
+    }
     private function _get_lead_data($id = '')
     {
         $reminder_data         = '';

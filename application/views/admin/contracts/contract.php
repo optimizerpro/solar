@@ -223,7 +223,15 @@
                      </div>
                   </div>
                   <!-- 04-09-2022 End -->
+                  <div class="row">
+                        <div class="col-md-12" id="lead-modal-agreement" style="display:none;">
+                           <div class="row">
+                              <div class="col-md-12 data">
 
+                              </div>
+                           </div>
+                        </div>
+                  </div>
                <div class="form-group select-placeholder projects-wrapper<?php if((!isset($contract)) || (isset($contract) && !customer_has_projects($contract->client))){ echo ' hide';} ?>">
                   <label for="project_id"><?php echo _l('project'); ?></label>
                   <div id="project_ajax_search_wrapper">
@@ -1154,9 +1162,10 @@ $('body').on('change','#rel_id', function() {
 proposal_rel_id_select();
 _rel_type.on('change', function() {
    if($(this).val() == "new_lead"){
-      init_lead();
+      init_lead_over_agreement();
       $(this).val("");
    } else {
+      $("#lead-modal-agreement").hide();
       var clonedSelect = _rel_id.html('').clone();
       _rel_id.selectpicker('destroy').remove();
       _rel_id = clonedSelect;

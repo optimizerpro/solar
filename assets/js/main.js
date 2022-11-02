@@ -4109,7 +4109,15 @@ function init_lead(id, isEdit) {
         $('#lead-modal').modal('show');
     }
 }
-
+function init_lead_over_agreement(id, isEdit) {
+    if ($('#task-modal').is(':visible')) {
+        $('#task-modal').modal('hide');
+    }
+    // In case header error
+    if (init_lead_modal_data_over_agreement(id, undefined, isEdit)) {
+        $('#lead-modal-agreement').show();
+    }
+}
 // Lead form validation
 function validate_lead_form() {
     var validationObject = {
@@ -4352,7 +4360,84 @@ function _lead_init_data(data, id) {
         }
     }
 }
+function _lead_init_data_over_agreement(data, id) {
 
+    var hash = window.location.hash;
+
+    var $leadModal = $('#lead-modal-agreement');
+    $('#lead_reminder_modal').html(data.leadView.reminder_data);
+
+    $leadModal.find('.data').html(data.leadView.data);
+
+    $leadModal.show();
+
+    init_tags_inputs();
+    init_selectpicker();
+    init_form_reminder();
+    init_datepicker();
+    init_color_pickers();
+    custom_fields_hyperlink();
+    validate_lead_form();
+
+    var hashes = ['#tab_lead_profile', '#attachments', '#lead_notes', '#lead_activity', '#gdpr'];
+
+    if (hashes.indexOf(hash) > -1) {
+        window.location.hash = hash;
+    }
+
+    initDataTableInline($('#consentHistoryTable'));
+
+    $('#lead-modal-agreement').find('.gpicker').googleDrivePicker({
+        onPick: function (pickData) {
+            leadExternalFileUpload(pickData, 'gdrive', id);
+        }
+    });
+
+    if (id !== '' && typeof (id) != 'undefined') {
+        if (typeof (Dropbox) != 'undefined') {
+            document.getElementById("dropbox-chooser-lead").appendChild(Dropbox.createChooseButton({
+                success: function (files) {
+                    leadExternalFileUpload(files, 'dropbox', id);
+                },
+                linkType: "preview",
+                extensions: app.options.allowed_files.split(','),
+            }));
+        }
+
+        if (typeof (leadAttachmentsDropzone) != 'undefined') {
+            leadAttachmentsDropzone.destroy();
+        }
+
+        leadAttachmentsDropzone = new Dropzone("#lead-attachment-upload", appCreateDropzoneOptions({
+            sending: function (file, xhr, formData) {
+                formData.append("id", id);
+                if (this.getQueuedFiles().length === 0) {
+                    formData.append("last_file", true);
+                }
+            },
+            success: function (file, response) {
+                response = JSON.parse(response);
+                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    _lead_init_data_over_agreement(response, response.id);
+                }
+            }
+        }));
+
+        $leadModal.find('.nav-tabs a[href="' + window.location.hash + '"]').tab('show');
+        var latest_lead_activity = $leadModal.find('#lead_activity .feed-item:last-child .text').html();
+        if (typeof (latest_lead_activity) != 'undefined') {
+            $leadModal.find('#lead-latest-activity').html(latest_lead_activity);
+        } else {
+            $leadModal.find('.lead-latest-activity > .lead-info-heading').addClass('hide');
+        }
+
+        // The status is not required when lead is lost or junk
+        // Remove the * required mark
+        if ($('[lead-is-junk-or-lost]').length > 0) {
+            $('.form-group-select-input-status').find('.req').remove();
+        }
+    }
+}
 // Fetches lead modal data, can be edit/add/view
 function init_lead_modal_data(id, url, isEdit) {
 
@@ -4372,7 +4457,24 @@ function init_lead_modal_data(id, url, isEdit) {
         alert_float('danger', data.responseText);
     });
 }
+function init_lead_modal_data_over_agreement(id, url, isEdit) {
 
+    var requestURL = (typeof (url) != 'undefined' ? url : 'leads/lead/agreement');
+
+    if (isEdit === true) {
+        var concat = '?';
+        if (requestURL.indexOf('?') > -1) {
+            concat += '&';
+        }
+        requestURL += concat + 'edit=true';
+    }
+
+    requestGetJSON(requestURL).done(function (response) {
+        _lead_init_data_over_agreement(response, id);
+    }).fail(function (data) {
+        alert_float('danger', data.responseText);
+    });
+}
 function print_lead_information() {
 
     var $leadViewWrapper = $('#leadViewWrapper').clone();
