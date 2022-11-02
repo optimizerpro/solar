@@ -122,8 +122,8 @@
             $rcv_checked=' checked';
          }
          $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'" class="form-control"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="claim_number">Claim Number</label><input type="text" id="claim_number" name="claim_number" value="'.$claim_number.'" class="form-control"></div></div>';
+         //$work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'" class="form-control"></div></div>';
+         //$work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="claim_number">Claim Number</label><input type="text" id="claim_number" name="claim_number" value="'.$claim_number.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="layers">Layers</label><input type="text" id="layers" name="layers" value="'.$layers.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="pitch">Pitch</label><input type="text" id="pitch" name="pitch" value="'.$pitch.'" class="form-control"></div></div></div>';

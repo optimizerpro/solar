@@ -207,6 +207,9 @@ class Contracts_model extends App_Model
         if(isset($data['pilicy_number'])){
             unset($data['pilicy_number']);
         }
+        if(isset($data['status'])){
+            unset($data['status']);
+        }
         $this->load->model('templates_model');
         $contentt = '';
         if($data['contract_type'] == 2){
