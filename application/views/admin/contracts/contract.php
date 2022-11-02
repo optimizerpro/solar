@@ -121,7 +121,10 @@
          else{
             $rcv_checked=' checked';
          }
-         $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'" class="form-control"></div></div>';
+         $work_order_fields='<div class="col-md-12"><div class="row"><div class="col-md-12" id="adjuster_label"><h4>Work Order details</h4><hr></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="claim_number">Claim Number</label><input type="text" id="claim_number" name="claim_number" value="'.$claim_number.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="roof_type">Roof Type</label><input type="text" id="roof_type" name="roof_type" value="'.$roof_type.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="layers">Layers</label><input type="text" id="layers" name="layers" value="'.$layers.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="pitch">Pitch</label><input type="text" id="pitch" name="pitch" value="'.$pitch.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="row"><div class="col-md-12" id="adjuster_label"><h4>Adjuster Estimate</h4><hr></div><div class="col-md-6"><div class="form-group"><label for="acv"><input type="radio" id="acv" name="acv_rcv" value="acv" '.$acv_checked.'>&nbsp;&nbsp;ACV</label>&nbsp;&nbsp;<label for="rcv"><input type="radio" id="rcv" name="acv_rcv" value="rcv" '.$rcv_checked.'>&nbsp;&nbsp;RCV</label></div></div>';
@@ -140,8 +143,6 @@
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="form-group" app-field-wrapper="description_agreement"><label for="description_agreement" class="control-label">Special Notes</label><textarea id="description_agreement" name="description_agreement" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'" class="form-control"></div></div>';
-         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="claim_number">Claim Number</label><input type="text" id="claim_number" name="claim_number" value="'.$claim_number.'" class="form-control"></div></div>';
             
          ?>
          <div class="col-md-5 left-column">
