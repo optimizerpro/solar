@@ -127,7 +127,7 @@
             <div class="mul_email">
                <?php echo render_input('email','lead_add_edit_email',$value); ?>
             </div>
-            <a href="javascript:;" class="add_ano_email">+ Add Another Email</a>
+            <!--<a href="javascript:;" class="add_ano_email">+ Add Another Email</a>-->
 
            <?php /*if((isset($lead) && empty($lead->website)) || !isset($lead)){
 
@@ -169,7 +169,7 @@
             <div class="mul_phone">
                <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?>
             </div>
-            <a href="javascript:;" class="add_ano_phone">+ Add Another Phone</a>
+            <!--<a href="javascript:;" class="add_ano_phone">+ Add Another Phone</a>-->
             
 
             <!-- <div class="form-group">
@@ -292,7 +292,7 @@
             </div>
          </div> -->
          <div class="clearfix"></div>
-         <div class="col-md-12 mtop15">
+         <!--<div class="col-md-12 mtop15">
             <div class="row">
                <?php $value = (isset($lead) ? $lead->policy_number : ''); ?>
                   <div class="col-md-6">
@@ -304,12 +304,12 @@
                   </div>
                </div>
          </div>
-         <div class="clearfix"></div>
+         <div class="clearfix"></div>-->
          <div class="col-md-12">
 
             <?php $value = (isset($lead) ? $lead->description : ''); ?>
 
-            <?php echo render_textarea('description','lead_description',$value); ?>
+            <?php //echo render_textarea('description','lead_description',$value); ?>
 
             <div class="row">
 
@@ -329,20 +329,20 @@
 
                   <?php } ?>
 
-                  <div class="checkbox-inline checkbox checkbox-primary<?php if(isset($lead)){echo ' hide';} ?><?php if(isset($lead) && (is_lead_creator($lead->id) || has_permission('leads','','edit'))){echo ' lead-edit';} ?>">
+                  <!--<div class="checkbox-inline checkbox checkbox-primary<?php if(isset($lead)){echo ' hide';} ?><?php if(isset($lead) && (is_lead_creator($lead->id) || has_permission('leads','','edit'))){echo ' lead-edit';} ?>">
 
                   <input type="checkbox" name="is_public" <?php if(isset($lead)){if($lead->is_public == 1){echo 'checked';}}; ?> id="lead_public">
 
                   <label for="lead_public"><?php echo _l('lead_public'); ?></label>
 
-               </div>
+               </div>-->
 
-                  <?php if(!isset($lead)){ ?>
+                  <?php /*if(!isset($lead)){ ?>
                   <div class="checkbox-inline checkbox checkbox-primary">
                      <input type="checkbox" name="contacted_today" id="contacted_today" checked>
                      <label for="contacted_today"><?php echo _l('lead_add_edit_contacted_today'); ?></label>
                   </div>
-                <?php } ?>
+                <?php }*/ ?>
                </div>
             </div>
          </div>

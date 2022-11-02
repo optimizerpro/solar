@@ -1163,7 +1163,8 @@ proposal_rel_id_select();
 _rel_type.on('change', function() {
    if($(this).val() == "new_lead"){
       init_lead_over_agreement();
-      $(this).val("");
+      //$(this).val("");
+      _rel_id_wrapper.removeClass('hide');
    } else {
       $("#lead-modal-agreement").hide();
       var clonedSelect = _rel_id.html('').clone();
