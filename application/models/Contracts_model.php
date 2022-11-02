@@ -210,6 +210,9 @@ class Contracts_model extends App_Model
         if(isset($data['status'])){
             unset($data['status']);
         }
+        if(isset($data['source'])){
+            unset($data['source']);
+        }
         $this->load->model('templates_model');
         $contentt = '';
         if($data['contract_type'] == 2){
