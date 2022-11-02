@@ -140,6 +140,9 @@
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div></div>';
          $work_order_fields.='<div class="form-group" app-field-wrapper="description_agreement"><label for="description_agreement" class="control-label">Special Notes</label><textarea id="description_agreement" name="description_agreement" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="policy_number">Policy Number</label><input type="text" id="policy_number" name="policy_number" value="'.$policy_number.'" class="form-control"></div></div>';
+         $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="claim_number">Claim Number</label><input type="text" id="claim_number" name="claim_number" value="'.$claim_number.'" class="form-control"></div></div>';
+            
          ?>
          <div class="col-md-5 left-column">
             <div class="panel_s">
