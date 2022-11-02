@@ -150,7 +150,7 @@ class Contracts_model extends App_Model
     public function add($data)
     {
         $_data=array();
-        if(isset($data['job_category'])){
+        if(isset($data['source'])){
             $_data=$data;
             if(isset($_data['trash'])){ unset($_data['trash']);}
             if(isset($_data['not_visible_to_client'])){ unset($_data['not_visible_to_client']);}
