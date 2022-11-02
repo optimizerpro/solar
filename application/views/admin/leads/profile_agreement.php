@@ -8,7 +8,6 @@
 
       <div class="lead-edit">
 
-         <div class="col-md-6">
 
           <?php
 
@@ -24,11 +23,8 @@
 
             }
 
-            echo render_leads_status_select($statuses, $selected,'lead_add_edit_status');
-
           ?>
-
-         </div>
+            <input type="hidden" name="status" value="2">
 
          <div class="col-md-6">
 
@@ -43,14 +39,14 @@
          </div>
 
 
-         <div class="clearfix"></div>
+         
          <div class="col-md-6">
 
             <?php
 
                $assigned_attrs = array();
 
-               $selected = (isset($lead) ? $lead->assigned : get_staff_user_id());
+               $selected = get_staff_user_id();
 
                if(isset($lead)
 
@@ -71,7 +67,8 @@
                echo render_select('assigned',$members,array('staffid',array('firstname','lastname')),'lead_add_edit_assigned',$selected,$assigned_attrs); ?>
 
          </div>
-         <div class="col-md-6">
+         <div class="clearfix" <?php echo $selected; ?>></div>
+         <!--<div class="col-md-6">
             <?php
                $selected = (isset($lead) ? $lead->job_category : '');
                echo render_select('job_category',$categories,array('id','name'),'lead_category',$selected,[]); ?>
@@ -87,11 +84,11 @@
             <?php
                $selected = (isset($lead) ? $lead->trade_type : '');
                echo render_select('trade_type[]',$trade_types,array('id','name'),'lead_trade_type',$selected,['multiple'=>'multiple']); ?>
-         </div>
+         </div>-->
 
             <hr class="mtop5 mbot10" />
 
-             <div class="col-md-12">
+             <!--<div class="col-md-12">
 
                   <div class="form-group no-mbot" id="inputTagsWrapper">
 
@@ -101,9 +98,9 @@
 
                   </div>
 
-               </div>
+               </div>-->
 
-         <div class="clearfix"></div>
+         <!--<div class="clearfix"></div>-->
 
          <hr class="no-mtop mbot15" />
 
@@ -202,7 +199,7 @@
          </div>
 
          <div class="col-md-12">
-            <div class="form-group">
+            <!--<div class="form-group">
                <label for="location_photo" class="profile-image"><?php echo _l('lead_location_photo_choose'); ?></label>
                <input type="file" name="location_photo[]" class="form-control" id="location_photo" multiple>
             </div>
@@ -224,7 +221,7 @@
                   </select>
                </div>
             <?php } ?>
-
+                    -->
             <?php $value = (isset($lead) ? $lead->address : ''); ?>
 
             <?php echo render_textarea('address','lead_address',$value,array('rows'=>1,'style'=>'height:36px;font-size:100%;')); ?>
@@ -353,7 +350,7 @@
 
             <?php $rel_id = (isset($lead) ? $lead->id : false); ?>
 
-            <?php echo render_custom_fields('leads',$rel_id); ?>
+            <?php //echo render_custom_fields('leads',$rel_id); ?> 
 
          </div>
 
