@@ -25,14 +25,34 @@
 
           ?>
             <input type="hidden" name="status" value="2">
-
+            <?php //print_r($sources); ?>
          <div class="col-md-6">
-
+            <div class="form-group form-group-select-input-source input-group-select">
+                  <label for="source" class="control-label">Source <span style="color:red;">*</span></label>
+                  <div class="input-group input-group-select select-source" app-field-wrapper="source">
+                     <div class="dropdown bootstrap-select input-group-btn _select_input_group bs3 bs3-has-addon" style="width: 100%;">
+                        <select id="source" required  name="source" class="selectpicker _select_input_group" data-width="100%" data-none-selected-text="Nothing selected" data-live-search="true" tabindex="-98">
+                           <option value=""></option>
+                           <?php 
+                              foreach($sources as $source){
+                                 ?>
+                                 <option <?php if($selected==$source['id']) { echo 'selected="selected"'; } ?> value="<?php echo $source['id']; ?>"><?php echo $source['name']; ?></option>
+                                 <?php
+                              }
+                           ?>
+                        </select>
+                     </div>
+                     <div class="input-group-addon" style="opacity: 1;">
+                     <a href="#" onclick="new_lead_source_inline();return false;" class="inline-field-new"><i class="fa fa-plus"></i></a>
+                  </div>
+               </div>
+            </div>
+            
             <?php
 
                $selected = (isset($lead) ? $lead->source : get_option('leads_default_source'));
 
-               echo render_leads_source_select($sources, $selected,'lead_add_edit_source');
+               //echo render_leads_source_select($sources, $selected,'lead_add_edit_source');
 
             ?>
 
@@ -110,7 +130,8 @@
             <div class="row">
             <?php $value = (isset($lead) ? $lead->name : ''); ?>
                <div class="col-md-6">
-                  <?php echo render_input('name','First Name',$value); ?>
+               <div class="form-group" app-field-wrapper="name"><label for="name" class="control-label">First Name <span style="color:red;">*</span></label><input type="text" id="name" name="name" class="form-control" value="<?php echo $value; ?>"></div>
+                  <?php //echo render_input('name','First Name',$value); ?>
                </div>
                <?php $value = (isset($lead) ? $lead->leadlastname : ''); ?>
                <div class="col-md-6">
