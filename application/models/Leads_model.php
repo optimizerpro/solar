@@ -68,7 +68,8 @@ class Leads_model extends App_Model
      * @return mixed false || leadid
      */
     public function add($data)
-    {
+    {   
+        $data['location_photo']=null;
         if (isset($data['custom_contact_date']) || isset($data['custom_contact_date'])) {
             if (isset($data['contacted_today'])) {
                 $data['lastcontact'] = date('Y-m-d H:i:s');

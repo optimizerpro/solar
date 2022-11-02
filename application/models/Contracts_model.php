@@ -149,6 +149,63 @@ class Contracts_model extends App_Model
      */
     public function add($data)
     {
+        $_data=array();
+        if(isset($data['job_category'])){
+            $_data=$data;
+            if(isset($_data['trash'])){ unset($_data['trash']);}
+            if(isset($_data['not_visible_to_client'])){ unset($_data['not_visible_to_client']);}
+            if(isset($_data['rel_type'])){ unset($_data['rel_type']);}
+            if(isset($_data['rel_id'])){ unset($_data['rel_id']);}
+            if(isset($_data['project_id'])){ unset($_data['project_id']);}
+            if(isset($_data['subject'])){ unset($_data['subject']);}
+            if(isset($_data['contract_type'])){ unset($_data['contract_type']);}
+            if(isset($_data['datestart'])){ unset($_data['datestart']);}
+            if(isset($_data['manufacturer_warranty'])){ unset($_data['manufacturer_warranty']);}
+            if(isset($_data['roll_yard'])){ unset($_data['roll_yard']);}
+            if(isset($_data['shingle_color'])){ unset($_data['shingle_color']);}
+            if(isset($_data['ventilation'])){ unset($_data['ventilation']);}
+            if(isset($_data['install_decking'])){ unset($_data['install_decking']);}
+            if(isset($_data['roof_type'])){ unset($_data['roof_type']);}
+
+            if(isset($_data['fastners'])){ unset($_data['fastners']);}
+            if(isset($_data['acv_rcv_aggre'])){unset($_data['acv_rcv_aggre']);}
+            if(isset($_data['adj_appoint_date'])){unset($_data['adj_appoint_date']);}
+            if(isset($_data['adj_appoint_time'])){unset($_data['adj_appoint_time']);}
+            if(isset($_data['description_agreement'])){unset($_data['description_agreement']);}
+            if(isset($_data['layers'])){unset($_data['layers']);}
+            if(isset($_data['pitch'])){unset($_data['pitch']);}
+            if(isset($_data['acv_rcv'])){unset($_data['acv_rcv']);}
+            if(isset($_data['acv_rcv_plus_tax'])){unset($_data['acv_rcv_plus_tax']);}
+            if(isset($_data['ad_allowance'])){unset($_data['ad_allowance']);}
+            if(isset($_data['first_check'])){unset($_data['first_check']);}
+            if(isset($_data['second_check'])){unset($_data['second_check']);}
+            if(isset($_data['deductible'])){unset($_data['deductible']);}
+            if(isset($_data['soffit'])){unset($_data['soffit']);}
+            if(isset($_data['fascia'])){unset($_data['fascia']);}
+            if(isset($_data['sidewall'])){unset($_data['sidewall']);}
+            if(isset($_data['driveway'])){unset($_data['driveway']);}
+            if(isset($_data['shingle'])){unset($_data['shingle']);}
+            if(isset($_data['color'])){unset($_data['color']);}
+            if(isset($_data['dripedge'])){unset($_data['dripedge']);}
+            if(isset($_data['material_drop'])){unset($_data['material_drop']);}
+            if(isset($_data['ventilation'])){unset($_data['ventilation']);}
+            //if(isset($_data['policy_number'])){unset($_data['policy_number']);}
+            //if(isset($_data['claim_number'])){unset($_data['claim_number']);}
+            $this->load->model('leads_model');
+            $lead_id=$this->leads_model->add($_data);
+            $data['rel_type']='lead';
+            $data['rel_id']=$lead_id;
+            $data=array_diff_key($data,$_data);
+            $data['policy_number']=$_data['policy_number'];
+            $data['claim_number']=$_data['claim_number'];
+        }
+        if(isset($data['description_agreement'])){
+            $data['description']=$data['description_agreement'];
+            unset($data['description_agreement']);
+        }
+        if(isset($data['pilicy_number'])){
+            unset($data['pilicy_number']);
+        }
         $this->load->model('templates_model');
         $contentt = '';
         if($data['contract_type'] == 2){
@@ -218,6 +275,10 @@ class Contracts_model extends App_Model
      */
     public function update($data, $id)
     {
+        if(isset($data['description_agreement'])){
+            $data['description']=$data['description_agreement'];
+            unset($data['description_agreement']);
+        }
         $affectedRows = 0;
 
         if(isset($data['datestart'])) {

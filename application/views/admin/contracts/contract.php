@@ -92,7 +92,7 @@
 
             $agreement_fields.= '</div>';
 
-            $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false" class="form-control">'.$description.'</textarea></div></div>';
+            $agreement_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Extra Work &amp; Notes</label><textarea id="description_agreement" name="description_agreement" class="form-control" rows="10" aria-invalid="false" class="form-control">'.$description.'</textarea></div></div>';
          $description=$roof_type=$layers=$pitch=$acv_rcv=$acv_rcv_plus_tax=$ad_allowance=$first_check=$second_check=$deductible='';
          $soffit=$fascia=$sidewall=$driveway=$shingle=$color=$dripedge=$material_drop=$ventilation='';
          if(isset($contract)){if($contract->roof_type !=''){$roof_type= $contract->roof_type;}}; 
@@ -139,12 +139,12 @@
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="dripedge">Drip Edge</label><input type="text" id="dripedge" name="dripedge" value="'.$dripedge.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="material_drop">Material Drop</label><input type="text" id="material_drop" name="material_drop" value="'.$material_drop.'" class="form-control"></div></div>';
          $work_order_fields.='<div class="col-md-6"><div class="form-group"><label for="ventilation">Ventilation</label><input type="text" id="ventilation" name="ventilation" value="'.$ventilation.'" class="form-control"></div></div></div>';
-         $work_order_fields.='<div class="form-group" app-field-wrapper="description"><label for="description" class="control-label">Special Notes</label><textarea id="description" name="description" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
+         $work_order_fields.='<div class="form-group" app-field-wrapper="description_agreement"><label for="description_agreement" class="control-label">Special Notes</label><textarea id="description_agreement" name="description_agreement" class="form-control" rows="10" aria-invalid="false">'.$description.'</textarea></div></div>';
          ?>
          <div class="col-md-5 left-column">
             <div class="panel_s">
                <div class="panel-body">
-                  <?php echo form_open($this->uri->uri_string(),array('id'=>'contract-form')); ?>
+                  <?php echo form_open_multipart($this->uri->uri_string(),array('id'=>'contract-form')); ?>
                   <div class="form-group">
                      <div class="checkbox checkbox-primary no-mtop checkbox-inline">
                         <input type="checkbox" id="trash" name="trash"<?php if(isset($contract)){if($contract->trash == 1){echo ' checked';}}; ?>>
