@@ -240,6 +240,7 @@
                 </div>
             </div>
             <!--  -->
+            <input type="hidden" id="commission_used" value="<?php echo ($salesCommAmt > 0)?$salesCommAmt:"0"; ?>">
             <h5>Pre-net profit : <span id="pre_net_profit">$<?php echo ($gross_profit > 0)?($gross_profit - $salesCommAmt):"0.00"; ?></span></h5>
             <input type="hidden" name="pre_net_profit" value="<?php echo ($gross_profit > 0)?($gross_profit - $salesCommAmt):"0"; ?>">
             
@@ -295,7 +296,7 @@
                      </div>
                 </div>
             </div>
-            <span class="gross_used"></span>
+            <!-- <span class="gross_used"></span> -->
             <input type="hidden" id="gross_used" value="<?php echo ($gross_used > 0)?$gross_used:"0"; ?>">
             <!--  -->
             <!--  -->
@@ -362,8 +363,8 @@
             }
             ?>
             <input type="hidden" id="net_used" value="<?php echo ($net_used > 0)?$net_used:"0"; ?>">
-            <h5>Final net profit : <span class="final_net_profit">$<?php echo $final_net_profit; ?></span></h5>
-            <input type="hidden" id="final_net_profit" value="<?php echo $final_net_profit; ?>">
+            <h5>Final net profit : <span id="final_net_profit">$<?php echo $final_net_profit; ?></span></h5>
+            <input type="hidden" name="final_net_profit" value="<?php echo $final_net_profit; ?>">
 
             <!--  -->
             <div class="text-right">

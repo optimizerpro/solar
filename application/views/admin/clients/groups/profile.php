@@ -150,7 +150,17 @@
                      echo render_select( 'country',$countries,array( 'country_id',array( 'short_name')), 'clients_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
                      ?>
                </div>
+               <div class="clearfix"></div>
+               <?php $value = (isset($client) ? $client->policy_number : ''); ?>
+               <div class="col-md-6">
+                  <?php echo render_input('policy_number','Policy Number',$value); ?>
+               </div>
+               <?php $value = (isset($client) ? $client->claim_number : ''); ?>
+               <div class="col-md-6">
+                  <?php echo render_input('claim_number','Claim Number',$value); ?>
+               </div>
             </div>
+
          </div>
          <?php if(isset($client)){ ?>
          <div role="tabpanel" class="tab-pane" id="customer_admins">
