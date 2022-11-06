@@ -124,7 +124,11 @@ class Projects extends AdminController
             $key                                          = array_search('available_features', array_column($data['last_project_settings'], 'name'));
             $data['last_project_settings'][$key]['value'] = unserialize($data['last_project_settings'][$key]['value']);
         }
-
+        $invoice_id='';
+        if(isset($_REQUEST['invoice_id'])){
+            $invoice_id=$_REQUEST['invoice_id'];
+        }
+        $data['invoice_id']=$invoice_id;
         $data['settings'] = $this->projects_model->get_settings();
         $data['statuses'] = $this->projects_model->get_project_statuses();
         $data['staff']    = $this->staff_model->get('', ['active' => 1]);

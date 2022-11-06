@@ -779,9 +779,16 @@ class Projects_model extends App_Model
             unset($data['tags']);
         }
 
+        $invoice_id=$data['invoice_id'];
+        unset($data['invoice_id']);
         $this->db->insert(db_prefix() . 'projects', $data);
         $insert_id = $this->db->insert_id();
         if ($insert_id) {
+            if (is_numeric($invoice_id) && $invoice_id!=0) {
+                $this->db->where('id', $invoice_id);
+                $this->db->set('project_id', $insert_id);
+                $this->db->update(db_prefix() . 'invoices');
+            }
             handle_tags_save($tags, $insert_id, 'project');
 
             if (isset($custom_fields)) {
@@ -853,6 +860,8 @@ class Projects_model extends App_Model
                 $this->db->set('project_id', $insert_id);
                 $this->db->update(db_prefix() . 'estimates');
             }
+            
+            
             /* global tasks 27-09-2022 */
             if ($global_tasks && is_array($global_tasks) && count($global_tasks) > 0) {
                 $this->convert_global_added_to_tasks($insert_id, $global_tasks, $global_tasks_assignees, $data, $project_settings);
@@ -889,7 +898,13 @@ class Projects_model extends App_Model
             unset($data['send_created_email']);
             $send_created_email = true;
         }
-
+        $invoice_id=$data['invoice_id'];
+        unset($data['invoice_id']);
+        if (is_numeric($invoice_id) && $invoice_id!=0) {
+            $this->db->where('id', $invoice_id);
+            $this->db->set('project_id', $id);
+            $this->db->update(db_prefix() . 'invoices');
+        }
         $send_project_marked_as_finished_email_to_contacts = false;
         if (isset($data['project_marked_as_finished_email_to_contacts'])) {
             unset($data['project_marked_as_finished_email_to_contacts']);

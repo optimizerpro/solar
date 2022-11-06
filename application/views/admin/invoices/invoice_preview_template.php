@@ -166,6 +166,7 @@
                   </span>
                   <?php } ?>
                   <!-- Single button -->
+                  <?php //print_r($invoice); ?>
                   <div class="btn-group">
                      <button type="button" class="btn btn-default pull-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                      <?php echo _l('more'); ?> <span class="caret"></span>
@@ -195,6 +196,9 @@
                            <a href="<?php echo admin_url('invoices/copy/'.$invoice->id); ?>"><?php echo _l('invoice_copy'); ?></a>
                         </li>
                         <?php } ?>
+                        <li>
+                           <a href="<?php echo admin_url('projects/project?via_estimate_id=0&customer_id='.$invoice->clientid.'&invoice_id='.$invoice->id); ?>">Convert to Job</a>
+                        </li>
                         <?php if($invoice->sent == 0){ ?>
                         <li>
                            <a href="<?php echo admin_url('invoices/mark_as_sent/'.$invoice->id); ?>"><?php echo _l('invoice_mark_as_sent'); ?></a>

@@ -23,6 +23,7 @@
                         ?>
                         <?php $value = (isset($project) ? $project->name : ''); ?>
                         <?php echo render_input('name','project_name',$value); ?>
+                        <input type="hidden" name="invoice_id" id=invoice_id" value="<?php echo $invoice_id; ?>">
                         <div class="form-group select-placeholder">
                             <label for="clientid" class="control-label"><?php echo _l('project_customer'); ?></label>
                             <select id="clientid" name="clientid" data-live-search="true" data-width="100%" class="ajax-search" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
