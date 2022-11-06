@@ -853,12 +853,19 @@ class Projects_model extends App_Model
                 }
             }
 
-            if ($items_to_convert && is_numeric($estimate_id)) {
+            if ($items_to_convert && is_numeric($estimate_id) && $estimate_id!=0) {
                 $this->convert_estimate_items_to_tasks($insert_id, $items_to_convert, $items_assignees, $data, $project_settings);
 
                 $this->db->where('id', $estimate_id);
                 $this->db->set('project_id', $insert_id);
                 $this->db->update(db_prefix() . 'estimates');
+            }
+            if ($items_to_convert && is_numeric($invoice_id) && $invoice_id!=0) {
+                $this->convert_estimate_items_to_tasks($insert_id, $items_to_convert, $items_assignees, $data, $project_settings);
+
+                $this->db->where('id', $invoice_id);
+                $this->db->set('project_id', $insert_id);
+                $this->db->update(db_prefix() . 'invoices');
             }
             
             

@@ -107,6 +107,12 @@ class Projects extends AdminController
                 $this->load->model('estimates_model');
                 $data['estimate'] = $this->estimates_model->get($this->input->get('via_estimate_id'));
             }
+            if(isset($_REQUEST['invoice_id'])){
+                $invoice_id=$_REQUEST['invoice_id'];
+                $this->load->model('invoices_model');
+                $data['invoice'] = $this->invoices_model->get($this->input->get('invoice_id'));
+            
+            }
         } else {
             $data['project']                               = $this->projects_model->get($id);
             $data['project']->settings->available_features = unserialize($data['project']->settings->available_features);
@@ -125,9 +131,7 @@ class Projects extends AdminController
             $data['last_project_settings'][$key]['value'] = unserialize($data['last_project_settings'][$key]['value']);
         }
         $invoice_id='';
-        if(isset($_REQUEST['invoice_id'])){
-            $invoice_id=$_REQUEST['invoice_id'];
-        }
+        
         $data['invoice_id']=$invoice_id;
         $data['settings'] = $this->projects_model->get_settings();
         $data['statuses'] = $this->projects_model->get_project_statuses();

@@ -233,6 +233,28 @@
                     <?php } ?>
                 </div>
                 <?php } ?>
+                <?php if (isset($invoice)) { ?>
+                <hr class="hr-panel-heading" />
+                <h5 class="font-medium">Items that will be converted to tasks</h5>
+                <div class="row">
+                    <?php foreach($invoice->items as $item) { ?>
+                    <div class="col-md-8 border-right">
+                        <div class="checkbox mbot15">
+                            <input type="checkbox" name="items[]" value="<?php echo $item['id'] ?>" checked id="item-<?php echo $item['id'] ?>">
+                            <label for="item-<?php echo $item['id'] ?>">
+                                <h5 class="no-mbot no-mtop text-uppercase"><?php echo $item['description'] ?></h5>
+                                <span class="text-muted"><?php echo $item['long_description'] ?></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div data-toggle="tooltip" title="<?php echo _l('task_single_assignees_select_title'); ?>">
+                            <?php echo render_select('items_assignee[]',$staff,array('staffid',array('firstname','lastname')),'', get_staff_user_id(),array('data-actions-box'=>true),array(),'','clean-select',false); ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+                <?php } ?>
                 <hr class="hr-panel-heading" />
 
                 <?php if(is_email_template_active('assigned-to-project')){ ?>
