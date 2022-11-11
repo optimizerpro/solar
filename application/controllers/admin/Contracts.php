@@ -104,6 +104,7 @@ class Contracts extends AdminController
                 send_contract_signed_notification_to_customer($id);
                 set_alert('success', _l('document_signed_successfully'));
                 redirect($_SERVER['HTTP_REFERER']);
+                die();
             }
 
             if ($id == '') {

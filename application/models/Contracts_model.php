@@ -981,7 +981,6 @@ class Contracts_model extends App_Model
         $custAddData = [
             'leadid' => $lead_id, 'default_language' => '',
             'firstname' => $leadRow->name, 'lastname' => $leadRow->leadlastname,
-            'title' => $leadRow->title, 'email' => $leadRow->email,
             'phonenumber' => $leadRow->phonenumber, 'website' => $leadRow->website,
             'address' => $leadRow->address, 'city' => $leadRow->city,
             'state' => $leadRow->state, 'country' => $leadRow->country,

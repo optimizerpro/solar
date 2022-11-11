@@ -139,8 +139,8 @@ class Clients_model extends App_Model
             $this->load->model('leads_model');
             $leadRow = $this->leads_model->get($data['leadid']);
             if($leadRow){
-                $data['policy_number'] = $leadRow->policy_number;
-                $data['claim_number'] = $leadRow->claim_number;
+                //$data['policy_number'] = $leadRow->policy_number;
+                //$data['claim_number'] = $leadRow->claim_number;
             }
         }
         $this->db->insert(db_prefix() . 'clients', array_merge($data, [
